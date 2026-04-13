@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Check } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { PRICING_PLANS, MODEL_CREDIT_RATES } from "@/lib/pricing"
+import { ZolaFaviconIcon } from "@/components/icons/zola"
 import { APP_NAME } from "@/lib/config"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -17,8 +18,10 @@ export default function PricingPage() {
     <div className="bg-background min-h-screen">
       <header className="border-b">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="text-xl font-medium tracking-tight">
-            {APP_NAME}
+          <Link href="/" className="inline-flex items-center gap-1.5 text-base font-medium tracking-tight">
+            <ZolaFaviconIcon className="size-7" />
+            <span className="font-medium">Notto</span>
+            <span className="font-normal opacity-80">AI</span>
           </Link>
           <Link href="/">
             <Button variant="ghost" size="sm">

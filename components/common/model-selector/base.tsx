@@ -86,7 +86,7 @@ export function ModelSelector({
         key={model.id}
         className={cn(
           "flex w-full items-center justify-between px-3 py-2",
-          selectedModelId === model.id && "bg-accent"
+          selectedModelId === model.id && "bg-[#10B981]/10 text-[#059669]"
         )}
         onClick={() => {
           setSelectedModelId(model.id)
@@ -278,7 +278,7 @@ export function ModelSelector({
                       key={model.id}
                       className={cn(
                         "flex w-full items-center justify-between px-3 py-2",
-                        selectedModelId === model.id && "bg-accent"
+                        selectedModelId === model.id && "bg-[#10B981]/10 text-[#059669]"
                       )}
                       onSelect={() => {
                         setSelectedModelId(model.id)

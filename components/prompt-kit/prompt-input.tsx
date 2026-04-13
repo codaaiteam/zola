@@ -83,7 +83,7 @@ function PromptInput({
     >
       <div
         className={cn(
-          "border-input bg-background cursor-text rounded-3xl border p-2 shadow-xs",
+          "border-input bg-background cursor-text rounded-3xl border p-2 shadow-xs transition-[border-color,box-shadow] focus-within:border-[#10B981] focus-within:shadow-[0_0_0_2px_rgba(16,185,129,0.15)]",
           className
         )}
         onClick={() => {
