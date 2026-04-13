@@ -98,7 +98,7 @@ export default function PricingPage() {
         </div>
 
         {/* Plans — 3 columns */}
-        <div className="mx-auto grid max-w-5xl items-stretch gap-8 md:grid-cols-3">
+        <div className="grid items-stretch gap-8 md:grid-cols-3">
           {mainPlans.map((plan) => {
             const price =
               billingPeriod === "monthly"
@@ -190,7 +190,7 @@ export default function PricingPage() {
 
         {/* Enterprise — separate, below */}
         {enterprisePlan && (
-          <div className="mx-auto mt-12 max-w-5xl rounded-2xl border p-6">
+          <div className="mt-12 rounded-2xl border p-6">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
               <div>
                 <h3 className="text-foreground text-lg font-semibold">
