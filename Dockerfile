@@ -28,6 +28,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_SUPABASE_URL=https://hjvbqkyodafpzfmlevws.supabase.co
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqdmJxa3lvZGFmcHpmbWxldndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NjM3MzcsImV4cCI6MjA5MTUzOTczN30.AHK6dDsz9kS-I04wkxccXvu1vdTKdJUUFE_Txt368Kg
 
+# Dummy build-time values for server-side env vars that Next.js page collection reads
+# Real values are injected at runtime by Railway environment variables
+ENV ENCRYPTION_KEY=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+ENV CSRF_SECRET=build-placeholder
+ENV SUPABASE_SERVICE_ROLE=build-placeholder
+
 # Build the application
 RUN npm run build
 
