@@ -77,10 +77,10 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(`${baseUrl}${next}`)
   } catch (err) {
-    console.error("Auth callback unhandled error:", err)
-    // Last resort: redirect to error page
+    const errorMessage = err instanceof Error ? err.message : String(err)
+    console.error("Auth callback unhandled error:", errorMessage, err)
     return NextResponse.redirect(
-      `${baseUrl}/auth/error?message=${encodeURIComponent("An unexpected error occurred during authentication.")}`
+      `${baseUrl}/auth/error?message=${encodeURIComponent(errorMessage)}`
     )
   }
 }
