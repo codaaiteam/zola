@@ -73,7 +73,7 @@ export function SubMenu({ hoveredModelData }: SubMenuProps) {
 
           <div className="flex items-center justify-between gap-2 text-sm">
             <span className="font-medium">Provider</span>
-            <span>{hoveredModelData.provider}</span>
+            <span>{provider?.name || hoveredModelData.provider}</span>
           </div>
         </div>
       </div>
