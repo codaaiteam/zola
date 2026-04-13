@@ -98,7 +98,7 @@ export default function PricingPage() {
         </div>
 
         {/* Plans — 3 columns */}
-        <div className="mx-auto grid max-w-4xl items-end gap-8 md:grid-cols-3">
+        <div className="mx-auto grid max-w-4xl items-stretch gap-8 md:grid-cols-3">
           {mainPlans.map((plan) => {
             const price =
               billingPeriod === "monthly"
@@ -113,7 +113,7 @@ export default function PricingPage() {
                 className={cn(
                   "relative flex flex-col rounded-2xl border p-6",
                   isPro
-                    ? "scale-[1.03] border-2 border-[#10B981] shadow-lg shadow-[#10B981]/10 md:-my-4"
+                    ? "scale-[1.03] border-2 border-[#10B981] shadow-lg shadow-[#10B981]/10"
                     : "border-border",
                   isFree && "opacity-75"
                 )}
