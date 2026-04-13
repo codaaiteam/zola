@@ -1,26 +1,12 @@
 import { FREE_MODELS_IDS } from "../config"
-import { claudeModels } from "./data/claude"
-import { deepseekModels } from "./data/deepseek"
-import { geminiModels } from "./data/gemini"
-import { grokModels } from "./data/grok"
-import { mistralModels } from "./data/mistral"
 import { getOllamaModels, ollamaModels } from "./data/ollama"
-import { openaiModels } from "./data/openai"
 import { openrouterModels } from "./data/openrouter"
-import { perplexityModels } from "./data/perplexity"
 import { ModelConfig } from "./types"
 
-// Static models (always available)
+// Static models — OpenRouter only (single API key for all providers)
 const STATIC_MODELS: ModelConfig[] = [
-  ...openaiModels,
-  ...mistralModels,
-  ...deepseekModels,
-  ...claudeModels,
-  ...grokModels,
-  ...perplexityModels,
-  ...geminiModels,
-  ...ollamaModels, // Static fallback Ollama models
   ...openrouterModels,
+  ...ollamaModels, // Static fallback Ollama models
 ]
 
 // Dynamic models cache
