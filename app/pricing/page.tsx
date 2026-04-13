@@ -31,7 +31,7 @@ export default function PricingPage() {
   const enterprisePlan = PRICING_PLANS.find((p) => p.tier === "enterprise")
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background min-h-screen w-screen">
       {/* Header */}
       <header className="border-b">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
