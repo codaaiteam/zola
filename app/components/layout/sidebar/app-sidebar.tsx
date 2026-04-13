@@ -14,9 +14,7 @@ import { useChats } from "@/lib/chat-store/chats/provider"
 import {
   ChatTeardropText,
   CrownSimple,
-  GithubLogo,
   Compass,
-  Gear,
   MagnifyingGlass,
   NotePencilIcon,
   X,
@@ -156,24 +154,13 @@ export function AppSidebar() {
         </ScrollArea>
       </SidebarContent>
       <SidebarFooter className="border-border/40 mb-2 border-t p-3">
-        <div className="flex flex-col gap-1">
-          <Link
-            href="/pricing"
-            className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-          >
-            <CrownSimple size={16} />
-            <span>Pricing</span>
-          </Link>
-          <a
-            href="https://github.com/ibelick/zola"
-            className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-            target="_blank"
-            aria-label="GitHub"
-          >
-            <GithubLogo size={16} />
-            <span>GitHub</span>
-          </a>
-        </div>
+        <Link
+          href="/pricing"
+          className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+        >
+          <CrownSimple size={16} />
+          <span>Pricing</span>
+        </Link>
       </SidebarFooter>
     </Sidebar>
   )

@@ -59,22 +59,13 @@ export async function getAllModels(): Promise<ModelConfig[]> {
 export async function getModelsWithAccessFlags(): Promise<ModelConfig[]> {
   const models = await getAllModels()
 
-  const freeModels = models
-    .filter(
-      (model) =>
-        FREE_MODELS_IDS.includes(model.id) || model.providerId === "ollama"
-    )
-    .map((model) => ({
-      ...model,
-      accessible: true,
-    }))
+  // All models accessible to logged-in users
+  const freeModels = models.map((model) => ({
+    ...model,
+    accessible: true,
+  }))
 
-  const proModels = models
-    .filter((model) => !freeModels.map((m) => m.id).includes(model.id))
-    .map((model) => ({
-      ...model,
-      accessible: false,
-    }))
+  const proModels: ModelConfig[] = []
 
   return [...freeModels, ...proModels]
 }
