@@ -27,9 +27,10 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nottoai.com"),
   title: "NottoAI",
   description:
-    "NottoAI is the open-source interface for AI chat. Multi-model, BYOK-ready, and fully self-hostable. Use Claude, OpenAI, Gemini, local models, and more, all in one place.",
+    "NottoAI — AI chat with 16+ models. GPT-5.4, Claude, Gemini, Grok, DeepSeek and more, all in one place.",
 }
 
 export default async function RootLayout({
@@ -47,7 +48,7 @@ export default async function RootLayout({
         <Script
           defer
           src="https://assets.onedollarstats.com/stonks.js"
-          {...(isDev ? { "data-debug": "zola.chat" } : {})}
+          {...(isDev ? { "data-debug": "nottoai.com" } : {})}
         />
       ) : null}
       <body

@@ -35,11 +35,9 @@ import {
   CaretDownIcon,
   CheckIcon,
   MagnifyingGlassIcon,
-  StarIcon,
 } from "@phosphor-icons/react"
 import { AnimatePresence, motion } from "motion/react"
 import { useRef, useState } from "react"
-import { ProModelDialog } from "../model-selector/pro-dialog"
 import { SubMenu } from "../model-selector/sub-menu"
 
 type MultiModelSelectorProps = {
@@ -68,8 +66,6 @@ export function MultiModelSelector({
   const [hoveredModel, setHoveredModel] = useState<string | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [isProDialogOpen, setIsProDialogOpen] = useState(false)
-  const [selectedProModel, setSelectedProModel] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
 
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -85,13 +81,7 @@ export function MultiModelSelector({
     }
   )
 
-  const handleModelToggle = (modelId: string, isLocked: boolean) => {
-    if (isLocked) {
-      setSelectedProModel(modelId)
-      setIsProDialogOpen(true)
-      return
-    }
-
+  const handleModelToggle = (modelId: string) => {
     const isSelected = selectedModelIds.includes(modelId)
 
     if (isSelected) {
@@ -104,7 +94,6 @@ export function MultiModelSelector({
   }
 
   const renderModelItem = (model: ModelConfig) => {
-    const isLocked = !model.accessible
     const isSelected = selectedModelIds.includes(model.id)
     const isAtLimit = selectedModelIds.length >= maxModels
     const provider = PROVIDERS.find((provider) => provider.id === model.icon)
@@ -116,33 +105,25 @@ export function MultiModelSelector({
           "hover:bg-accent/50 flex w-full cursor-pointer items-center justify-between px-3 py-2",
           isSelected && "bg-accent"
         )}
-        onClick={() => handleModelToggle(model.id, isLocked)}
+        onClick={() => handleModelToggle(model.id)}
       >
         <div className="flex items-center gap-3">
           <Checkbox
             checked={isSelected}
-            disabled={isLocked || (!isSelected && isAtLimit)}
+            disabled={!isSelected && isAtLimit}
             onClick={(e) => e.stopPropagation()}
-            onChange={() => handleModelToggle(model.id, isLocked)}
+            onChange={() => handleModelToggle(model.id)}
           />
           {provider?.icon && <provider.icon className="size-5" />}
           <div className="flex flex-col gap-0">
             <span className="text-sm">{model.name}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {isLocked && (
-            <div className="border-input bg-accent text-muted-foreground flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-medium">
-              <StarIcon className="size-2" />
-              <span>Locked</span>
-            </div>
-          )}
-          {!isSelected && isAtLimit && !isLocked && (
-            <div className="border-input bg-muted text-muted-foreground flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-medium">
-              <span>Limit</span>
-            </div>
-          )}
-        </div>
+        {!isSelected && isAtLimit && (
+          <div className="border-input bg-muted text-muted-foreground flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-medium">
+            <span>Limit</span>
+          </div>
+        )}
       </div>
     )
   }
@@ -334,11 +315,6 @@ export function MultiModelSelector({
   if (isMobile) {
     return (
       <div>
-        <ProModelDialog
-          isOpen={isProDialogOpen}
-          setIsOpen={setIsProDialogOpen}
-          currentModel={selectedProModel || ""}
-        />
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
           <DrawerTrigger asChild>{trigger}</DrawerTrigger>
           <DrawerContent>
@@ -375,9 +351,7 @@ export function MultiModelSelector({
                     No results found.
                   </p>
                   <a
-                    href="https://github.com/ibelick/zola/issues/new?title=Model%20Request%3A%20"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="mailto:support@nottoai.com?subject=Model%20Request"
                     className="text-muted-foreground text-sm underline"
                   >
                     Request a new model
@@ -393,11 +367,6 @@ export function MultiModelSelector({
 
   return (
     <div>
-      <ProModelDialog
-        isOpen={isProDialogOpen}
-        setIsOpen={setIsProDialogOpen}
-        currentModel={selectedProModel || ""}
-      />
       <Tooltip>
         <DropdownMenu
           open={isDropdownOpen}
@@ -449,7 +418,6 @@ export function MultiModelSelector({
                 </div>
               ) : filteredModels.length > 0 ? (
                 filteredModels.map((model) => {
-                  const isLocked = !model.accessible
                   const isSelected = selectedModelIds.includes(model.id)
                   const provider = PROVIDERS.find(
                     (provider) => provider.id === model.icon
@@ -464,7 +432,7 @@ export function MultiModelSelector({
                       )}
                       onSelect={(e) => {
                         e.preventDefault()
-                        handleModelToggle(model.id, isLocked)
+                        handleModelToggle(model.id)
                       }}
                       onFocus={() => {
                         if (isDropdownOpen) {
@@ -483,14 +451,7 @@ export function MultiModelSelector({
                           <span className="text-sm">{model.name}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {isSelected && <CheckIcon className="size-4" />}
-                        {isLocked && (
-                          <div className="border-input bg-accent text-muted-foreground flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-medium">
-                            <span>Locked</span>
-                          </div>
-                        )}
-                      </div>
+                      {isSelected && <CheckIcon className="size-4" />}
                     </DropdownMenuItem>
                   )
                 })
@@ -500,9 +461,7 @@ export function MultiModelSelector({
                     No results found.
                   </p>
                   <a
-                    href="https://github.com/ibelick/zola/issues/new?title=Model%20Request%3A%20"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="mailto:support@nottoai.com?subject=Model%20Request"
                     className="text-muted-foreground text-sm underline"
                   >
                     Request a new model

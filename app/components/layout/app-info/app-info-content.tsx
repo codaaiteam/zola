@@ -2,25 +2,18 @@ export function AppInfoContent() {
   return (
     <div className="space-y-4">
       <p className="text-foreground leading-relaxed">
-        <span className="font-medium">NottoAI</span> is the open-source interface
-        for AI chat.
+        <span className="font-medium">NottoAI</span> — AI chat with 16+ models.
         <br />
-        Multi-model, BYOK-ready, and fully self-hostable.
-        <br />
-        Use Claude, OpenAI, Gemini, local models, and more, all in one place.
-        <br />
+        GPT-5.4, Claude, Gemini, Grok, DeepSeek and more, all in one place.
       </p>
-      <p className="text-foreground leading-relaxed">
-        The code is available on{" "}
+      <p className="text-muted-foreground text-sm">
+        Questions? Contact{" "}
         <a
-          href="https://github.com/ibelick/zola"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="mailto:support@nottoai.com"
           className="underline"
         >
-          GitHub
+          support@nottoai.com
         </a>
-        .
       </p>
     </div>
   )

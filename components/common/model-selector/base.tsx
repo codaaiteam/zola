@@ -33,10 +33,8 @@ import { cn } from "@/lib/utils"
 import {
   CaretDownIcon,
   MagnifyingGlassIcon,
-  StarIcon,
 } from "@phosphor-icons/react"
 import { useRef, useState } from "react"
-import { ProModelDialog } from "./pro-dialog"
 import { SubMenu } from "./sub-menu"
 
 type ModelSelectorProps = {
@@ -64,8 +62,6 @@ export function ModelSelector({
   const [hoveredModel, setHoveredModel] = useState<string | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [isProDialogOpen, setIsProDialogOpen] = useState(false)
-  const [selectedProModel, setSelectedProModel] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
 
   // Ref for input to maintain focus
@@ -83,7 +79,6 @@ export function ModelSelector({
   )
 
   const renderModelItem = (model: ModelConfig) => {
-    const isLocked = !model.accessible
     const provider = PROVIDERS.find((provider) => provider.id === model.icon)
 
     return (
@@ -94,12 +89,6 @@ export function ModelSelector({
           selectedModelId === model.id && "bg-accent"
         )}
         onClick={() => {
-          if (isLocked) {
-            setSelectedProModel(model.id)
-            setIsProDialogOpen(true)
-            return
-          }
-
           setSelectedModelId(model.id)
           if (isMobile) {
             setIsDrawerOpen(false)
@@ -114,12 +103,6 @@ export function ModelSelector({
             <span className="text-sm">{model.name}</span>
           </div>
         </div>
-        {isLocked && (
-          <div className="border-input bg-accent text-muted-foreground flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-medium">
-            <StarIcon className="size-2" />
-            <span>Locked</span>
-          </div>
-        )}
       </div>
     )
   }
@@ -188,11 +171,6 @@ export function ModelSelector({
   if (isMobile) {
     return (
       <>
-        <ProModelDialog
-          isOpen={isProDialogOpen}
-          setIsOpen={setIsProDialogOpen}
-          currentModel={selectedProModel || ""}
-        />
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
           <DrawerTrigger asChild>{trigger}</DrawerTrigger>
           <DrawerContent>
@@ -227,9 +205,7 @@ export function ModelSelector({
                     No results found.
                   </p>
                   <a
-                    href="https://github.com/ibelick/zola/issues/new?title=Model%20Request%3A%20"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="mailto:support@nottoai.com?subject=Model%20Request"
                     className="text-muted-foreground text-sm underline"
                   >
                     Request a new model
@@ -245,11 +221,6 @@ export function ModelSelector({
 
   return (
     <div>
-      <ProModelDialog
-        isOpen={isProDialogOpen}
-        setIsOpen={setIsProDialogOpen}
-        currentModel={selectedProModel || ""}
-      />
       <Tooltip>
         <DropdownMenu
           open={isDropdownOpen}
@@ -298,7 +269,6 @@ export function ModelSelector({
                 </div>
               ) : filteredModels.length > 0 ? (
                 filteredModels.map((model) => {
-                  const isLocked = !model.accessible
                   const provider = PROVIDERS.find(
                     (provider) => provider.id === model.icon
                   )
@@ -311,12 +281,6 @@ export function ModelSelector({
                         selectedModelId === model.id && "bg-accent"
                       )}
                       onSelect={() => {
-                        if (isLocked) {
-                          setSelectedProModel(model.id)
-                          setIsProDialogOpen(true)
-                          return
-                        }
-
                         setSelectedModelId(model.id)
                         setIsDropdownOpen(false)
                       }}
@@ -337,11 +301,6 @@ export function ModelSelector({
                           <span className="text-sm">{model.name}</span>
                         </div>
                       </div>
-                      {isLocked && (
-                        <div className="border-input bg-accent text-muted-foreground flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-medium">
-                          <span>Locked</span>
-                        </div>
-                      )}
                     </DropdownMenuItem>
                   )
                 })
@@ -351,9 +310,7 @@ export function ModelSelector({
                     No results found.
                   </p>
                   <a
-                    href="https://github.com/ibelick/zola/issues/new?title=Model%20Request%3A%20"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="mailto:support@nottoai.com?subject=Model%20Request"
                     className="text-muted-foreground text-sm underline"
                   >
                     Request a new model

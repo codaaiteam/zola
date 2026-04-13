@@ -1,34 +1,6 @@
-import { APP_DOMAIN } from "@/lib/config"
 import type { UserProfile } from "@/lib/user/types"
-import { SupabaseClient } from "@supabase/supabase-js"
 import { fetchClient } from "./fetch"
-import { API_ROUTE_CREATE_GUEST, API_ROUTE_UPDATE_CHAT_MODEL } from "./routes"
-import { createClient } from "./supabase/client"
-
-/**
- * Creates a guest user record on the server
- */
-export async function createGuestUser(guestId: string) {
-  try {
-    const res = await fetchClient(API_ROUTE_CREATE_GUEST, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: guestId }),
-    })
-    const responseData = await res.json()
-    if (!res.ok) {
-      throw new Error(
-        responseData.error ||
-          `Failed to create guest user: ${res.status} ${res.statusText}`
-      )
-    }
-
-    return responseData
-  } catch (err) {
-    console.error("Error creating guest user:", err)
-    throw err
-  }
-}
+import { API_ROUTE_UPDATE_CHAT_MODEL } from "./routes"
 
 export class UsageLimitError extends Error {
   code: string
@@ -39,13 +11,7 @@ export class UsageLimitError extends Error {
 }
 
 /**
- * Checks the user's daily usage and increments both overall and daily counters.
- * Resets the daily counter if a new day (UTC) is detected.
- * Uses the `anonymous` flag from the user record to decide which daily limit applies.
- *
- * @param supabase - Your Supabase client.
- * @param userId - The ID of the user.
- * @returns The remaining daily limit.
+ * Checks the user's daily usage limits.
  */
 export async function checkRateLimits(
   userId: string,
@@ -100,51 +66,12 @@ export async function updateChatModel(chatId: string, model: string) {
 }
 
 /**
- * Signs in user with Google OAuth via Supabase
+ * Gets or returns the current user's ID (Clerk-based)
  */
-export async function signInWithGoogle(supabase: SupabaseClient) {
-  try {
-    const isDev = process.env.NODE_ENV === "development"
-
-    // Get base URL dynamically (will work in both browser and server environments)
-    const baseUrl = isDev
-      ? "http://localhost:3000"
-      : typeof window !== "undefined"
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_VERCEL_URL
-          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-          : APP_DOMAIN
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${baseUrl}/auth/callback`,
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent",
-        },
-      },
-    })
-
-    if (error) {
-      throw error
-    }
-
-    // Return the provider URL
-    return data
-  } catch (err) {
-    console.error("Error signing in with Google:", err)
-    throw err
-  }
-}
-
 export const getOrCreateGuestUserId = async (
   user: UserProfile | null
 ): Promise<string | null> => {
-  // If user is logged in via Clerk, use their ID
   if (user?.id) return user.id
-
-  // No authenticated user available
   console.warn("No authenticated user found. Please sign in.")
   return null
 }
