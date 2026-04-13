@@ -68,7 +68,7 @@ export default function PricingPage() {
         </div>
 
         {/* Plans Grid */}
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-5">
           {PRICING_PLANS.map((plan) => {
             const price =
               billingPeriod === "monthly"
@@ -174,96 +174,47 @@ export default function PricingPage() {
                   <th className="text-muted-foreground py-3 text-center font-medium">
                     Team
                   </th>
+                  <th className="text-muted-foreground py-3 text-center font-medium">
+                    Business
+                  </th>
+                  <th className="text-muted-foreground py-3 text-center font-medium">
+                    Enterprise
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {[
-                  { model: "GPT-4.1 Nano", free: true, pro: true, team: true },
-                  {
-                    model: "DeepSeek R1 (Free)",
-                    free: true,
-                    pro: true,
-                    team: true,
-                  },
-                  {
-                    model: "Llama 3.3 8B (Free)",
-                    free: true,
-                    pro: true,
-                    team: true,
-                  },
-                  { model: "GPT-4o / GPT-4.1", free: false, pro: true, team: true },
-                  {
-                    model: "Claude 3.5 Sonnet / Opus",
-                    free: false,
-                    pro: true,
-                    team: true,
-                  },
-                  {
-                    model: "Gemini 2.0 Pro / Flash",
-                    free: false,
-                    pro: true,
-                    team: true,
-                  },
-                  { model: "Grok", free: false, pro: true, team: true },
-                  {
-                    model: "DeepSeek R1 / V3",
-                    free: false,
-                    pro: true,
-                    team: true,
-                  },
-                  {
-                    model: "Mistral Large",
-                    free: false,
-                    pro: true,
-                    team: true,
-                  },
-                  {
-                    model: "Perplexity Sonar",
-                    free: false,
-                    pro: true,
-                    team: true,
-                  },
-                  {
-                    model: "Ollama (Local)",
-                    free: true,
-                    pro: true,
-                    team: true,
-                  },
+                  { model: "GPT-4.1 Nano", tiers: [true, true, true, true, true] },
+                  { model: "DeepSeek R1 (Free)", tiers: [true, true, true, true, true] },
+                  { model: "Llama 3.3 8B (Free)", tiers: [true, true, true, true, true] },
+                  { model: "GPT-4.1 / GPT-4.1 Mini", tiers: [false, true, true, true, true] },
+                  { model: "Claude Sonnet 4 / 3.5", tiers: [false, true, true, true, true] },
+                  { model: "Gemini 2.5 Pro / Flash", tiers: [false, true, true, true, true] },
+                  { model: "Grok 3 Mini", tiers: [false, true, true, true, true] },
+                  { model: "O3 Mini / O4 Mini", tiers: [false, true, true, true, true] },
+                  { model: "Perplexity Sonar (all)", tiers: [false, true, true, true, true] },
+                  { model: "GPT-4.5 Preview", tiers: [false, false, false, true, true] },
+                  { model: "Custom model routing", tiers: [false, false, false, true, true] },
+                  { model: "API access", tiers: [false, false, false, true, true] },
+                  { model: "SSO & team management", tiers: [false, false, false, false, true] },
+                  { model: "On-premise deployment", tiers: [false, false, false, false, true] },
                 ].map((row) => (
                   <tr key={row.model} className="border-b last:border-0">
                     <td className="text-foreground py-3 font-medium">
                       {row.model}
                     </td>
-                    <td className="py-3 text-center">
-                      {row.free ? (
-                        <Check
-                          className="text-foreground mx-auto size-4"
-                          weight="bold"
-                        />
-                      ) : (
-                        <span className="text-muted-foreground/40">—</span>
-                      )}
-                    </td>
-                    <td className="py-3 text-center">
-                      {row.pro ? (
-                        <Check
-                          className="text-foreground mx-auto size-4"
-                          weight="bold"
-                        />
-                      ) : (
-                        <span className="text-muted-foreground/40">—</span>
-                      )}
-                    </td>
-                    <td className="py-3 text-center">
-                      {row.team ? (
-                        <Check
-                          className="text-foreground mx-auto size-4"
-                          weight="bold"
-                        />
-                      ) : (
-                        <span className="text-muted-foreground/40">—</span>
-                      )}
-                    </td>
+                    {row.tiers.map((available, i) => (
+                      <td key={i} className="py-3 text-center">
+                        {available ? (
+                          <Check
+                            className="text-foreground mx-auto size-4"
+                            weight="bold"
+                          />
+                        ) : (
+                          <span className="text-muted-foreground/40">—</span>
+                        )}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
