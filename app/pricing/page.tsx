@@ -3,22 +3,38 @@
 import { useState } from "react"
 import { Check } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
-import { PRICING_PLANS, MODEL_CREDIT_RATES } from "@/lib/pricing"
+import { PRICING_PLANS } from "@/lib/pricing"
 import { ZolaFaviconIcon } from "@/components/icons/zola"
-import { APP_NAME } from "@/lib/config"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+
+const USAGE_EXAMPLES = [
+  { model: "GPT-5.4 Nano", messages: "~5,300", note: "Fast everyday tasks" },
+  { model: "Claude Sonnet 4.6", messages: "~410", note: "Complex writing & analysis" },
+  { model: "Gemini 3.1 Pro", messages: "~530", note: "Research & reasoning" },
+  { model: "GPT-5.4", messages: "~410", note: "Advanced problem solving" },
+]
 
 export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly"
   )
 
+  // Only show Free and Pro prominently
+  const mainPlans = PRICING_PLANS.filter(
+    (p) => p.tier === "free" || p.tier === "pro"
+  )
+  const teamPlan = PRICING_PLANS.find((p) => p.tier === "team")
+
   return (
     <div className="bg-background min-h-screen">
+      {/* Header */}
       <header className="border-b">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-base font-medium tracking-tight">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-base font-medium tracking-tight"
+          >
             <ZolaFaviconIcon className="size-7" />
             <span className="font-medium">Notto</span>
             <span className="font-normal opacity-80">AI</span>
@@ -31,24 +47,32 @@ export default function PricingPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+      <main className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+        {/* Trust bar */}
+        <div className="mb-6 text-center">
+          <p className="text-muted-foreground text-sm">
+            Supports GPT-5.4, Claude, Gemini, DeepSeek, Grok & more
+          </p>
+        </div>
+
         {/* Title */}
         <div className="mb-12 text-center">
           <h1 className="text-foreground text-4xl font-semibold tracking-tight sm:text-5xl">
-            Simple, transparent pricing
+            One Subscription. All AI Models.
           </h1>
           <p className="text-muted-foreground mt-4 text-lg">
-            Pay by credits. Different models, different rates. Use what you
-            need.
+            Stop paying for multiple AI subscriptions. Access every model in one
+            place.
           </p>
 
+          {/* Billing toggle */}
           <div className="mt-8 inline-flex items-center gap-2 rounded-full border p-1">
             <button
               onClick={() => setBillingPeriod("monthly")}
               className={cn(
                 "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
                 billingPeriod === "monthly"
-                  ? "bg-foreground text-background"
+                  ? "bg-[#10B981] text-white"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -59,87 +83,95 @@ export default function PricingPage() {
               className={cn(
                 "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
                 billingPeriod === "yearly"
-                  ? "bg-foreground text-background"
+                  ? "bg-[#10B981] text-white"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
               Yearly
-              <span className="ml-1.5 text-xs text-emerald-500">Save 17%</span>
+              <span className="ml-1.5 text-xs opacity-80">Save 17%</span>
             </button>
           </div>
         </div>
 
-        {/* Plans Grid */}
-        <div className="mx-auto grid max-w-sm gap-5 md:max-w-none md:grid-cols-3 lg:grid-cols-5">
-          {PRICING_PLANS.map((plan) => {
+        {/* Plans — Free + Pro */}
+        <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
+          {mainPlans.map((plan) => {
             const price =
               billingPeriod === "monthly"
                 ? plan.monthlyPrice
                 : plan.yearlyPrice / 12
+            const isPro = plan.tier === "pro"
 
             return (
               <div
                 key={plan.tier}
                 className={cn(
-                  "relative flex flex-col rounded-2xl border p-5",
-                  plan.highlight
-                    ? "border-foreground ring-foreground/10 shadow-lg ring-1"
-                    : "border-border"
+                  "relative flex flex-col rounded-2xl border p-6",
+                  isPro
+                    ? "border-[#10B981] shadow-lg ring-1 ring-[#10B981]/20"
+                    : "border-border opacity-80"
                 )}
               >
-                {plan.highlight && (
-                  <div className="bg-foreground text-background absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-medium">
+                {isPro && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#10B981] px-3 py-0.5 text-xs font-medium text-white">
                     Most Popular
                   </div>
                 )}
 
-                <div className="mb-4">
+                <div className="mb-5">
                   <h2 className="text-foreground text-lg font-semibold">
                     {plan.name}
                   </h2>
-                  <p className="text-muted-foreground mt-1 text-xs">
+                  <p className="text-muted-foreground mt-1 text-sm">
                     {plan.description}
                   </p>
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-5">
                   {plan.monthlyPrice === 0 ? (
-                    <div className="text-foreground text-3xl font-semibold">
+                    <div className="text-foreground text-4xl font-semibold">
                       Free
                     </div>
                   ) : (
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-foreground text-3xl font-semibold">
-                        ${price.toFixed(price % 1 === 0 ? 0 : 1)}
-                      </span>
-                      <span className="text-muted-foreground text-sm">
-                        /mo
-                      </span>
-                    </div>
+                    <>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-foreground text-4xl font-semibold">
+                          ${price.toFixed(price % 1 === 0 ? 0 : 1)}
+                        </span>
+                        <span className="text-muted-foreground text-sm">
+                          /mo
+                        </span>
+                      </div>
+                      {billingPeriod === "yearly" && (
+                        <p className="text-muted-foreground mt-1 text-xs">
+                          ${plan.yearlyPrice} billed yearly
+                        </p>
+                      )}
+                    </>
                   )}
-                  {billingPeriod === "yearly" && plan.yearlyPrice > 0 && (
-                    <p className="text-muted-foreground mt-1 text-xs">
-                      ${plan.yearlyPrice} billed yearly
-                    </p>
-                  )}
-                  <p className="text-muted-foreground mt-2 text-xs font-medium">
-                    {plan.credits.toLocaleString()} credits / month
-                  </p>
                 </div>
 
                 <Button
-                  className="mb-4 w-full text-sm"
-                  variant={plan.highlight ? "default" : "outline"}
-                  size="sm"
+                  className={cn(
+                    "mb-5 w-full",
+                    isPro
+                      ? ""
+                      : "border-border bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
+                  variant={isPro ? "default" : "outline"}
+                  size="default"
                 >
                   {plan.cta}
                 </Button>
 
-                <ul className="flex-1 space-y-2">
+                <ul className="flex-1 space-y-2.5">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs">
+                    <li key={i} className="flex items-start gap-2 text-sm">
                       <Check
-                        className="text-foreground mt-0.5 size-3.5 shrink-0"
+                        className={cn(
+                          "mt-0.5 size-4 shrink-0",
+                          isPro ? "text-[#10B981]" : "text-muted-foreground"
+                        )}
                         weight="bold"
                       />
                       <span className="text-muted-foreground">{feature}</span>
@@ -151,88 +183,85 @@ export default function PricingPage() {
           })}
         </div>
 
-        {/* Credit Rates Table */}
+        {/* Team plan — compact */}
+        {teamPlan && (
+          <div className="mx-auto mt-6 max-w-3xl rounded-2xl border p-5">
+            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <div>
+                <h3 className="text-foreground font-semibold">
+                  {teamPlan.name}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {teamPlan.description} &mdash;{" "}
+                  {teamPlan.credits.toLocaleString()} credits/mo
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-foreground text-xl font-semibold">
+                  $
+                  {billingPeriod === "monthly"
+                    ? teamPlan.monthlyPrice
+                    : (teamPlan.yearlyPrice / 12).toFixed(1)}
+                  /mo
+                </span>
+                <Button variant="outline" size="sm">
+                  {teamPlan.cta}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Usage examples — replaces complex credit table */}
         <div className="mt-20">
-          <h2 className="text-foreground mb-4 text-center text-2xl font-semibold">
-            Credit Rates by Model
+          <h2 className="text-foreground mb-2 text-center text-2xl font-semibold">
+            What can you do with Pro?
           </h2>
           <p className="text-muted-foreground mb-8 text-center text-sm">
-            1 credit = 1,000 tokens (input + output combined). More powerful
-            models consume more credits per token.
+            8,000 credits per month gets you approximately:
           </p>
-          <div className="mx-auto max-w-3xl overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-muted-foreground py-3 text-left font-medium">
-                    Model
-                  </th>
-                  <th className="text-muted-foreground py-3 text-right font-medium">
-                    Credits / 1K tokens
-                  </th>
-                  <th className="text-muted-foreground py-3 text-right font-medium">
-                    ~Messages per 1K credits
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {MODEL_CREDIT_RATES.map((model) => {
-                  // Estimate: avg message = 1.5K tokens (500 in + 1000 out)
-                  const msgsPerK =
-                    model.rate === 0
-                      ? "Unlimited"
-                      : Math.floor(1000 / (model.rate * 1.5)).toString()
-                  return (
-                    <tr key={model.label} className="border-b last:border-0">
-                      <td className="text-foreground py-2.5 font-medium">
-                        {model.label}
-                      </td>
-                      <td className="text-muted-foreground py-2.5 text-right">
-                        {model.rate === 0 ? (
-                          <span className="text-emerald-500 font-medium">
-                            Free
-                          </span>
-                        ) : (
-                          model.rate
-                        )}
-                      </td>
-                      <td className="text-muted-foreground py-2.5 text-right">
-                        {msgsPerK}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+          <div className="mx-auto grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
+            {USAGE_EXAMPLES.map((ex) => (
+              <div
+                key={ex.model}
+                className="rounded-xl border p-4 text-center"
+              >
+                <div className="text-foreground text-2xl font-semibold">
+                  {ex.messages}
+                </div>
+                <div className="text-foreground mt-1 text-sm font-medium">
+                  {ex.model}
+                </div>
+                <div className="text-muted-foreground mt-0.5 text-xs">
+                  {ex.note}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* FAQ */}
+        {/* Why NottoAI */}
         <div className="mt-20">
           <h2 className="text-foreground mb-8 text-center text-2xl font-semibold">
-            Frequently Asked Questions
+            Why NottoAI?
           </h2>
           <div className="mx-auto max-w-2xl space-y-6">
             {[
               {
-                q: "How do credits work?",
-                a: "1 credit = 1,000 tokens. Each model consumes credits at different rates based on its cost. Cheaper models like GPT-5.4 Nano use 1 credit per 1K tokens, while premium models like Claude Opus 4.6 use 22 credits. Free models (DeepSeek R1, Llama) don't consume any credits.",
+                q: "Why not use ChatGPT directly?",
+                a: "NottoAI lets you switch between all AI models in one place — no multiple subscriptions needed. ChatGPT Plus is $20/mo for one model. NottoAI Pro is $9.90/mo for 16+ models.",
               },
               {
-                q: "What counts as a token?",
-                a: "Both input (your message + conversation history) and output (AI response) count towards token usage. A typical short conversation uses about 1,500 tokens per exchange.",
+                q: "How do credits work?",
+                a: "Credits are simple: different models cost different amounts. Lightweight models like GPT-5.4 Nano use very few credits, while premium models like Claude Opus use more. Free models like DeepSeek R1 don't use any credits at all.",
               },
               {
                 q: "What happens when I run out of credits?",
-                a: "You can still use free models (DeepSeek R1, Llama 3.3). Credits reset at the beginning of each billing cycle. Unused credits do not roll over.",
+                a: "You can still use free models (DeepSeek R1, Llama 3.3). Credits reset at the beginning of each billing cycle.",
               },
               {
                 q: "Can I cancel anytime?",
-                a: "Yes. You retain access until the end of your billing period.",
-              },
-              {
-                q: "Do you offer refunds?",
-                a: "We offer a 7-day money-back guarantee if you are not satisfied.",
+                a: "Yes. You retain access until the end of your billing period. 7-day money-back guarantee.",
               },
             ].map((item, i) => (
               <div key={i} className="space-y-2">
