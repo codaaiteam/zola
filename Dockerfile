@@ -24,11 +24,9 @@ COPY . .
 # Set Next.js telemetry to disabled
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build-time args for NEXT_PUBLIC_ variables (required by Next.js at build time)
-ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
-ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+# NEXT_PUBLIC_ variables must be available at build time for Next.js
+ENV NEXT_PUBLIC_SUPABASE_URL=https://hjvbqkyodafpzfmlevws.supabase.co
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqdmJxa3lvZGFmcHpmbWxldndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NjM3MzcsImV4cCI6MjA5MTUzOTczN30.AHK6dDsz9kS-I04wkxccXvu1vdTKdJUUFE_Txt368Kg
 
 # Build the application
 RUN npm run build
