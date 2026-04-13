@@ -28,7 +28,7 @@ export default function PricingPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         {/* Title */}
         <div className="mb-12 text-center">
           <h1 className="text-foreground text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -67,7 +67,7 @@ export default function PricingPage() {
         </div>
 
         {/* Plans Grid */}
-        <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-5">
+        <div className="mx-auto grid max-w-sm gap-5 md:max-w-none md:grid-cols-3 lg:grid-cols-5">
           {PRICING_PLANS.map((plan) => {
             const price =
               billingPeriod === "monthly"
@@ -157,7 +157,7 @@ export default function PricingPage() {
             1 credit = 1,000 tokens (input + output combined). More powerful
             models consume more credits per token.
           </p>
-          <div className="mx-auto max-w-2xl overflow-x-auto">
+          <div className="mx-auto max-w-3xl overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
