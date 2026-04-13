@@ -30,7 +30,17 @@ export async function GET(request: Request) {
     )
   }
 
-  const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+  let data, error
+  try {
+    const result = await supabase.auth.exchangeCodeForSession(code)
+    data = result.data
+    error = result.error
+  } catch (err) {
+    console.error("exchangeCodeForSession threw:", err)
+    return NextResponse.redirect(
+      `${origin}/auth/error?message=${encodeURIComponent("Failed to exchange code for session")}`
+    )
+  }
 
   if (error) {
     console.error("Auth error:", error)
@@ -64,8 +74,8 @@ export async function GET(request: Request) {
     console.error("Unexpected user insert error:", err)
   }
 
-  const host = request.headers.get("host")
-  const protocol = host?.includes("localhost") ? "http" : "https"
+  const host = request.headers.get("host") || request.headers.get("x-forwarded-host")
+  const protocol = request.headers.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https")
 
   const redirectUrl = `${protocol}://${host}${next}`
 
