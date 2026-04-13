@@ -14,8 +14,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { isSupabaseEnabled } from "@/lib/supabase/config"
 import { useUser } from "@/lib/user-store/provider"
-import { GithubLogoIcon } from "@phosphor-icons/react"
+import { GithubLogoIcon, SignOut, SignIn } from "@phosphor-icons/react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { AppInfoTrigger } from "./app-info/app-info-trigger"
 import { FeedbackTrigger } from "./feedback/feedback-trigger"
@@ -23,8 +25,19 @@ import { SettingsTrigger } from "./settings/settings-trigger"
 
 export function UserMenu() {
   const { user } = useUser()
+  const router = useRouter()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const [isSettingsOpen, setSettingsOpen] = useState(false)
+
+  const handleSignOut = async () => {
+    if (isSupabaseEnabled) {
+      const { createClient } = await import("@/lib/supabase/client")
+      const supabase = createClient()
+      if (supabase) await supabase.auth.signOut()
+    }
+    router.push("/auth")
+    router.refresh()
+  }
 
   if (!user) return null
 
@@ -95,6 +108,24 @@ export function UserMenu() {
             <span>GitHub</span>
           </a>
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        {user?.anonymous ? (
+          <DropdownMenuItem
+            onClick={() => router.push("/auth")}
+            className="flex items-center gap-2"
+          >
+            <SignIn className="size-4" />
+            <span>Sign In</span>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            onClick={handleSignOut}
+            className="flex items-center gap-2"
+          >
+            <SignOut className="size-4" />
+            <span>Sign Out</span>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )
