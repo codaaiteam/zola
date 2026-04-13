@@ -1,12 +1,8 @@
-// Check at runtime whether Supabase is configured.
-// Cannot use a simple const because NEXT_PUBLIC_ vars get inlined at build time,
-// and they may not be available during the build phase (e.g. Railway Nixpacks).
-export function getIsSupabaseEnabled(): boolean {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
-}
-
-// Keep backward compatibility — this will be true at runtime when env vars are set
-export const isSupabaseEnabled = getIsSupabaseEnabled()
+// NEXT_PUBLIC_ vars are inlined at build time by Next.js.
+// If the build environment has them, this will be true.
+// If not (e.g. Railway Nixpacks without build-time env vars), this will be false.
+// We also check at runtime for server-side code.
+export const isSupabaseEnabled = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
