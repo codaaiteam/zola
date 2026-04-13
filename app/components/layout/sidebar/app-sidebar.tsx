@@ -13,12 +13,16 @@ import {
 import { useChats } from "@/lib/chat-store/chats/provider"
 import {
   ChatTeardropText,
+  CrownSimple,
   GithubLogo,
+  Compass,
+  Gear,
   MagnifyingGlass,
   NotePencilIcon,
   X,
 } from "@phosphor-icons/react"
 import { Pin } from "lucide-react"
+import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useMemo } from "react"
 import { HistoryTrigger } from "../../history/history-trigger"
@@ -91,6 +95,27 @@ export function AppSidebar() {
               hasPopover={false}
             />
           </div>
+          {/* Navigation Links */}
+          <div className="mb-3 flex w-full flex-col items-start gap-0">
+            <Link
+              href="/pricing"
+              className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <CrownSimple size={20} />
+                Upgrade Plan
+              </div>
+            </Link>
+            <Link
+              href="/"
+              className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <Compass size={20} />
+                Explore Models
+              </div>
+            </Link>
+          </div>
           <SidebarProject />
           {isLoading ? (
             <div className="h-full" />
@@ -131,24 +156,24 @@ export function AppSidebar() {
         </ScrollArea>
       </SidebarContent>
       <SidebarFooter className="border-border/40 mb-2 border-t p-3">
-        <a
-          href="https://github.com/ibelick/zola"
-          className="hover:bg-muted flex items-center gap-2 rounded-md p-2"
-          target="_blank"
-          aria-label="Star the repo on GitHub"
-        >
-          <div className="rounded-full border p-1">
-            <GithubLogo className="size-4" />
-          </div>
-          <div className="flex flex-col">
-            <div className="text-sidebar-foreground text-sm font-medium">
-              NottoAI is open source
-            </div>
-            <div className="text-sidebar-foreground/70 text-xs">
-              Star the repo on GitHub!
-            </div>
-          </div>
-        </a>
+        <div className="flex flex-col gap-1">
+          <Link
+            href="/pricing"
+            className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+          >
+            <CrownSimple size={16} />
+            <span>Pricing</span>
+          </Link>
+          <a
+            href="https://github.com/ibelick/zola"
+            className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+            target="_blank"
+            aria-label="GitHub"
+          >
+            <GithubLogo size={16} />
+            <span>GitHub</span>
+          </a>
+        </div>
       </SidebarFooter>
     </Sidebar>
   )
