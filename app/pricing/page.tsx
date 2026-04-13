@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Check } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
-import { PRICING_PLANS } from "@/lib/pricing"
+import { PRICING_PLANS, MODEL_CREDIT_RATES } from "@/lib/pricing"
 import { APP_NAME } from "@/lib/config"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -15,7 +15,6 @@ export default function PricingPage() {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Header */}
       <header className="border-b">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-xl font-medium tracking-tight">
@@ -29,17 +28,17 @@ export default function PricingPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         {/* Title */}
         <div className="mb-12 text-center">
           <h1 className="text-foreground text-4xl font-semibold tracking-tight sm:text-5xl">
             Simple, transparent pricing
           </h1>
           <p className="text-muted-foreground mt-4 text-lg">
-            Access the best AI models in one place. Pay for what you need.
+            Pay by credits. Different models, different rates. Use what you
+            need.
           </p>
 
-          {/* Billing Toggle */}
           <div className="mt-8 inline-flex items-center gap-2 rounded-full border p-1">
             <button
               onClick={() => setBillingPeriod("monthly")}
@@ -79,7 +78,7 @@ export default function PricingPage() {
               <div
                 key={plan.tier}
                 className={cn(
-                  "relative flex flex-col rounded-2xl border p-6",
+                  "relative flex flex-col rounded-2xl border p-5",
                   plan.highlight
                     ? "border-foreground ring-foreground/10 shadow-lg ring-1"
                     : "border-border"
@@ -91,28 +90,27 @@ export default function PricingPage() {
                   </div>
                 )}
 
-                <div className="mb-6">
+                <div className="mb-4">
                   <h2 className="text-foreground text-lg font-semibold">
                     {plan.name}
                   </h2>
-                  <p className="text-muted-foreground mt-1 text-sm">
+                  <p className="text-muted-foreground mt-1 text-xs">
                     {plan.description}
                   </p>
                 </div>
 
-                {/* Price */}
-                <div className="mb-6">
+                <div className="mb-4">
                   {plan.monthlyPrice === 0 ? (
-                    <div className="text-foreground text-4xl font-semibold">
+                    <div className="text-foreground text-3xl font-semibold">
                       Free
                     </div>
                   ) : (
                     <div className="flex items-baseline gap-1">
-                      <span className="text-foreground text-4xl font-semibold">
+                      <span className="text-foreground text-3xl font-semibold">
                         ${price.toFixed(price % 1 === 0 ? 0 : 1)}
                       </span>
                       <span className="text-muted-foreground text-sm">
-                        /month
+                        /mo
                       </span>
                     </div>
                   )}
@@ -121,27 +119,24 @@ export default function PricingPage() {
                       ${plan.yearlyPrice} billed yearly
                     </p>
                   )}
+                  <p className="text-muted-foreground mt-2 text-xs font-medium">
+                    {plan.credits.toLocaleString()} credits / month
+                  </p>
                 </div>
 
-                {/* CTA */}
                 <Button
-                  className={cn(
-                    "mb-6 w-full",
-                    plan.highlight
-                      ? ""
-                      : "bg-background text-foreground border hover:bg-accent"
-                  )}
+                  className="mb-4 w-full text-sm"
                   variant={plan.highlight ? "default" : "outline"}
+                  size="sm"
                 >
                   {plan.cta}
                 </Button>
 
-                {/* Features */}
-                <ul className="flex-1 space-y-3">
+                <ul className="flex-1 space-y-2">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
+                    <li key={i} className="flex items-start gap-2 text-xs">
                       <Check
-                        className="text-foreground mt-0.5 size-4 shrink-0"
+                        className="text-foreground mt-0.5 size-3.5 shrink-0"
                         weight="bold"
                       />
                       <span className="text-muted-foreground">{feature}</span>
@@ -153,70 +148,57 @@ export default function PricingPage() {
           })}
         </div>
 
-        {/* Model Table */}
+        {/* Credit Rates Table */}
         <div className="mt-20">
-          <h2 className="text-foreground mb-8 text-center text-2xl font-semibold">
-            Model Access by Plan
+          <h2 className="text-foreground mb-4 text-center text-2xl font-semibold">
+            Credit Rates by Model
           </h2>
-          <div className="overflow-x-auto">
+          <p className="text-muted-foreground mb-8 text-center text-sm">
+            1 credit = 1,000 tokens (input + output combined). More powerful
+            models consume more credits per token.
+          </p>
+          <div className="mx-auto max-w-2xl overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
                   <th className="text-muted-foreground py-3 text-left font-medium">
                     Model
                   </th>
-                  <th className="text-muted-foreground py-3 text-center font-medium">
-                    Free
+                  <th className="text-muted-foreground py-3 text-right font-medium">
+                    Credits / 1K tokens
                   </th>
-                  <th className="text-muted-foreground py-3 text-center font-medium">
-                    Pro
-                  </th>
-                  <th className="text-muted-foreground py-3 text-center font-medium">
-                    Team
-                  </th>
-                  <th className="text-muted-foreground py-3 text-center font-medium">
-                    Business
-                  </th>
-                  <th className="text-muted-foreground py-3 text-center font-medium">
-                    Enterprise
+                  <th className="text-muted-foreground py-3 text-right font-medium">
+                    ~Messages per 1K credits
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  { model: "GPT-4.1 Nano", tiers: [true, true, true, true, true] },
-                  { model: "DeepSeek R1 (Free)", tiers: [true, true, true, true, true] },
-                  { model: "Llama 3.3 8B (Free)", tiers: [true, true, true, true, true] },
-                  { model: "GPT-4.1 / GPT-4.1 Mini", tiers: [false, true, true, true, true] },
-                  { model: "Claude Sonnet 4 / 3.5", tiers: [false, true, true, true, true] },
-                  { model: "Gemini 2.5 Pro / Flash", tiers: [false, true, true, true, true] },
-                  { model: "Grok 3 Mini", tiers: [false, true, true, true, true] },
-                  { model: "O3 Mini / O4 Mini", tiers: [false, true, true, true, true] },
-                  { model: "Perplexity Sonar (all)", tiers: [false, true, true, true, true] },
-                  { model: "GPT-4.5 Preview", tiers: [false, false, false, true, true] },
-                  { model: "Custom model routing", tiers: [false, false, false, true, true] },
-                  { model: "API access", tiers: [false, false, false, true, true] },
-                  { model: "SSO & team management", tiers: [false, false, false, false, true] },
-                  { model: "On-premise deployment", tiers: [false, false, false, false, true] },
-                ].map((row) => (
-                  <tr key={row.model} className="border-b last:border-0">
-                    <td className="text-foreground py-3 font-medium">
-                      {row.model}
-                    </td>
-                    {row.tiers.map((available, i) => (
-                      <td key={i} className="py-3 text-center">
-                        {available ? (
-                          <Check
-                            className="text-foreground mx-auto size-4"
-                            weight="bold"
-                          />
+                {MODEL_CREDIT_RATES.map((model) => {
+                  // Estimate: avg message = 1.5K tokens (500 in + 1000 out)
+                  const msgsPerK =
+                    model.rate === 0
+                      ? "Unlimited"
+                      : Math.floor(1000 / (model.rate * 1.5)).toString()
+                  return (
+                    <tr key={model.label} className="border-b last:border-0">
+                      <td className="text-foreground py-2.5 font-medium">
+                        {model.label}
+                      </td>
+                      <td className="text-muted-foreground py-2.5 text-right">
+                        {model.rate === 0 ? (
+                          <span className="text-emerald-500 font-medium">
+                            Free
+                          </span>
                         ) : (
-                          <span className="text-muted-foreground/40">—</span>
+                          model.rate
                         )}
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                      <td className="text-muted-foreground py-2.5 text-right">
+                        {msgsPerK}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
@@ -230,24 +212,24 @@ export default function PricingPage() {
           <div className="mx-auto max-w-2xl space-y-6">
             {[
               {
-                q: "What happens when I reach my daily limit?",
-                a: "You can wait for the next day when limits reset, or upgrade to a higher plan for more messages. Free-tier models like GPT-4.1 Nano remain available.",
+                q: "How do credits work?",
+                a: "1 credit = 1,000 tokens. Each model consumes credits at different rates based on its cost. Cheaper models like GPT-5.4 Nano use 1 credit per 1K tokens, while premium models like Claude Opus 4.6 use 22 credits. Free models (DeepSeek R1, Llama) don't consume any credits.",
               },
               {
-                q: "Can I bring my own API keys?",
-                a: "Yes! Pro and Team plans support BYOK (Bring Your Own Key). Add your own OpenAI, Anthropic, or other API keys to use your personal quotas.",
+                q: "What counts as a token?",
+                a: "Both input (your message + conversation history) and output (AI response) count towards token usage. A typical short conversation uses about 1,500 tokens per exchange.",
               },
               {
-                q: "What are pro model messages?",
-                a: "Pro models include GPT-4o, Claude 3.5, Gemini Pro, and other premium models. These have separate daily limits because they cost more to run.",
+                q: "What happens when I run out of credits?",
+                a: "You can still use free models (DeepSeek R1, Llama 3.3). Credits reset at the beginning of each billing cycle. Unused credits do not roll over.",
               },
               {
                 q: "Can I cancel anytime?",
-                a: "Yes, you can cancel your subscription at any time. You will retain access until the end of your billing period.",
+                a: "Yes. You retain access until the end of your billing period.",
               },
               {
                 q: "Do you offer refunds?",
-                a: "We offer a 7-day money-back guarantee if you are not satisfied with your plan.",
+                a: "We offer a 7-day money-back guarantee if you are not satisfied.",
               },
             ].map((item, i) => (
               <div key={i} className="space-y-2">

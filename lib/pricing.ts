@@ -7,14 +7,30 @@ export interface PricingPlan {
   yearlyPrice: number
   description: string
   features: string[]
-  limits: {
-    dailyMessages: number
-    dailyProModelMessages: number
-    fileUploads: number
-  }
+  credits: number
   highlight?: boolean
   cta: string
 }
+
+// 1 credit = 1,000 tokens. Different models consume credits at different rates.
+export const MODEL_CREDIT_RATES: { pattern: string; rate: number; label: string }[] = [
+  { pattern: "deepseek-r1:free", rate: 0, label: "DeepSeek R1 (Free)" },
+  { pattern: "llama-3.3-8b-instruct:free", rate: 0, label: "Llama 3.3 8B (Free)" },
+  { pattern: "gpt-5.4-nano", rate: 1, label: "GPT-5.4 Nano" },
+  { pattern: "gemini-3.1-flash-lite", rate: 1, label: "Gemini 3.1 Flash Lite" },
+  { pattern: "grok-4.1-fast", rate: 1, label: "Grok 4.1 Fast" },
+  { pattern: "deepseek-v3.2", rate: 1, label: "DeepSeek V3.2" },
+  { pattern: "gpt-5.4-mini", rate: 4, label: "GPT-5.4 Mini" },
+  { pattern: "o4-mini", rate: 5, label: "O4 Mini" },
+  { pattern: "grok-4.20", rate: 6, label: "Grok 4.20" },
+  { pattern: "gemini-3.1-pro", rate: 10, label: "Gemini 3.1 Pro" },
+  { pattern: "sonar-deep-research", rate: 8, label: "Perplexity Deep Research" },
+  { pattern: "sonar-pro", rate: 13, label: "Perplexity Sonar Pro" },
+  { pattern: "gpt-5.4\"", rate: 13, label: "GPT-5.4" },
+  { pattern: "claude-sonnet-4.6", rate: 13, label: "Claude Sonnet 4.6" },
+  { pattern: "claude-opus-4.6", rate: 22, label: "Claude Opus 4.6" },
+  { pattern: "gpt-5.4-pro", rate: 150, label: "GPT-5.4 Pro" },
+]
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
@@ -24,16 +40,12 @@ export const PRICING_PLANS: PricingPlan[] = [
     yearlyPrice: 0,
     description: "Get started with lightweight models",
     features: [
-      "GPT-4.1 Nano, DeepSeek R1 Free, Llama 3.3",
-      "10 messages per day",
+      "GPT-5.4 Nano, DeepSeek R1, Llama 3.3",
+      "500 credits / month",
       "Basic chat features",
       "Conversation history",
     ],
-    limits: {
-      dailyMessages: 10,
-      dailyProModelMessages: 0,
-      fileUploads: 0,
-    },
+    credits: 500,
     cta: "Get Started",
   },
   {
@@ -43,18 +55,13 @@ export const PRICING_PLANS: PricingPlan[] = [
     yearlyPrice: 99,
     description: "Full access to all AI models",
     features: [
-      "All 20+ models: GPT-4.1, Claude, Gemini, Grok, DeepSeek",
-      "300 messages per day",
-      "100 pro model messages per day",
+      "All 16 models including GPT-5.4, Claude, Gemini",
+      "8,000 credits / month",
       "File & image uploads",
       "Web search",
       "Priority response speed",
     ],
-    limits: {
-      dailyMessages: 300,
-      dailyProModelMessages: 100,
-      fileUploads: 20,
-    },
+    credits: 8000,
     highlight: true,
     cta: "Upgrade to Pro",
   },
@@ -66,18 +73,12 @@ export const PRICING_PLANS: PricingPlan[] = [
     description: "For teams that need more power",
     features: [
       "Everything in Pro",
-      "1,000 messages per day",
-      "500 pro model messages per day",
+      "22,000 credits / month",
       "Unlimited file uploads",
       "Custom system prompts",
       "Shared prompt library",
-      "Priority support",
     ],
-    limits: {
-      dailyMessages: 1000,
-      dailyProModelMessages: 500,
-      fileUploads: -1,
-    },
+    credits: 22000,
     cta: "Get Team",
   },
   {
@@ -88,19 +89,13 @@ export const PRICING_PLANS: PricingPlan[] = [
     description: "For power users and growing teams",
     features: [
       "Everything in Team",
-      "5,000 messages per day",
-      "2,000 pro model messages per day",
-      "GPT-4.5 Preview & premium models",
+      "100,000 credits / month",
+      "GPT-5.4 Pro & premium models",
       "API access",
       "Usage analytics dashboard",
-      "Custom model routing",
-      "Dedicated support channel",
+      "Dedicated support",
     ],
-    limits: {
-      dailyMessages: 5000,
-      dailyProModelMessages: 2000,
-      fileUploads: -1,
-    },
+    credits: 100000,
     cta: "Get Business",
   },
   {
@@ -108,23 +103,16 @@ export const PRICING_PLANS: PricingPlan[] = [
     tier: "enterprise",
     monthlyPrice: 199,
     yearlyPrice: 1990,
-    description: "Unlimited power for organizations",
+    description: "Maximum power for organizations",
     features: [
       "Everything in Business",
-      "Unlimited messages",
-      "Unlimited pro model messages",
-      "All premium & preview models",
+      "210,000 credits / month",
+      "All premium models",
       "SSO & team management",
-      "Custom model fine-tuning",
-      "SLA guarantee (99.9% uptime)",
+      "SLA guarantee (99.9%)",
       "Dedicated account manager",
-      "On-premise deployment option",
     ],
-    limits: {
-      dailyMessages: -1,
-      dailyProModelMessages: -1,
-      fileUploads: -1,
-    },
+    credits: 210000,
     cta: "Contact Sales",
   },
 ]
