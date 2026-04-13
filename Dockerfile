@@ -52,6 +52,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# NEXT_PUBLIC_ vars must also be available at runtime for server-side code
+ENV NEXT_PUBLIC_SUPABASE_URL=https://hjvbqkyodafpzfmlevws.supabase.co
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqdmJxa3lvZGFmcHpmbWxldndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NjM3MzcsImV4cCI6MjA5MTUzOTczN30.AHK6dDsz9kS-I04wkxccXvu1vdTKdJUUFE_Txt368Kg
+
 # Create a non-root user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
