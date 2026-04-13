@@ -10,7 +10,11 @@ import { cn } from "@/lib/utils"
 
 const USAGE_EXAMPLES = [
   { model: "GPT-5.4 Nano", messages: "~5,300", note: "Fast everyday tasks" },
-  { model: "Claude Sonnet 4.6", messages: "~410", note: "Complex writing & analysis" },
+  {
+    model: "Claude Sonnet 4.6",
+    messages: "~410",
+    note: "Complex writing & analysis",
+  },
   { model: "Gemini 3.1 Pro", messages: "~530", note: "Research & reasoning" },
   { model: "GPT-5.4", messages: "~410", note: "Advanced problem solving" },
 ]
@@ -20,11 +24,11 @@ export default function PricingPage() {
     "monthly"
   )
 
-  // Only show Free and Pro prominently
+  // Main 3 plans: Free, Basic, Pro
   const mainPlans = PRICING_PLANS.filter(
-    (p) => p.tier === "free" || p.tier === "pro"
+    (p) => p.tier === "free" || p.tier === "basic" || p.tier === "pro"
   )
-  const teamPlan = PRICING_PLANS.find((p) => p.tier === "team")
+  const enterprisePlan = PRICING_PLANS.find((p) => p.tier === "enterprise")
 
   return (
     <div className="bg-background min-h-screen">
@@ -47,7 +51,7 @@ export default function PricingPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+      <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         {/* Trust bar */}
         <div className="mb-6 text-center">
           <p className="text-muted-foreground text-sm">
@@ -93,14 +97,15 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* Plans — Free + Pro */}
-        <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
+        {/* Plans — 3 columns */}
+        <div className="mx-auto grid max-w-[1100px] items-end gap-8 md:grid-cols-3">
           {mainPlans.map((plan) => {
             const price =
               billingPeriod === "monthly"
                 ? plan.monthlyPrice
                 : plan.yearlyPrice / 12
             const isPro = plan.tier === "pro"
+            const isFree = plan.tier === "free"
 
             return (
               <div
@@ -108,8 +113,9 @@ export default function PricingPage() {
                 className={cn(
                   "relative flex flex-col rounded-2xl border p-6",
                   isPro
-                    ? "border-[#10B981] shadow-lg ring-1 ring-[#10B981]/20"
-                    : "border-border opacity-80"
+                    ? "scale-[1.03] border-2 border-[#10B981] shadow-lg shadow-[#10B981]/10 md:-my-4"
+                    : "border-border",
+                  isFree && "opacity-75"
                 )}
               >
                 {isPro && (
@@ -154,9 +160,8 @@ export default function PricingPage() {
                 <Button
                   className={cn(
                     "mb-5 w-full",
-                    isPro
-                      ? ""
-                      : "border-border bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
+                    !isPro &&
+                      "border-border bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
                   )}
                   variant={isPro ? "default" : "outline"}
                   size="default"
@@ -183,42 +188,43 @@ export default function PricingPage() {
           })}
         </div>
 
-        {/* Team plan — compact */}
-        {teamPlan && (
-          <div className="mx-auto mt-6 max-w-3xl rounded-2xl border p-5">
+        {/* Enterprise — separate, below */}
+        {enterprisePlan && (
+          <div className="mx-auto mt-12 max-w-[1100px] rounded-2xl border p-6">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
               <div>
-                <h3 className="text-foreground font-semibold">
-                  {teamPlan.name}
+                <h3 className="text-foreground text-lg font-semibold">
+                  Need more power?
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  {teamPlan.description} &mdash;{" "}
-                  {teamPlan.credits.toLocaleString()} credits/mo
+                  {enterprisePlan.name} &mdash;{" "}
+                  {enterprisePlan.credits.toLocaleString()} credits/mo,
+                  dedicated support, API access & SSO.
                 </p>
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-foreground text-xl font-semibold">
                   $
                   {billingPeriod === "monthly"
-                    ? teamPlan.monthlyPrice
-                    : (teamPlan.yearlyPrice / 12).toFixed(1)}
+                    ? enterprisePlan.monthlyPrice
+                    : (enterprisePlan.yearlyPrice / 12).toFixed(1)}
                   /mo
                 </span>
                 <Button variant="outline" size="sm">
-                  {teamPlan.cta}
+                  {enterprisePlan.cta}
                 </Button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Usage examples — replaces complex credit table */}
+        {/* Usage examples */}
         <div className="mt-20">
           <h2 className="text-foreground mb-2 text-center text-2xl font-semibold">
             What can you do with Pro?
           </h2>
           <p className="text-muted-foreground mb-8 text-center text-sm">
-            8,000 credits per month gets you approximately:
+            100,000 credits per month gets you approximately:
           </p>
           <div className="mx-auto grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
             {USAGE_EXAMPLES.map((ex) => (
@@ -249,7 +255,7 @@ export default function PricingPage() {
             {[
               {
                 q: "Why not use ChatGPT directly?",
-                a: "NottoAI lets you switch between all AI models in one place — no multiple subscriptions needed. ChatGPT Plus is $20/mo for one model. NottoAI Pro is $9.90/mo for 16+ models.",
+                a: "NottoAI lets you switch between all AI models in one place — no multiple subscriptions needed. ChatGPT Plus is $20/mo for one model. NottoAI Pro gives you 16+ models.",
               },
               {
                 q: "How do credits work?",
