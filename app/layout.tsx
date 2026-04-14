@@ -44,6 +44,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <Script
+        defer
+        data-domain="nottoai.com"
+        src="https://app.pageview.app/js/script.js"
+      />
       {isOfficialDeployment ? (
         <Script
           defer
