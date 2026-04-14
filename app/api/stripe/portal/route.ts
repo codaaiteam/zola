@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
 import { createGuestServerClient } from "@/lib/supabase/server-guest"
 
+function getBaseUrl(req: NextRequest): string {
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host")
+  const proto = req.headers.get("x-forwarded-proto") || "https"
+  return host ? `${proto}://${host}` : req.nextUrl.origin
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth()
@@ -33,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripe_customer_id,
-      return_url: `${req.nextUrl.origin}/pricing`,
+      return_url: `${getBaseUrl(req)}/pricing`,
     })
 
     return NextResponse.json({ url: session.url })
