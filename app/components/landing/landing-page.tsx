@@ -3,8 +3,8 @@
 import Link from "next/link"
 import { ZolaFaviconIcon } from "@/components/icons/zola"
 import { SignInButton } from "@clerk/nextjs"
-import { motion, useInView } from "motion/react"
-import { useRef, type ReactNode } from "react"
+import { motion, useInView, useScroll, useTransform } from "motion/react"
+import { useRef, useEffect, useState, type ReactNode } from "react"
 import {
   Zap,
   KeyRound,
@@ -180,6 +180,76 @@ const staggerItem = {
   },
 }
 
+/** Animated counter that counts up when scrolled into view */
+function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true })
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!inView) return
+    let start = 0
+    const duration = 1200
+    const step = Math.ceil(value / (duration / 16))
+    const timer = setInterval(() => {
+      start += step
+      if (start >= value) {
+        setCount(value)
+        clearInterval(timer)
+      } else {
+        setCount(start)
+      }
+    }, 16)
+    return () => clearInterval(timer)
+  }, [inView, value])
+
+  return (
+    <span ref={ref} className="tabular-nums">
+      {count.toLocaleString()}
+      {suffix}
+    </span>
+  )
+}
+
+/** Floating model icons that orbit around the hero */
+function FloatingIcons() {
+  const icons = [
+    { Icon: OpenAIIcon, size: 40, x: -280, y: -60, delay: 0 },
+    { Icon: AnthropicIcon, size: 36, x: 290, y: -40, delay: 0.5 },
+    { Icon: GeminiIcon, size: 38, x: -240, y: 80, delay: 1.0 },
+    { Icon: DeepSeekIcon, size: 34, x: 260, y: 100, delay: 1.5 },
+    { Icon: GrokIcon, size: 32, x: -320, y: 10, delay: 2.0 },
+    { Icon: PerplexityIcon, size: 30, x: 330, y: 30, delay: 0.8 },
+  ]
+
+  return (
+    <div className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block">
+      {icons.map(({ Icon, size, x, y, delay }, i) => (
+        <motion.div
+          key={i}
+          className="absolute left-1/2 top-1/2 rounded-xl border border-zinc-200/60 bg-white/80 p-2 shadow-lg backdrop-blur-sm"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{
+            opacity: [0, 0.85, 0.85, 0.85],
+            scale: [0.5, 1, 1, 1],
+            x: [x, x + 8, x - 8, x],
+            y: [y, y - 12, y + 12, y],
+          }}
+          transition={{
+            duration: 6,
+            delay: 0.8 + delay,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "easeInOut",
+          }}
+        >
+          <Icon style={{ width: size, height: size }} />
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
 export function LandingPage() {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-white text-zinc-900">
@@ -216,8 +286,11 @@ export function LandingPage() {
       </header>
 
       {/* Hero — gradient bg */}
-      <section className="bg-gradient-to-b from-white to-[#f8faf9]">
-        <div className="mx-auto max-w-7xl px-6 pb-16 pt-20 text-center sm:pt-28 lg:px-12">
+      <section className="relative overflow-hidden bg-gradient-to-b from-white to-[#f8faf9]">
+        {/* Subtle radial glow behind hero */}
+        <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-emerald-100/40 blur-[120px]" />
+        <FloatingIcons />
+        <div className="relative mx-auto max-w-7xl px-6 pb-16 pt-20 text-center sm:pt-28 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -238,7 +311,14 @@ export function LandingPage() {
           >
             Use GPT-5.4, Claude & Gemini
             <br />
-            <span className="text-emerald-500">in One Chat</span>
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.5, type: "spring", stiffness: 200 }}
+              className="inline-block text-emerald-500"
+            >
+              in One Chat
+            </motion.span>
           </motion.h1>
 
           <motion.p
@@ -293,29 +373,50 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Model logos */}
-      <section className="border-y border-zinc-100 bg-white py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-12">
-          <p className="mb-8 text-center text-xs font-medium uppercase tracking-widest text-zinc-400">
-            Powered by the best AI models
-          </p>
-          <StaggerChildren className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
-            {MODEL_LOGOS.map(({ icon: Icon, name, label }) => (
-              <motion.div
-                key={name}
-                variants={staggerItem}
-                whileHover={{ scale: 1.1, y: -4 }}
-                className="group flex flex-col items-center gap-2"
+      {/* Stats bar */}
+      <section className="border-y border-zinc-100 bg-zinc-50/80 py-10">
+        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-12 px-6 sm:gap-20">
+          {[
+            { value: 16, suffix: "+", label: "AI Models" },
+            { value: 10000, suffix: "+", label: "Users" },
+            { value: 50, suffix: "+", label: "Saved Monthly" },
+          ].map((stat) => (
+            <FadeIn key={stat.label} className="text-center">
+              <div className="text-3xl font-bold text-zinc-900 sm:text-4xl">
+                {stat.label === "Saved Monthly" && "$"}
+                <Counter value={stat.value} suffix={stat.suffix} />
+              </div>
+              <p className="mt-1 text-sm text-zinc-500">{stat.label}</p>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
+
+      {/* Model logos — infinite marquee */}
+      <section className="border-b border-zinc-100 bg-white py-12 overflow-hidden">
+        <p className="mb-8 text-center text-xs font-medium uppercase tracking-widest text-zinc-400">
+          Powered by the best AI models
+        </p>
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent" />
+          <motion.div
+            className="flex w-max gap-10"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          >
+            {[...MODEL_LOGOS, ...MODEL_LOGOS].map(({ icon: Icon, name, label }, i) => (
+              <div
+                key={`${name}-${i}`}
+                className="group flex shrink-0 items-center gap-3 rounded-xl border border-zinc-200 bg-white px-5 py-3 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:shadow-md"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-zinc-200 bg-white shadow-sm transition-all group-hover:border-emerald-300 group-hover:bg-emerald-50 group-hover:shadow-md">
-                  <Icon className="h-8 w-8" />
-                </div>
-                <span className="text-xs font-medium text-zinc-500 transition-colors group-hover:text-emerald-600">
+                <Icon className="h-8 w-8" />
+                <span className="text-sm font-medium text-zinc-600 transition-colors group-hover:text-emerald-600">
                   {label}
                 </span>
-              </motion.div>
+              </div>
             ))}
-          </StaggerChildren>
+          </motion.div>
         </div>
       </section>
 
@@ -558,10 +659,20 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="relative rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 p-8 shadow-[0_10px_30px_rgba(16,185,129,0.1)]">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-semibold text-white">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="relative rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 p-8 shadow-[0_10px_30px_rgba(16,185,129,0.1)]"
+            >
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-semibold text-white shadow-md shadow-emerald-500/30"
+              >
                 BEST VALUE
-              </div>
+              </motion.div>
               <div className="mb-5 flex items-center gap-2">
                 <h3 className="text-lg font-semibold text-emerald-600">
                   All Models. One Subscription.
@@ -593,7 +704,7 @@ export function LandingPage() {
                   Better answers + less hassle + save time
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
