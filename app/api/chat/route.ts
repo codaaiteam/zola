@@ -128,12 +128,12 @@ export async function POST(req: Request) {
           })
 
           // Deduct credits based on actual token usage
-          if (usage?.totalTokens) {
-            try {
-              await deductCredits(supabase, userId, model, usage.totalTokens)
-            } catch (err) {
-              console.error("Failed to deduct credits:", err)
-            }
+          // Fall back to estimate (~1000 tokens) if provider doesn't report usage
+          const tokens = usage?.totalTokens || 1000
+          try {
+            await deductCredits(supabase, userId, model, tokens)
+          } catch (err) {
+            console.error("Failed to deduct credits:", err)
           }
         }
       },

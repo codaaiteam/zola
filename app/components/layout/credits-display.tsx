@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { fetchClient } from "@/lib/fetch"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -14,7 +14,7 @@ interface SubscriptionInfo {
 export function CreditsDisplay() {
   const [info, setInfo] = useState<SubscriptionInfo | null>(null)
 
-  useEffect(() => {
+  const refresh = useCallback(() => {
     fetchClient("/api/subscription")
       .then((res) => res.json())
       .then((data) => {
@@ -22,6 +22,22 @@ export function CreditsDisplay() {
       })
       .catch(() => {})
   }, [])
+
+  useEffect(() => {
+    refresh()
+    // Poll every 15s to pick up credit changes after messages
+    const interval = setInterval(refresh, 15_000)
+    return () => clearInterval(interval)
+  }, [refresh])
+
+  // Also refresh when tab becomes visible (user switches back)
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refresh()
+    }
+    document.addEventListener("visibilitychange", onVisible)
+    return () => document.removeEventListener("visibilitychange", onVisible)
+  }, [refresh])
 
   if (!info) return null
 
