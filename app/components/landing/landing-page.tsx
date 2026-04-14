@@ -553,12 +553,24 @@ export function LandingPage() {
             >
               Pricing
             </Link>
-            <span className="text-sm text-zinc-400 hover:text-zinc-600">
+            <Link
+              href="/privacy"
+              className="text-sm text-zinc-400 hover:text-zinc-600"
+            >
               Privacy
-            </span>
-            <span className="text-sm text-zinc-400 hover:text-zinc-600">
+            </Link>
+            <Link
+              href="/terms"
+              className="text-sm text-zinc-400 hover:text-zinc-600"
+            >
               Terms
-            </span>
+            </Link>
+            <a
+              href="mailto:contact@nottoai.com"
+              className="text-sm text-zinc-400 hover:text-zinc-600"
+            >
+              Contact
+            </a>
           </div>
         </div>
       </footer>
