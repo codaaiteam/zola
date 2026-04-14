@@ -32,10 +32,22 @@ export const MODEL_CREDIT_RATES: { pattern: string; rate: number; label: string 
   { pattern: "gpt-5.4-pro", rate: 150, label: "GPT-5.4 Pro" },
 ]
 
-/** Returns the credit cost for a given model ID, defaults to 1 */
-export function getModelCreditCost(modelId: string): number {
-  const entry = MODEL_CREDIT_RATES.find((r) => modelId.includes(r.pattern.replace(/"/g, "")))
+/**
+ * Returns the credit rate multiplier for a model.
+ * Credits are calculated as: ceil(totalTokens / 1000) * rate
+ */
+export function getModelCreditRate(modelId: string): number {
+  const entry = MODEL_CREDIT_RATES.find((r) =>
+    modelId.includes(r.pattern.replace(/"/g, ""))
+  )
   return entry?.rate ?? 1
+}
+
+/** Calculate credits to deduct based on actual token usage */
+export function calculateCredits(modelId: string, totalTokens: number): number {
+  const rate = getModelCreditRate(modelId)
+  if (rate === 0) return 0
+  return Math.ceil(totalTokens / 1000) * rate
 }
 
 export const PRICING_PLANS: PricingPlan[] = [

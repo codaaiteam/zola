@@ -10,6 +10,7 @@ import {
   storeAssistantMessage,
   validateAndTrackUsage,
 } from "./api"
+import { deductCredits } from "@/lib/usage"
 import { createErrorResponse, extractErrorMessage } from "./utils"
 
 export const maxDuration = 60
@@ -53,9 +54,9 @@ export async function POST(req: Request) {
       isAuthenticated,
     })
 
-    // Increment message count and deduct credits
+    // Increment message count
     if (supabase) {
-      await incrementMessageCount({ supabase, userId, model })
+      await incrementMessageCount({ supabase, userId })
     }
 
     const userMessage = messages[messages.length - 1]
@@ -115,7 +116,7 @@ export async function POST(req: Request) {
         // Don't set streamError anymore - let the AI SDK handle it through the stream
       },
 
-      onFinish: async ({ response }) => {
+      onFinish: async ({ response, usage }) => {
         if (supabase) {
           await storeAssistantMessage({
             supabase,
@@ -125,6 +126,15 @@ export async function POST(req: Request) {
             message_group_id,
             model,
           })
+
+          // Deduct credits based on actual token usage
+          if (usage?.totalTokens) {
+            try {
+              await deductCredits(supabase, userId, model, usage.totalTokens)
+            } catch (err) {
+              console.error("Failed to deduct credits:", err)
+            }
+          }
         }
       },
     })

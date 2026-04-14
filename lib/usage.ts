@@ -5,7 +5,7 @@ import {
   FREE_MODELS_IDS,
   NON_AUTH_DAILY_MESSAGE_LIMIT,
 } from "@/lib/config"
-import { getModelCreditCost } from "@/lib/pricing"
+import { calculateCredits, getModelCreditRate } from "@/lib/pricing"
 import { SupabaseClient } from "@supabase/supabase-js"
 
 const isFreeModel = (modelId: string) => FREE_MODELS_IDS.includes(modelId)
@@ -212,10 +212,10 @@ export async function checkUsageByModel(
   modelId: string,
   isAuthenticated: boolean
 ) {
-  // Check credit balance for authenticated users
+  // Check credit balance for authenticated users (must have at least some credits for non-free models)
   if (isAuthenticated) {
-    const creditCost = getModelCreditCost(modelId)
-    if (creditCost > 0) {
+    const rate = getModelCreditRate(modelId)
+    if (rate > 0) {
       const { data: user } = await supabase
         .from("users")
         .select("credits_remaining")
@@ -223,9 +223,9 @@ export async function checkUsageByModel(
         .maybeSingle()
 
       const credits = user?.credits_remaining ?? 0
-      if (credits < creditCost) {
+      if (credits <= 0) {
         throw new UsageLimitError(
-          `Insufficient credits. This model costs ${creditCost} credits per message. Upgrade your plan for more credits.`
+          "You've run out of credits. Upgrade your plan or wait for your credits to reset."
         )
       }
     }
@@ -255,14 +255,15 @@ export async function incrementUsageByModel(
   return await incrementUsage(supabase, userId)
 }
 
-/** Deduct credits for a model usage */
+/** Deduct credits based on actual token usage */
 export async function deductCredits(
   supabase: SupabaseClient,
   userId: string,
-  modelId: string
+  modelId: string,
+  totalTokens: number
 ): Promise<void> {
-  const creditCost = getModelCreditCost(modelId)
-  if (creditCost <= 0) return
+  const cost = calculateCredits(modelId, totalTokens)
+  if (cost <= 0) return
 
   const { data: user } = await supabase
     .from("users")
@@ -272,7 +273,7 @@ export async function deductCredits(
 
   if (!user) return
 
-  const newCredits = Math.max(0, (user.credits_remaining ?? 0) - creditCost)
+  const newCredits = Math.max(0, (user.credits_remaining ?? 0) - cost)
 
   await supabase
     .from("users")
