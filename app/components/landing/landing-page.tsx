@@ -3,6 +3,14 @@
 import Link from "next/link"
 import { ZolaFaviconIcon } from "@/components/icons/zola"
 import { SignInButton } from "@clerk/nextjs"
+import {
+  Zap,
+  KeyRound,
+  Globe,
+  FileUp,
+  MessageSquareText,
+  ArrowLeftRight,
+} from "lucide-react"
 import OpenAIIcon from "@/components/icons/openai"
 import AnthropicIcon from "@/components/icons/anthropic"
 import GeminiIcon from "@/components/icons/gemini"
@@ -61,43 +69,49 @@ const STEPS = [
 
 const FEATURES = [
   {
-    icon: "⚡",
+    icon: Zap,
     iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
     title: "All Models, One Price",
     description:
       "GPT-5.4, Claude, Gemini, Grok, DeepSeek — switch between 16+ models without separate subscriptions.",
   },
   {
-    icon: "🔒",
+    icon: KeyRound,
     iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
     title: "Bring Your Own Keys",
     description:
       "Use your own API keys for complete control and privacy. Your keys are encrypted and never stored in plain text.",
   },
   {
-    icon: "🌐",
+    icon: Globe,
     iconBg: "bg-cyan-50",
+    iconColor: "text-cyan-600",
     title: "Web Search Built In",
     description:
       "Get real-time answers with integrated web search. No copy-pasting between tabs.",
   },
   {
-    icon: "📁",
+    icon: FileUp,
     iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
     title: "File Uploads",
     description:
       "Upload images, PDFs, and documents. Analyze, summarize, or ask questions about any file.",
   },
   {
-    icon: "💬",
+    icon: MessageSquareText,
     iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
     title: "Conversation History",
     description:
       "All your chats are saved and searchable. Pick up where you left off, across any model.",
   },
   {
-    icon: "🔄",
+    icon: ArrowLeftRight,
     iconBg: "bg-rose-50",
+    iconColor: "text-rose-600",
     title: "Switch Models Mid-Chat",
     description:
       "Start with GPT, continue with Claude, compare with Gemini — all in the same thread.",
@@ -367,7 +381,9 @@ export function LandingPage() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((feat) => (
+            {FEATURES.map((feat) => {
+              const Icon = feat.icon
+              return (
               <div
                 key={feat.title}
                 className="group rounded-2xl border border-zinc-200 bg-white p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all hover:border-emerald-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
@@ -375,14 +391,15 @@ export function LandingPage() {
                 <div
                   className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl transition-colors ${feat.iconBg} group-hover:bg-emerald-50`}
                 >
-                  <span className="text-xl">{feat.icon}</span>
+                  <Icon className={`h-5 w-5 ${feat.iconColor} group-hover:text-emerald-600`} strokeWidth={2} />
                 </div>
                 <h3 className="mb-2 text-lg font-semibold">{feat.title}</h3>
                 <p className="text-sm leading-relaxed text-zinc-500">
                   {feat.description}
                 </p>
               </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
