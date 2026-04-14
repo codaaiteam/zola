@@ -8,6 +8,7 @@ import { ZolaFaviconIcon } from "@/components/icons/zola"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { useUser } from "@clerk/nextjs"
+import { fetchClient } from "@/lib/fetch"
 
 const USAGE_EXAMPLES = [
   { model: "GPT-5.4 Nano", messages: "~5,300", note: "Fast everyday tasks" },
@@ -25,6 +26,7 @@ export default function PricingPage() {
     "monthly"
   )
   const [loadingTier, setLoadingTier] = useState<PlanTier | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const { isSignedIn } = useUser()
 
   async function handleCheckout(tier: PlanTier) {
@@ -39,34 +41,41 @@ export default function PricingPage() {
     }
 
     setLoadingTier(tier)
+    setError(null)
     try {
-      const res = await fetch("/api/stripe/checkout", {
+      const res = await fetchClient("/api/stripe/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tier, billingPeriod }),
       })
       const data = await res.json()
       if (data.url) {
         window.location.href = data.url
+      } else {
+        setError(data.error || "Failed to start checkout")
       }
-    } catch (error) {
-      console.error("Checkout error:", error)
+    } catch (err) {
+      console.error("Checkout error:", err)
+      setError("Something went wrong. Please try again.")
     } finally {
       setLoadingTier(null)
     }
   }
 
   async function handleManageSubscription() {
+    setError(null)
     try {
-      const res = await fetch("/api/stripe/portal", {
+      const res = await fetchClient("/api/stripe/portal", {
         method: "POST",
       })
       const data = await res.json()
       if (data.url) {
         window.location.href = data.url
+      } else {
+        setError(data.error || "Failed to open portal")
       }
-    } catch (error) {
-      console.error("Portal error:", error)
+    } catch (err) {
+      console.error("Portal error:", err)
+      setError("Something went wrong. Please try again.")
     }
   }
 
@@ -109,6 +118,12 @@ export default function PricingPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        {error && (
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-3 text-center text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
+            {error}
+          </div>
+        )}
+
         {/* Trust bar */}
         <div className="mb-6 text-center">
           <p className="text-muted-foreground text-sm">
