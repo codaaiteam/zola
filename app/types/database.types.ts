@@ -206,6 +206,13 @@ export type Database = {
           daily_pro_message_count: number | null
           daily_pro_reset: string | null
           system_prompt: string | null
+          stripe_customer_id: string | null
+          subscription_id: string | null
+          subscription_status: string | null
+          subscription_tier: string | null
+          subscription_current_period_end: string | null
+          credits_remaining: number | null
+          credits_reset_at: string | null
         }
         Insert: {
           anonymous?: boolean | null
@@ -223,6 +230,13 @@ export type Database = {
           daily_pro_message_count?: number | null
           daily_pro_reset?: string | null
           system_prompt?: string | null
+          stripe_customer_id?: string | null
+          subscription_id?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          subscription_current_period_end?: string | null
+          credits_remaining?: number | null
+          credits_reset_at?: string | null
         }
         Update: {
           anonymous?: boolean | null
@@ -240,6 +254,13 @@ export type Database = {
           daily_pro_message_count?: number | null
           daily_pro_reset?: string | null
           system_prompt?: string | null
+          stripe_customer_id?: string | null
+          subscription_id?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          subscription_current_period_end?: string | null
+          credits_remaining?: number | null
+          credits_reset_at?: string | null
         }
         Relationships: []
       }

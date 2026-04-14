@@ -3,10 +3,11 @@
 import { useState } from "react"
 import { Check } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
-import { PRICING_PLANS } from "@/lib/pricing"
+import { PRICING_PLANS, type PlanTier } from "@/lib/pricing"
 import { ZolaFaviconIcon } from "@/components/icons/zola"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { useUser } from "@clerk/nextjs"
 
 const USAGE_EXAMPLES = [
   { model: "GPT-5.4 Nano", messages: "~5,300", note: "Fast everyday tasks" },
@@ -23,6 +24,51 @@ export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly"
   )
+  const [loadingTier, setLoadingTier] = useState<PlanTier | null>(null)
+  const { isSignedIn } = useUser()
+
+  async function handleCheckout(tier: PlanTier) {
+    if (tier === "free") {
+      window.location.href = "/"
+      return
+    }
+
+    if (!isSignedIn) {
+      window.location.href = "/sign-in?redirect_url=/pricing"
+      return
+    }
+
+    setLoadingTier(tier)
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier, billingPeriod }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error("Checkout error:", error)
+    } finally {
+      setLoadingTier(null)
+    }
+  }
+
+  async function handleManageSubscription() {
+    try {
+      const res = await fetch("/api/stripe/portal", {
+        method: "POST",
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error("Portal error:", error)
+    }
+  }
 
   // Main 3 plans: Free, Basic, Pro
   const mainPlans = PRICING_PLANS.filter(
@@ -43,11 +89,22 @@ export default function PricingPage() {
             <span className="font-medium">Notto</span>
             <span className="font-normal opacity-80">AI</span>
           </Link>
-          <Link href="/">
-            <Button variant="ghost" size="sm">
-              Back to Chat
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            {isSignedIn && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleManageSubscription}
+              >
+                Manage Subscription
+              </Button>
+            )}
+            <Link href="/">
+              <Button variant="ghost" size="sm">
+                Back to Chat
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -165,8 +222,10 @@ export default function PricingPage() {
                   )}
                   variant={isPro ? "default" : "outline"}
                   size="default"
+                  disabled={loadingTier === plan.tier}
+                  onClick={() => handleCheckout(plan.tier)}
                 >
-                  {plan.cta}
+                  {loadingTier === plan.tier ? "Loading..." : plan.cta}
                 </Button>
 
                 <ul className="flex-1 space-y-2.5">
@@ -210,8 +269,15 @@ export default function PricingPage() {
                     : (enterprisePlan.yearlyPrice / 12).toFixed(1)}
                   /mo
                 </span>
-                <Button variant="outline" size="sm">
-                  {enterprisePlan.cta}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={loadingTier === "enterprise"}
+                  onClick={() => handleCheckout("enterprise")}
+                >
+                  {loadingTier === "enterprise"
+                    ? "Loading..."
+                    : enterprisePlan.cta}
                 </Button>
               </div>
             </div>
