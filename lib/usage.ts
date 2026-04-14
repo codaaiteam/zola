@@ -222,8 +222,8 @@ export async function checkUsageByModel(
         .eq("id", userId)
         .maybeSingle()
 
-      const credits = user?.credits_remaining ?? 0
-      if (credits <= 0) {
+      const credits = user?.credits_remaining
+      if (credits !== null && credits !== undefined && credits <= 0) {
         throw new UsageLimitError(
           "You've run out of credits. Upgrade your plan or wait for your credits to reset."
         )
