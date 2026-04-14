@@ -57,7 +57,7 @@ const PROVIDERS = [
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#09090B] text-white">
+    <div className="fixed inset-0 z-50 min-h-screen overflow-y-auto bg-[#09090B] text-white">
       {/* Nav */}
       <header className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-12">
         <Link
