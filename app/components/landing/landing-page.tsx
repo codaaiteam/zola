@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { ZolaFaviconIcon } from "@/components/icons/zola"
 import { SignInButton } from "@clerk/nextjs"
+import { motion, useInView } from "motion/react"
+import { useRef, type ReactNode } from "react"
 import {
   Zap,
   KeyRound,
@@ -118,6 +120,66 @@ const FEATURES = [
   },
 ]
 
+function FadeIn({
+  children,
+  delay = 0,
+  y = 30,
+  className,
+}: {
+  children: ReactNode
+  delay?: number
+  y?: number
+  className?: string
+}) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: "-60px" })
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration: 0.5, delay, ease: "easeOut" }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function StaggerChildren({
+  children,
+  className,
+}: {
+  children: ReactNode
+  className?: string
+}) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: "-60px" })
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      variants={{
+        visible: { transition: { staggerChildren: 0.1 } },
+        hidden: {},
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: "easeOut" },
+  },
+}
+
 export function LandingPage() {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-white text-zinc-900">
@@ -156,32 +218,56 @@ export function LandingPage() {
       {/* Hero — gradient bg */}
       <section className="bg-gradient-to-b from-white to-[#f8faf9]">
         <div className="mx-auto max-w-7xl px-6 pb-16 pt-20 text-center sm:pt-28 lg:px-12">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5"
+          >
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
             <span className="text-xs font-medium text-emerald-700">
               16+ AI Models — One Subscription
             </span>
-          </div>
+          </motion.div>
 
-          <h1 className="mx-auto max-w-5xl text-5xl font-bold leading-[1.08] tracking-tight text-zinc-900 sm:text-7xl">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="mx-auto max-w-5xl text-5xl font-bold leading-[1.08] tracking-tight text-zinc-900 sm:text-7xl"
+          >
             Use GPT-5.4, Claude & Gemini
             <br />
             <span className="text-emerald-500">in One Chat</span>
-          </h1>
+          </motion.h1>
 
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500 sm:text-xl">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500 sm:text-xl"
+          >
             <span className="font-semibold text-zinc-800">Pay once. Use every AI model.</span>
             <br />
-            <span className="text-emerald-600 font-medium">Save $50+ every month</span>{" "}
+            <span className="font-medium text-emerald-600">Save $50+ every month</span>{" "}
             vs paying for each tool separately.
-          </p>
+          </motion.p>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.45 }}
+            className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
+          >
             <SignInButton mode="modal">
-              <button className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30"
+              >
                 Start Using All Models Now
                 <span>→</span>
-              </button>
+              </motion.button>
             </SignInButton>
             <Link
               href="/pricing"
@@ -189,16 +275,21 @@ export function LandingPage() {
             >
               View Pricing
             </Link>
-          </div>
+          </motion.div>
 
-          <div className="mt-5 flex flex-col items-center gap-2">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mt-5 flex flex-col items-center gap-2"
+          >
             <p className="text-sm text-zinc-400">
               No credit card required · 500 free credits included
             </p>
             <p className="text-xs font-medium text-zinc-500">
               Join 10,000+ users saving $50+/month
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -208,53 +299,61 @@ export function LandingPage() {
           <p className="mb-8 text-center text-xs font-medium uppercase tracking-widest text-zinc-400">
             Powered by the best AI models
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
+          <StaggerChildren className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
             {MODEL_LOGOS.map(({ icon: Icon, name, label }) => (
-              <div
+              <motion.div
                 key={name}
+                variants={staggerItem}
+                whileHover={{ scale: 1.1, y: -4 }}
                 className="group flex flex-col items-center gap-2"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-zinc-200 bg-white shadow-sm transition-all group-hover:border-emerald-300 group-hover:bg-emerald-50 group-hover:shadow-md group-hover:scale-110">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-zinc-200 bg-white shadow-sm transition-all group-hover:border-emerald-300 group-hover:bg-emerald-50 group-hover:shadow-md">
                   <Icon className="h-8 w-8" />
                 </div>
                 <span className="text-xs font-medium text-zinc-500 transition-colors group-hover:text-emerald-600">
                   {label}
                 </span>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </StaggerChildren>
         </div>
       </section>
 
       {/* How it works */}
       <section className="bg-gradient-to-b from-white to-zinc-50/50">
         <div className="mx-auto max-w-7xl px-6 py-24 lg:px-12">
-          <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
-            How It Works
-          </h2>
-          <p className="mx-auto mb-16 max-w-xl text-center text-lg text-zinc-500">
-            Three steps to better AI answers
-          </p>
+          <FadeIn>
+            <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
+              How It Works
+            </h2>
+            <p className="mx-auto mb-16 max-w-xl text-center text-lg text-zinc-500">
+              Three steps to better AI answers
+            </p>
+          </FadeIn>
 
-          <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
+          <StaggerChildren className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
             {STEPS.map((step) => (
-              <div key={step.num} className="text-center">
-                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 text-2xl font-bold text-white shadow-lg shadow-emerald-500/20">
+              <motion.div key={step.num} variants={staggerItem} className="text-center">
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 3 }}
+                  className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 text-2xl font-bold text-white shadow-lg shadow-emerald-500/20"
+                >
                   {step.num}
-                </div>
+                </motion.div>
                 <h3 className="mb-2 text-lg font-semibold">{step.title}</h3>
                 <p className="text-sm leading-relaxed text-zinc-500">
                   {step.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </StaggerChildren>
         </div>
       </section>
 
       {/* Chat mockup */}
       <section className="border-t border-zinc-100 bg-zinc-50/50">
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-12">
+          <FadeIn y={40}>
           <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_10px_60px_rgba(0,0,0,0.08)]">
             <div className="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50 px-4 py-3">
               <span className="h-3 w-3 rounded-full bg-red-400" />
@@ -321,21 +420,25 @@ export function LandingPage() {
               </div>
             </div>
           </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* Why NottoAI > ChatGPT */}
       <section className="border-t border-zinc-100">
         <div className="mx-auto max-w-7xl px-6 py-24 lg:px-12">
-          <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
-            Why NottoAI is Better
-            <br className="hidden sm:block" />{" "}
-            <span className="text-emerald-500">Than ChatGPT</span>
-          </h2>
-          <p className="mx-auto mb-16 max-w-xl text-center text-lg text-zinc-500">
-            ChatGPT gives you one model. We give you all of them.
-          </p>
+          <FadeIn>
+            <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
+              Why NottoAI is Better
+              <br className="hidden sm:block" />{" "}
+              <span className="text-emerald-500">Than ChatGPT</span>
+            </h2>
+            <p className="mx-auto mb-16 max-w-xl text-center text-lg text-zinc-500">
+              ChatGPT gives you one model. We give you all of them.
+            </p>
+          </FadeIn>
 
+          <FadeIn y={20}>
           <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-zinc-200 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
             {/* Table header */}
             <div className="grid grid-cols-2 border-b border-zinc-100 bg-zinc-50">
@@ -365,26 +468,30 @@ export function LandingPage() {
               </div>
             ))}
           </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* Features grid */}
       <section className="border-t border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
         <div className="mx-auto max-w-7xl px-6 py-24 lg:px-12">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Everything You Need
-            </h2>
-            <p className="mt-4 text-lg text-zinc-500">
-              Built for people who use AI every day
-            </p>
-          </div>
+          <FadeIn>
+            <div className="mb-16 text-center">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
+                Everything You Need
+              </h2>
+              <p className="mt-4 text-lg text-zinc-500">
+                Built for people who use AI every day
+              </p>
+            </div>
+          </FadeIn>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerChildren className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((feat) => {
               const Icon = feat.icon
               return (
-              <div
+              <motion.div
+                variants={staggerItem}
                 key={feat.title}
                 className="group rounded-2xl border border-zinc-200 bg-white p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all hover:border-emerald-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
               >
@@ -397,23 +504,25 @@ export function LandingPage() {
                 <p className="text-sm leading-relaxed text-zinc-500">
                   {feat.description}
                 </p>
-              </div>
+              </motion.div>
               )
             })}
-          </div>
+          </StaggerChildren>
         </div>
       </section>
 
       {/* Comparison */}
       <section className="border-t border-zinc-100">
         <div className="mx-auto max-w-7xl px-6 py-24 lg:px-12">
-          <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
-            Stop Paying for Multiple
-            <br className="hidden sm:block" /> Subscriptions
-          </h2>
-          <p className="mx-auto mb-12 max-w-xl text-center text-lg text-zinc-500">
-            One plan that gives you everything
-          </p>
+          <FadeIn>
+            <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
+              Stop Paying for Multiple
+              <br className="hidden sm:block" /> Subscriptions
+            </h2>
+            <p className="mx-auto mb-12 max-w-xl text-center text-lg text-zinc-500">
+              One plan that gives you everything
+            </p>
+          </FadeIn>
 
           <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
             <div className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
@@ -492,12 +601,14 @@ export function LandingPage() {
       {/* Model showcase */}
       <section className="border-t border-zinc-100 bg-gradient-to-b from-zinc-50/50 to-white">
         <div className="mx-auto max-w-7xl px-6 py-24 lg:px-12">
-          <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
-            All the Models You Need
-          </h2>
-          <p className="mx-auto mb-12 max-w-xl text-center text-lg text-zinc-500">
-            Switch between models instantly — pick the right one for every task
-          </p>
+          <FadeIn>
+            <h2 className="mb-4 text-center text-4xl font-bold tracking-tight sm:text-5xl">
+              All the Models You Need
+            </h2>
+            <p className="mx-auto mb-12 max-w-xl text-center text-lg text-zinc-500">
+              Switch between models instantly — pick the right one for every task
+            </p>
+          </FadeIn>
 
           <div className="mx-auto grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {[
@@ -538,23 +649,31 @@ export function LandingPage() {
       {/* Final CTA */}
       <section className="border-t border-zinc-100 bg-gradient-to-b from-white to-emerald-50/30">
         <div className="mx-auto max-w-7xl px-6 py-28 text-center lg:px-12">
-          <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Ready to Use Every AI Model?
-          </h2>
-          <p className="mt-6 text-lg text-zinc-500">
-            Join 10,000+ users who switched to NottoAI.
-          </p>
+          <FadeIn>
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              Ready to Use Every AI Model?
+            </h2>
+            <p className="mt-6 text-lg text-zinc-500">
+              Join 10,000+ users who switched to NottoAI.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.2}>
           <div className="mt-8 flex flex-col items-center gap-3">
             <SignInButton mode="modal">
-              <button className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-10 py-4 text-lg font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-10 py-4 text-lg font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30"
+              >
                 Start Using All Models Now
                 <span>→</span>
-              </button>
+              </motion.button>
             </SignInButton>
             <p className="text-sm text-zinc-400">
               No credit card required · 500 free credits included
             </p>
           </div>
+          </FadeIn>
         </div>
       </section>
 
