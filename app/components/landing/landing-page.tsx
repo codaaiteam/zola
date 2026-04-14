@@ -155,18 +155,17 @@ export function LandingPage() {
             <span className="text-emerald-500">in One Chat</span>
           </h1>
 
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-zinc-500 sm:text-xl">
-            Stop paying{" "}
-            <span className="font-semibold text-zinc-700">$20/month for each AI tool</span>.
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-zinc-500 sm:text-xl">
+            <span className="font-semibold text-zinc-800">Pay once. Use every AI model.</span>
             <br />
-            Access all models in one place and{" "}
-            <span className="font-semibold text-emerald-600">save $50+ every month</span>.
+            <span className="text-emerald-600 font-medium">Save $50+ every month</span>{" "}
+            vs paying for each tool separately.
           </p>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <SignInButton mode="modal">
               <button className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30">
-                Start Using All Models Free
+                Start Using All Models Now
                 <span>→</span>
               </button>
             </SignInButton>
@@ -178,9 +177,14 @@ export function LandingPage() {
             </Link>
           </div>
 
-          <p className="mt-4 text-sm text-zinc-400">
-            No credit card required — 500 free credits to start
-          </p>
+          <div className="mt-5 flex flex-col items-center gap-2">
+            <p className="text-sm text-zinc-400">
+              No credit card required · 500 free credits included
+            </p>
+            <p className="text-xs font-medium text-zinc-500">
+              Join 10,000+ users saving $50+/month
+            </p>
+          </div>
         </div>
       </section>
 
@@ -196,10 +200,10 @@ export function LandingPage() {
                 key={name}
                 className="group flex flex-col items-center gap-2"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-zinc-200 bg-white shadow-sm transition-all group-hover:border-emerald-200 group-hover:bg-emerald-50 group-hover:shadow-md">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-zinc-200 bg-white shadow-sm transition-all group-hover:border-emerald-300 group-hover:bg-emerald-50 group-hover:shadow-md group-hover:scale-110">
                   <Icon className="h-8 w-8" />
                 </div>
-                <span className="text-xs font-medium text-zinc-400 transition-colors group-hover:text-emerald-600">
+                <span className="text-xs font-medium text-zinc-500 transition-colors group-hover:text-emerald-600">
                   {label}
                 </span>
               </div>
@@ -315,7 +319,7 @@ export function LandingPage() {
             <span className="text-emerald-500">Than ChatGPT</span>
           </h2>
           <p className="mx-auto mb-16 max-w-xl text-center text-lg text-zinc-500">
-            One subscription that replaces all your AI tools
+            ChatGPT gives you one model. We give you all of them.
           </p>
 
           <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-zinc-200 shadow-[0_10px_30px_rgba(0,0,0,0.05)]">
@@ -397,7 +401,7 @@ export function LandingPage() {
           <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
             <div className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
               <h3 className="mb-5 text-lg font-semibold text-red-500">
-                Without NottoAI
+                Pay for 4 Tools Separately
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2 text-sm text-zinc-500">
@@ -418,11 +422,12 @@ export function LandingPage() {
                 </li>
               </ul>
               <div className="mt-6 border-t border-zinc-100 pt-5">
+                <p className="text-sm text-zinc-400">$20 × 4 tools =</p>
                 <span className="text-2xl font-bold text-red-500">
                   $80+/mo
                 </span>
                 <p className="mt-1 text-xs text-zinc-400">
-                  4 apps, 4 logins, 4 bills
+                  4 apps · 4 logins · 4 bills · no model switching
                 </p>
               </div>
             </div>
@@ -433,7 +438,7 @@ export function LandingPage() {
               </div>
               <div className="mb-5 flex items-center gap-2">
                 <h3 className="text-lg font-semibold text-emerald-600">
-                  With NottoAI Pro
+                  All Models. One Subscription.
                 </h3>
               </div>
               <ul className="space-y-3">
@@ -447,19 +452,19 @@ export function LandingPage() {
                 </li>
                 <li className="flex items-center gap-2 text-sm text-zinc-700">
                   <span className="text-emerald-500">✓</span>
-                  Web search & file uploads
+                  Compare answers from different AIs
                 </li>
                 <li className="flex items-center gap-2 text-sm text-zinc-700">
                   <span className="text-emerald-500">✓</span>
-                  Priority speed + better results
+                  One login · one bill · zero hassle
                 </li>
               </ul>
               <div className="mt-6 border-t border-emerald-200 pt-5">
                 <span className="text-2xl font-bold text-emerald-600">
                   $99.90/mo
                 </span>
-                <p className="mt-1 text-xs text-emerald-600 font-medium">
-                  Everything in one place — save time + money
+                <p className="mt-1 text-xs font-medium text-emerald-600">
+                  Better answers + less hassle + save time
                 </p>
               </div>
             </div>
@@ -520,20 +525,19 @@ export function LandingPage() {
             Ready to Use Every AI Model?
           </h2>
           <p className="mt-6 text-lg text-zinc-500">
-            Start free with 500 credits.{" "}
-            <span className="font-medium text-zinc-700">No credit card required.</span>
+            Join 10,000+ users who switched to NottoAI.
           </p>
-          <div className="mt-10">
+          <div className="mt-8 flex flex-col items-center gap-3">
             <SignInButton mode="modal">
               <button className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-10 py-4 text-lg font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30">
-                Start Using All Models Free
+                Start Using All Models Now
                 <span>→</span>
               </button>
             </SignInButton>
+            <p className="text-sm text-zinc-400">
+              No credit card required · 500 free credits included
+            </p>
           </div>
-          <p className="mt-4 text-sm text-zinc-400">
-            Free models available forever — upgrade anytime
-          </p>
         </div>
       </section>
 
