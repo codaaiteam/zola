@@ -10,6 +10,7 @@ import { APP_NAME } from "@/lib/config"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
 import { useUser } from "@/lib/user-store/provider"
 import Link from "next/link"
+import { CreditsDisplay } from "./credits-display"
 import { DialogPublish } from "./dialog-publish"
 import { HeaderSidebarTrigger } from "./header-sidebar-trigger"
 
@@ -40,6 +41,7 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
           </div>
           <div />
           <div className="pointer-events-auto flex flex-1 items-center justify-end gap-2">
+            {isLoggedIn && <CreditsDisplay />}
             {isLoggedIn && !isMultiModelEnabled && <DialogPublish />}
             {isLoggedIn && <ButtonNewChat />}
             {isLoggedIn && !hasSidebar && <HistoryTrigger hasSidebar={hasSidebar} />}

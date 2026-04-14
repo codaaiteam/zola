@@ -32,6 +32,12 @@ export const MODEL_CREDIT_RATES: { pattern: string; rate: number; label: string 
   { pattern: "gpt-5.4-pro", rate: 150, label: "GPT-5.4 Pro" },
 ]
 
+/** Returns the credit cost for a given model ID, defaults to 1 */
+export function getModelCreditCost(modelId: string): number {
+  const entry = MODEL_CREDIT_RATES.find((r) => modelId.includes(r.pattern.replace(/"/g, "")))
+  return entry?.rate ?? 1
+}
+
 export const PRICING_PLANS: PricingPlan[] = [
   {
     name: "Free",

@@ -9,7 +9,7 @@ import { FREE_MODELS_IDS, NON_AUTH_ALLOWED_MODELS } from "@/lib/config"
 import { getProviderForModel } from "@/lib/openproviders/provider-map"
 import { sanitizeUserInput } from "@/lib/sanitize"
 import { validateUserIdentity } from "@/lib/server/api"
-import { checkUsageByModel, incrementUsage } from "@/lib/usage"
+import { checkUsageByModel, deductCredits, incrementUsage } from "@/lib/usage"
 import { getUserKey, type ProviderWithoutOllama } from "@/lib/user-keys"
 
 export async function validateAndTrackUsage({
@@ -39,14 +39,20 @@ export async function validateAndTrackUsage({
 export async function incrementMessageCount({
   supabase,
   userId,
+  model,
 }: {
   supabase: SupabaseClientType
   userId: string
+  model?: string
 }): Promise<void> {
   if (!supabase) return
 
   try {
     await incrementUsage(supabase, userId)
+    // Deduct credits for this model usage
+    if (model) {
+      await deductCredits(supabase, userId, model)
+    }
   } catch (err) {
     console.error("Failed to increment message count:", err)
     // Don't throw error as this shouldn't block the chat

@@ -5,6 +5,7 @@ import {
   FREE_MODELS_IDS,
   NON_AUTH_DAILY_MESSAGE_LIMIT,
 } from "@/lib/config"
+import { getModelCreditCost } from "@/lib/pricing"
 import { SupabaseClient } from "@supabase/supabase-js"
 
 const isFreeModel = (modelId: string) => FREE_MODELS_IDS.includes(modelId)
@@ -211,6 +212,25 @@ export async function checkUsageByModel(
   modelId: string,
   isAuthenticated: boolean
 ) {
+  // Check credit balance for authenticated users
+  if (isAuthenticated) {
+    const creditCost = getModelCreditCost(modelId)
+    if (creditCost > 0) {
+      const { data: user } = await supabase
+        .from("users")
+        .select("credits_remaining")
+        .eq("id", userId)
+        .maybeSingle()
+
+      const credits = user?.credits_remaining ?? 0
+      if (credits < creditCost) {
+        throw new UsageLimitError(
+          `Insufficient credits. This model costs ${creditCost} credits per message. Upgrade your plan for more credits.`
+        )
+      }
+    }
+  }
+
   if (isProModel(modelId)) {
     if (!isAuthenticated) {
       throw new UsageLimitError("You must log in to use this model.")
@@ -233,4 +253,29 @@ export async function incrementUsageByModel(
   }
 
   return await incrementUsage(supabase, userId)
+}
+
+/** Deduct credits for a model usage */
+export async function deductCredits(
+  supabase: SupabaseClient,
+  userId: string,
+  modelId: string
+): Promise<void> {
+  const creditCost = getModelCreditCost(modelId)
+  if (creditCost <= 0) return
+
+  const { data: user } = await supabase
+    .from("users")
+    .select("credits_remaining")
+    .eq("id", userId)
+    .maybeSingle()
+
+  if (!user) return
+
+  const newCredits = Math.max(0, (user.credits_remaining ?? 0) - creditCost)
+
+  await supabase
+    .from("users")
+    .update({ credits_remaining: newCredits })
+    .eq("id", userId)
 }

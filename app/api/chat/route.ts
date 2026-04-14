@@ -53,9 +53,9 @@ export async function POST(req: Request) {
       isAuthenticated,
     })
 
-    // Increment message count for successful validation
+    // Increment message count and deduct credits
     if (supabase) {
-      await incrementMessageCount({ supabase, userId })
+      await incrementMessageCount({ supabase, userId, model })
     }
 
     const userMessage = messages[messages.length - 1]
