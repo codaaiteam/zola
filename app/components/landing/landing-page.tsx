@@ -134,6 +134,107 @@ function TextReveal({ text, className, delay = 0 }: { text: string; className?: 
   )
 }
 
+/* Auto-cycling model demo in the chat mockup */
+const DEMO_MODELS = [
+  { icon: OpenAIIcon, label: "GPT-5.4", response: "React excels with its massive ecosystem and job market. Vue offers a gentler learning curve with built-in state management." },
+  { icon: AnthropicIcon, label: "Claude", response: "For a SaaS project, React gives you more hiring options and community support. Vue shines for smaller teams wanting faster development." },
+  { icon: GeminiIcon, label: "Gemini", response: "React: 40% market share, JSX flexibility, Next.js ecosystem. Vue: simpler mental model, official router + Pinia, great DX." },
+]
+
+function ChatDemo() {
+  const [activeModel, setActiveModel] = useState(0)
+  const [isTyping, setIsTyping] = useState(false)
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    if (!inView) return
+    const interval = setInterval(() => {
+      setIsTyping(true)
+      setTimeout(() => {
+        setActiveModel((prev) => (prev + 1) % DEMO_MODELS.length)
+        setIsTyping(false)
+      }, 600)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [inView])
+
+  const model = DEMO_MODELS[activeModel]
+
+  return (
+    <div ref={ref} className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-[0_20px_80px_rgba(0,0,0,0.08)]">
+      <div className="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50/80 px-5 py-3.5">
+        <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
+        <span className="h-3 w-3 rounded-full bg-[#FFBD2E]" />
+        <span className="h-3 w-3 rounded-full bg-[#28CA41]" />
+        <span className="ml-3 text-xs font-medium text-zinc-400">NottoAI</span>
+      </div>
+      <div className="flex flex-col gap-6 p-8 sm:p-12">
+        {/* User message */}
+        <div className="flex items-start gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-bold text-white">U</div>
+          <div className="rounded-2xl rounded-tl-sm bg-zinc-100 px-5 py-3"><p className="text-sm text-zinc-700">Compare React vs Vue for a new SaaS project</p></div>
+        </div>
+        {/* AI response — animates on model switch */}
+        <div className="flex items-start gap-3">
+          <motion.div
+            key={activeModel}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-500"
+          >
+            <model.icon className="h-5 w-5 invert" />
+          </motion.div>
+          <div className="max-w-xl rounded-2xl rounded-tl-sm border border-zinc-100 bg-white px-5 py-3 shadow-sm">
+            {isTyping ? (
+              <div className="flex items-center gap-1 py-1">
+                <span className="h-2 w-2 animate-bounce rounded-full bg-zinc-300" style={{ animationDelay: "0ms" }} />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-zinc-300" style={{ animationDelay: "150ms" }} />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-zinc-300" style={{ animationDelay: "300ms" }} />
+              </div>
+            ) : (
+              <motion.p
+                key={activeModel}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="text-sm leading-relaxed text-zinc-600"
+              >
+                {model.response}
+              </motion.p>
+            )}
+          </div>
+        </div>
+        {/* Model chips — active one highlights */}
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
+          {DEMO_MODELS.map(({ icon: Icon, label }, i) => (
+            <motion.button
+              key={label}
+              onClick={() => { setIsTyping(true); setTimeout(() => { setActiveModel(i); setIsTyping(false) }, 400) }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className={`flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all ${
+                i === activeModel
+                  ? "border-2 border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm shadow-emerald-500/10"
+                  : "border border-zinc-200 bg-white text-zinc-500 hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-600"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />{label}
+            </motion.button>
+          ))}
+          {MODEL_LOGOS.slice(3, 6).map(({ icon: Icon, label }) => (
+            <div key={label} className="flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-xs text-zinc-400">
+              <Icon className="h-3.5 w-3.5" />{label}
+            </div>
+          ))}
+          <span className="rounded-full border border-dashed border-zinc-300 bg-white px-3.5 py-2 text-xs text-zinc-400">+8 more</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ─── Page ─── */
 
 export function LandingPage() {
@@ -172,14 +273,13 @@ export function LandingPage() {
 
       {/* ═══ HERO ═══ */}
       <section ref={heroRef} className="relative overflow-hidden">
-        {/* Aurora gradient mesh background */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 left-1/4 h-[500px] w-[600px] rounded-full bg-emerald-200/30 blur-[120px]" />
-          <div className="absolute -top-20 right-1/4 h-[400px] w-[500px] rounded-full bg-cyan-200/20 blur-[100px]" />
-          <div className="absolute top-40 left-1/2 h-[300px] w-[400px] -translate-x-1/2 rounded-full bg-violet-200/15 blur-[100px]" />
-          {/* Dot grid pattern */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, #000 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-        </div>
+        {/* Clean radial glow — Stripe/OpenAI style */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(16,185,129,0.12), transparent 60%), radial-gradient(ellipse 60% 40% at 25% 10%, rgba(16,185,129,0.06), transparent), radial-gradient(ellipse 60% 40% at 75% 5%, rgba(16,185,129,0.05), transparent)",
+          }}
+        />
 
         <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative mx-auto max-w-7xl px-6 pb-20 pt-24 text-center sm:pt-32 lg:px-12">
           <motion.div
@@ -292,42 +392,15 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ═══ Chat mockup ═══ */}
+      {/* ═══ Chat mockup — auto-switching models ═══ */}
       <section className="bg-gradient-to-b from-zinc-50 to-white">
         <div className="mx-auto max-w-7xl px-6 py-24 lg:px-12">
-          <FadeIn y={50}>
-            <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-[0_20px_80px_rgba(0,0,0,0.08)]">
-              <div className="flex items-center gap-2 border-b border-zinc-100 bg-zinc-50/80 px-5 py-3.5">
-                <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
-                <span className="h-3 w-3 rounded-full bg-[#FFBD2E]" />
-                <span className="h-3 w-3 rounded-full bg-[#28CA41]" />
-                <span className="ml-3 text-xs font-medium text-zinc-400">NottoAI</span>
-              </div>
-              <div className="flex flex-col gap-6 p-8 sm:p-12">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-bold text-white">U</div>
-                  <div className="rounded-2xl rounded-tl-sm bg-zinc-100 px-5 py-3"><p className="text-sm text-zinc-700">Compare React vs Vue for a new SaaS project</p></div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-500"><OpenAIIcon className="h-5 w-5 invert" /></div>
-                  <div className="max-w-xl rounded-2xl rounded-tl-sm border border-zinc-100 bg-white px-5 py-3 shadow-sm">
-                    <p className="text-sm leading-relaxed text-zinc-600">Here&apos;s a quick comparison for your SaaS:</p>
-                    <div className="mt-3 grid grid-cols-2 gap-3">
-                      <div className="rounded-xl bg-blue-50/80 p-3"><p className="text-xs font-bold text-blue-700">React</p><p className="mt-1 text-xs text-blue-600/80">Larger ecosystem, more jobs, JSX flexibility</p></div>
-                      <div className="rounded-xl bg-green-50/80 p-3"><p className="text-xs font-bold text-green-700">Vue</p><p className="mt-1 text-xs text-green-600/80">Easier learning curve, built-in state mgmt</p></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
-                  {MODEL_LOGOS.slice(0, 5).map(({ icon: Icon, label }, i) => (
-                    <motion.div key={label} whileHover={{ scale: 1.05, y: -2 }} className={`flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-all ${i === 0 ? "border-2 border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm" : "border border-zinc-200 bg-white text-zinc-500 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-600"}`}>
-                      <Icon className="h-3.5 w-3.5" />{label}
-                    </motion.div>
-                  ))}
-                  <span className="rounded-full border border-dashed border-zinc-300 bg-white px-3.5 py-2 text-xs text-zinc-400">+11 more</span>
-                </div>
-              </div>
-            </div>
+          <FadeIn>
+            <p className="mb-3 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-400">See it in action</p>
+            <h2 className="mb-12 text-center text-3xl font-bold tracking-tight sm:text-4xl">Same Question, Different Models</h2>
+          </FadeIn>
+          <FadeIn y={40}>
+            <ChatDemo />
           </FadeIn>
         </div>
       </section>
@@ -449,10 +522,10 @@ export function LandingPage() {
 
       {/* ═══ Final CTA ═══ */}
       <section className="relative overflow-hidden border-t border-zinc-100">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute bottom-0 left-1/3 h-[400px] w-[500px] rounded-full bg-emerald-100/40 blur-[120px]" />
-          <div className="absolute bottom-0 right-1/3 h-[300px] w-[400px] rounded-full bg-cyan-100/30 blur-[100px]" />
-        </div>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse 70% 50% at 50% 100%, rgba(16,185,129,0.08), transparent 60%)" }}
+        />
         <div className="relative mx-auto max-w-7xl px-6 py-32 text-center lg:px-12">
           <FadeIn>
             <h2 className="text-4xl font-bold tracking-tight sm:text-6xl">Ready to Use Every AI Model?</h2>
