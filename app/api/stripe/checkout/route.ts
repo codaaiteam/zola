@@ -4,6 +4,12 @@ import { stripe, STRIPE_PRICES } from "@/lib/stripe"
 import { createGuestServerClient } from "@/lib/supabase/server-guest"
 import type { PlanTier } from "@/lib/pricing"
 
+function getBaseUrl(req: NextRequest): string {
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host")
+  const proto = req.headers.get("x-forwarded-proto") || "https"
+  return host ? `${proto}://${host}` : req.nextUrl.origin
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth()
@@ -65,8 +71,8 @@ export async function POST(req: NextRequest) {
       {
         mode: "subscription",
         line_items: [{ price: priceId, quantity: 1 }],
-        success_url: `${req.nextUrl.origin}/?checkout=success`,
-        cancel_url: `${req.nextUrl.origin}/pricing?checkout=cancelled`,
+        success_url: `${getBaseUrl(req)}/?checkout=success`,
+        cancel_url: `${getBaseUrl(req)}/pricing?checkout=cancelled`,
         metadata: { clerk_user_id: userId, tier },
         subscription_data: {
           metadata: { clerk_user_id: userId, tier },
