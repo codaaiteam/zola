@@ -28,9 +28,45 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nottoai.com"),
-  title: "NottoAI",
+  title: {
+    default:
+      "NottoAI — One Chat, Every AI Model | GPT-5.4, Claude, Gemini & More",
+    template: "%s | NottoAI",
+  },
   description:
-    "NottoAI — AI chat with 16+ models. GPT-5.4, Claude, Gemini, Grok, DeepSeek and more, all in one place.",
+    "Access GPT-5.4, Claude Opus, Gemini Pro, DeepSeek, Grok and 16+ AI models in one place. Stop paying for multiple AI subscriptions. Start free.",
+  keywords: [
+    "AI chat",
+    "ChatGPT alternative",
+    "Claude",
+    "Gemini",
+    "GPT-5.4",
+    "AI models",
+    "multi-model AI",
+    "AI subscription",
+    "DeepSeek",
+    "Grok",
+    "AI assistant",
+    "NottoAI",
+  ],
+  openGraph: {
+    title: "NottoAI — One Chat, Every AI Model",
+    description:
+      "Access GPT-5.4, Claude, Gemini, DeepSeek, Grok and 16+ AI models in one place. Start free with 500 credits.",
+    url: "https://nottoai.com",
+    siteName: "NottoAI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NottoAI — One Chat, Every AI Model",
+    description:
+      "Access 16+ AI models in one place. Stop paying for multiple subscriptions.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default async function RootLayout({
