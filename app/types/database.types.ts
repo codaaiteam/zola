@@ -142,6 +142,39 @@ export type Database = {
           },
         ]
       }
+      credit_logs: {
+        Row: {
+          id: string
+          user_id: string
+          model_id: string
+          tokens_used: number
+          credits_cost: number
+          credits_after: number
+          chat_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          model_id: string
+          tokens_used?: number
+          credits_cost?: number
+          credits_after?: number
+          chat_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          model_id?: string
+          tokens_used?: number
+          credits_cost?: number
+          credits_after?: number
+          chat_id?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           experimental_attachments: Attachment[]
