@@ -250,8 +250,8 @@ export function LandingPage() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-12">
           <Link href="/" className="inline-flex items-center gap-1.5 text-base font-medium tracking-tight">
             <ZolaFaviconIcon className="size-7" />
-            <span className="font-semibold tracking-[-0.02em]">Notto</span>
-            <span className="relative font-semibold tracking-[-0.02em]">AI<svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 24 6" fill="none"><path d="M1 4.5C4 1.5 8 1 12 3s8 1.5 11-1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" className="text-emerald-500" /></svg></span>
+            <span className="font-semibold">Notto</span>
+            <span className="font-normal opacity-50">AI</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/pricing" className="hidden text-sm text-zinc-500 transition-colors hover:text-zinc-900 sm:inline">
