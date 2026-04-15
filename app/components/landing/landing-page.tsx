@@ -557,6 +557,7 @@ export function LandingPage() {
             <Link href="/pricing" className="text-sm text-zinc-400 hover:text-zinc-600">Pricing</Link>
             <Link href="/privacy" className="text-sm text-zinc-400 hover:text-zinc-600">Privacy</Link>
             <Link href="/terms" className="text-sm text-zinc-400 hover:text-zinc-600">Terms</Link>
+            <Link href="/model-pricing" className="text-sm text-zinc-400 hover:text-zinc-600">Model Pricing</Link>
             <Link href="/claude-opus-4-7" className="text-sm text-zinc-400 hover:text-zinc-600">Claude Opus 4.7</Link>
             <a href="mailto:contact@nottoai.com" className="text-sm text-zinc-400 hover:text-zinc-600">Contact</a>
           </div>

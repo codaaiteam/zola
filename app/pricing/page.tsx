@@ -325,6 +325,17 @@ export default function PricingPage() {
               </div>
             ))}
           </div>
+
+          {/* Link to full model pricing */}
+          <div className="mt-8 text-center">
+            <Link
+              href="/model-pricing"
+              className="group inline-flex items-center gap-2 rounded-full border border-[#10B981]/30 bg-[#10B981]/5 px-6 py-3 text-sm font-medium text-[#10B981] transition-all hover:border-[#10B981]/50 hover:bg-[#10B981]/10"
+            >
+              See detailed model pricing & credit usage
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+          </div>
         </div>
 
         {/* Why NottoAI */}
