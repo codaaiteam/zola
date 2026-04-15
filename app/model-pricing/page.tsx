@@ -89,7 +89,7 @@ function CreditsCalculator() {
   const [selectedRate, setSelectedRate] = useState(13)
 
   const credits = Math.ceil(tokens / 1000) * selectedRate
-  const proMessages = selectedRate > 0 ? Math.floor(100000 / (Math.ceil(tokens / 1000) * selectedRate)) : Infinity
+  const proMessages = selectedRate > 0 ? Math.floor(100000 / (Math.ceil(tokens / 1000) * selectedRate)) : -1
 
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/[0.03] sm:p-8">
@@ -145,7 +145,7 @@ function CreditsCalculator() {
         </div>
         <div className="text-center">
           <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {selectedRate === 0 ? "∞" : proMessages.toLocaleString()}
+            {proMessages < 0 ? "Unlimited*" : proMessages.toLocaleString()}
           </div>
           <div className="text-xs text-zinc-500">messages on Pro</div>
         </div>
@@ -197,7 +197,7 @@ function getTierTag(rate: number): {
 
 // avg ~1000 tokens per message
 function estimateMessages(rate: number, credits: number): string {
-  if (rate === 0) return "Unlimited"
+  if (rate === 0) return "Unlimited*"
   const msgs = Math.floor(credits / rate)
   return `~${msgs.toLocaleString()}`
 }
@@ -471,7 +471,8 @@ export default function ModelPricingPage() {
             <p className="mx-auto mt-6 max-w-2xl text-center text-xs text-zinc-400">
               * Messages estimated at ~1,000 tokens each. Actual token usage
               varies by message length, context, and model response. Free models
-              never consume credits.
+              never consume credits. *Unlimited free models are subject to
+              third-party rate limits and availability.
             </p>
           </FadeIn>
         </div>
