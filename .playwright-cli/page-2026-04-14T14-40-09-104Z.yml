@@ -1,0 +1,185 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Pencil Logo" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Pencil Logo" [ref=e7]
+        - navigation [ref=e8]:
+          - link "Downloads" [ref=e9] [cursor=pointer]:
+            - /url: /downloads
+          - link "Pricing" [ref=e10] [cursor=pointer]:
+            - /url: /pricing
+          - link "Prompt Gallery" [ref=e11] [cursor=pointer]:
+            - /url: /prompts
+          - link "Docs" [ref=e12] [cursor=pointer]:
+            - /url: https://docs.pencil.dev
+        - generic [ref=e13]:
+          - link "Sign in" [ref=e14] [cursor=pointer]:
+            - /url: /login
+          - link "Download Pencil" [ref=e15] [cursor=pointer]:
+            - /url: /downloads
+    - main [ref=e16]:
+      - generic [ref=e17]:
+        - heading "Prompt Gallery" [level=1] [ref=e18]
+        - paragraph [ref=e19]: Copy a prompt. Paste it in Pencil. Watch your design come to life.
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button "Prompt example" [ref=e24] [cursor=pointer]:
+            - img "Prompt example" [ref=e25]
+          - generic [ref=e26]:
+            - paragraph [ref=e28]: Design a web app for managing rocket launches. Use a technical style.
+            - generic [ref=e29]:
+              - button "Copy prompt" [ref=e30] [cursor=pointer]:
+                - img [ref=e31]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e34] [cursor=pointer]:
+                - img [ref=e35]
+        - generic [ref=e37]:
+          - button "Prompt example" [ref=e39] [cursor=pointer]:
+            - img "Prompt example" [ref=e40]
+          - generic [ref=e41]:
+            - paragraph [ref=e43]: Design a website for a specialty cafe in Haight Ashbury, San Francisco.
+            - generic [ref=e44]:
+              - button "Copy prompt" [ref=e45] [cursor=pointer]:
+                - img [ref=e46]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e49] [cursor=pointer]:
+                - img [ref=e50]
+        - generic [ref=e52]:
+          - button "Prompt example" [ref=e54] [cursor=pointer]:
+            - img "Prompt example" [ref=e55]
+          - generic [ref=e56]:
+            - paragraph [ref=e58]: Design a mobile app for tracking music royalties. Use a Scandinavian minimalistic style.
+            - generic [ref=e59]:
+              - button "Copy prompt" [ref=e60] [cursor=pointer]:
+                - img [ref=e61]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e64] [cursor=pointer]:
+                - img [ref=e65]
+        - generic [ref=e67]:
+          - button "Prompt example" [ref=e69] [cursor=pointer]:
+            - img "Prompt example" [ref=e70]
+          - generic [ref=e71]:
+            - paragraph [ref=e73]: Look at the selected design. Adjust the prompts page code to reflect it. You can find the images in the /public folder. Don't worry about header and footer, keep it as it is on the current page.
+            - generic [ref=e74]:
+              - button "Copy prompt" [ref=e75] [cursor=pointer]:
+                - img [ref=e76]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e79] [cursor=pointer]:
+                - img [ref=e80]
+        - generic [ref=e82]:
+          - button "Prompt example" [ref=e84] [cursor=pointer]:
+            - img "Prompt example" [ref=e85]
+          - generic [ref=e86]:
+            - paragraph [ref=e88]: Use the selected design as the base design, that's my current app. Design a new page, the Missions page now. Create a new design for it.
+            - generic [ref=e89]:
+              - button "Copy prompt" [ref=e90] [cursor=pointer]:
+                - img [ref=e91]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e94] [cursor=pointer]:
+                - img [ref=e95]
+        - generic [ref=e97]:
+          - button "Prompt example" [ref=e99] [cursor=pointer]:
+            - img "Prompt example" [ref=e100]
+          - generic [ref=e101]:
+            - paragraph [ref=e103]: Look at the selected design. Explore a totally different design direction.
+            - generic [ref=e104]:
+              - button "Copy prompt" [ref=e105] [cursor=pointer]:
+                - img [ref=e106]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e109] [cursor=pointer]:
+                - img [ref=e110]
+        - generic [ref=e112]:
+          - button "Prompt example" [ref=e114] [cursor=pointer]:
+            - img "Prompt example" [ref=e115]
+          - generic [ref=e116]:
+            - paragraph [ref=e118]: Look at the selected design. Explore a different layout, but keep the current design direction. Create a new design for it.
+            - generic [ref=e119]:
+              - button "Copy prompt" [ref=e120] [cursor=pointer]:
+                - img [ref=e121]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e124] [cursor=pointer]:
+                - img [ref=e125]
+        - generic [ref=e127]:
+          - button "Prompt example" [ref=e129] [cursor=pointer]:
+            - img "Prompt example" [ref=e130]
+          - generic [ref=e131]:
+            - paragraph [ref=e133]: Look at the selected design. Change it to the light mode. Create a new design for it.
+            - generic [ref=e134]:
+              - button "Copy prompt" [ref=e135] [cursor=pointer]:
+                - img [ref=e136]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e139] [cursor=pointer]:
+                - img [ref=e140]
+        - generic [ref=e142]:
+          - button "Prompt example" [ref=e144] [cursor=pointer]:
+            - img "Prompt example" [ref=e145]
+          - generic [ref=e146]:
+            - generic [ref=e147]:
+              - paragraph [ref=e148]: Let's go more bold and rock'n'roll, make the headline much larger, drop boxes around prompts and just focus on typography, one column layout, most emphasis on prompts, everything else secondary, Swiss layout.
+              - paragraph [ref=e149]: "*Continuation of the same chat"
+            - generic [ref=e150]:
+              - button "Copy prompt" [ref=e151] [cursor=pointer]:
+                - img [ref=e152]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e155] [cursor=pointer]:
+                - img [ref=e156]
+        - generic [ref=e158]:
+          - button "Prompt example" [ref=e160] [cursor=pointer]:
+            - img "Prompt example" [ref=e161]
+          - generic [ref=e162]:
+            - generic [ref=e163]:
+              - paragraph [ref=e164]: That's great. Now change fonts to something more classy. Create a new design for it.
+              - paragraph [ref=e165]: "*Continuation of the same chat"
+            - generic [ref=e166]:
+              - button "Copy prompt" [ref=e167] [cursor=pointer]:
+                - img [ref=e168]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e171] [cursor=pointer]:
+                - img [ref=e172]
+        - generic [ref=e174]:
+          - button "Prompt example" [ref=e176] [cursor=pointer]:
+            - img "Prompt example" [ref=e177]
+          - generic [ref=e178]:
+            - generic [ref=e179]:
+              - paragraph [ref=e180]: Great! Now use a sidenav. Create a new design for it.
+              - paragraph [ref=e181]: "*Continuation of the same chat"
+            - generic [ref=e182]:
+              - button "Copy prompt" [ref=e183] [cursor=pointer]:
+                - img [ref=e184]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e187] [cursor=pointer]:
+                - img [ref=e188]
+        - generic [ref=e190]:
+          - button "Prompt example" [ref=e192] [cursor=pointer]:
+            - img "Prompt example" [ref=e193]
+          - generic [ref=e194]:
+            - paragraph [ref=e196]: Look at the selected design. Change this to a simpler and cleaner design direction. Create a new design for it.
+            - generic [ref=e197]:
+              - button "Copy prompt" [ref=e198] [cursor=pointer]:
+                - img [ref=e199]
+                - text: Copy prompt
+              - button "View full prompt" [ref=e202] [cursor=pointer]:
+                - img [ref=e203]
+    - contentinfo [ref=e205]:
+      - generic [ref=e207]:
+        - generic [ref=e208]:
+          - generic [ref=e209]:
+            - link "Prompt Gallery" [ref=e210] [cursor=pointer]:
+              - /url: /prompts
+            - link "Add to Cursor" [ref=e211] [cursor=pointer]:
+              - /url: cursor:extension/highagency.pencildev
+            - link "Add to VSCode" [ref=e212] [cursor=pointer]:
+              - /url: https://marketplace.visualstudio.com/items?itemName=highagency.pencildev
+            - link "Pencil on OPENVSX" [ref=e213] [cursor=pointer]:
+              - /url: https://open-vsx.org/extension/highagency/pencildev
+          - generic [ref=e214]:
+            - link "Privacy Policy" [ref=e215] [cursor=pointer]:
+              - /url: /privacy-policy
+            - link "Terms of use" [ref=e216] [cursor=pointer]:
+              - /url: /terms-of-use
+            - link "EULA" [ref=e217] [cursor=pointer]:
+              - /url: /eula
+        - generic [ref=e218]: © 2026 High agency, inc.
+  - alert [ref=e219]
