@@ -307,8 +307,8 @@ export default function ClaudeOpus47Page() {
             className="inline-flex items-center gap-1.5 text-base font-medium tracking-tight"
           >
             <ZolaFaviconIcon className="size-7" />
-            <span className="font-semibold">Notto</span>
-            <span className="font-normal opacity-50">AI</span>
+            <span className="font-semibold tracking-[-0.01em]">Notto</span>
+            <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text font-semibold tracking-[-0.01em] text-transparent">AI</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link

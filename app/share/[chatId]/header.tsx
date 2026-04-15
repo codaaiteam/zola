@@ -10,8 +10,8 @@ export function Header() {
       <div className="bg-background relative mx-auto flex h-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:bg-transparent lg:px-8">
         <Link href="/" className="inline-flex items-center gap-1.5 text-base font-medium tracking-tight">
           <ZolaFaviconIcon className="size-7" />
-          <span className="font-medium">Notto</span>
-          <span className="font-normal opacity-80">AI</span>
+          <span className="font-semibold tracking-[-0.01em]">Notto</span>
+          <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text font-semibold tracking-[-0.01em] text-transparent">AI</span>
         </Link>
       </div>
     </header>
