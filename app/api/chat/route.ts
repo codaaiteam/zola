@@ -25,6 +25,7 @@ type ChatRequest = {
   enableSearch: boolean
   message_group_id?: string
   editCutoffTimestamp?: string
+  skipUserMessageLog?: boolean
 }
 
 export async function POST(req: Request) {
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
       enableSearch,
       message_group_id,
       editCutoffTimestamp,
+      skipUserMessageLog,
     } = (await req.json()) as ChatRequest
 
     if (!messages || !chatId || !userId) {
@@ -74,7 +76,7 @@ export async function POST(req: Request) {
       }
     }
 
-    if (supabase && userMessage?.role === "user") {
+    if (supabase && userMessage?.role === "user" && !skipUserMessageLog) {
       await logUserMessage({
         supabase,
         userId,

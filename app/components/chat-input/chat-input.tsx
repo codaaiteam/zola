@@ -9,12 +9,15 @@ import {
 } from "@/components/prompt-kit/prompt-input"
 import { Button } from "@/components/ui/button"
 import { getModelInfo } from "@/lib/models"
+import { getActiveMentionQuery, filterModelsForMention } from "@/lib/mentions"
+import { useModel } from "@/lib/model-store/provider"
 import { ArrowUpIcon, StopIcon } from "@phosphor-icons/react"
-import { useCallback, useEffect, useMemo, useRef } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { PromptSystem } from "../suggestions/prompt-system"
 import { ButtonFileUpload } from "./button-file-upload"
 import { ButtonSearch } from "./button-search"
 import { FileList } from "./file-list"
+import { MentionAutocomplete } from "./mention-autocomplete"
 
 type ChatInputProps = {
   value: string
@@ -61,6 +64,55 @@ export function ChatInput({
   const isOnlyWhitespace = (text: string) => !/[^\s]/.test(text)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
+  // @mention autocomplete state
+  const { models: allModels } = useModel()
+  const [mentionVisible, setMentionVisible] = useState(false)
+  const [mentionQuery, setMentionQuery] = useState("")
+  const [mentionStart, setMentionStart] = useState(0)
+  const [mentionIndex, setMentionIndex] = useState(0)
+
+  const mentionFiltered = useMemo(
+    () => (mentionVisible ? filterModelsForMention(mentionQuery, allModels) : []),
+    [mentionVisible, mentionQuery, allModels]
+  )
+
+  const updateMentionState = useCallback(
+    (text: string, cursorPos?: number) => {
+      const pos = cursorPos ?? text.length
+      const result = getActiveMentionQuery(text, pos)
+      if (result) {
+        setMentionVisible(true)
+        setMentionQuery(result.query)
+        setMentionStart(result.start)
+        setMentionIndex(0)
+      } else {
+        setMentionVisible(false)
+      }
+    },
+    []
+  )
+
+  const handleMentionSelect = useCallback(
+    (model: { name: string }) => {
+      const before = value.slice(0, mentionStart)
+      const after = value.slice(
+        mentionStart + 1 + mentionQuery.length // +1 for @
+      )
+      const newValue = `${before}@${model.name} ${after}`
+      onValueChange(newValue)
+      setMentionVisible(false)
+      requestAnimationFrame(() => {
+        const textarea = textareaRef.current
+        if (textarea) {
+          const cursorPos = before.length + 1 + model.name.length + 1
+          textarea.setSelectionRange(cursorPos, cursorPos)
+          textarea.focus()
+        }
+      })
+    },
+    [value, mentionStart, mentionQuery, onValueChange]
+  )
+
   const handleSend = useCallback(() => {
     if (isSubmitting) {
       return
@@ -81,6 +133,34 @@ export function ChatInput({
         return
       }
 
+      // Intercept keys when @mention autocomplete is open
+      if (mentionVisible && mentionFiltered.length > 0) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault()
+          setMentionIndex((prev) =>
+            prev < mentionFiltered.length - 1 ? prev + 1 : 0
+          )
+          return
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault()
+          setMentionIndex((prev) =>
+            prev > 0 ? prev - 1 : mentionFiltered.length - 1
+          )
+          return
+        }
+        if (e.key === "Enter" || e.key === "Tab") {
+          e.preventDefault()
+          handleMentionSelect(mentionFiltered[mentionIndex])
+          return
+        }
+        if (e.key === "Escape") {
+          e.preventDefault()
+          setMentionVisible(false)
+          return
+        }
+      }
+
       if (e.key === "Enter" && status === "streaming") {
         e.preventDefault()
         return
@@ -95,7 +175,7 @@ export function ChatInput({
         onSend()
       }
     },
-    [isSubmitting, onSend, status, value]
+    [isSubmitting, onSend, status, value, mentionVisible, mentionFiltered, mentionIndex, handleMentionSelect]
   )
 
   const handlePaste = useCallback(
@@ -176,8 +256,19 @@ export function ChatInput({
           className="bg-popover relative z-10 p-0 pt-1 shadow-xs backdrop-blur-xl"
           maxHeight={200}
           value={value}
-          onValueChange={onValueChange}
+          onValueChange={(v) => {
+            onValueChange(v)
+            const cursorPos = textareaRef.current?.selectionStart ?? v.length
+            updateMentionState(v, cursorPos)
+          }}
         >
+          <MentionAutocomplete
+            query={mentionQuery}
+            models={allModels}
+            selectedIndex={mentionIndex}
+            onSelect={handleMentionSelect}
+            visible={mentionVisible}
+          />
           <FileList files={files} onFileRemove={onFileRemove} />
           <PromptInputTextarea
             ref={textareaRef}

@@ -4,6 +4,8 @@ import {
   MessageActions,
   MessageContent,
 } from "@/components/prompt-kit/message"
+import { PROVIDERS } from "@/lib/providers"
+import { getModelInfo } from "@/lib/models"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
 import { cn } from "@/lib/utils"
 import type { Message as MessageAISDK } from "@ai-sdk/react"
@@ -29,6 +31,7 @@ type MessageAssistantProps = {
   className?: string
   messageId: string
   onQuote?: (text: string, messageId: string) => void
+  modelId?: string
 }
 
 export function MessageAssistant({
@@ -43,7 +46,13 @@ export function MessageAssistant({
   className,
   messageId,
   onQuote,
+  modelId,
 }: MessageAssistantProps) {
+  // Model attribution badge
+  const modelConfig = modelId ? getModelInfo(modelId) : null
+  const modelProvider = modelConfig
+    ? PROVIDERS.find((p) => p.id === modelConfig.icon)
+    : null
   const { preferences } = useUserPreferences()
   const sources = getSources(parts)
   const toolInvocationParts = parts?.filter(
@@ -99,6 +108,17 @@ export function MessageAssistant({
         )}
         {...(isQuoteEnabled && { "data-message-id": messageId })}
       >
+        {modelConfig && (
+          <div className="mb-1 flex items-center gap-1.5">
+            {modelProvider?.icon && (
+              <modelProvider.icon className="size-4" />
+            )}
+            <span className="text-xs font-medium text-muted-foreground">
+              {modelConfig.name}
+            </span>
+          </div>
+        )}
+
         {reasoningParts && reasoningParts.reasoning && (
           <Reasoning
             reasoning={reasoningParts.reasoning}

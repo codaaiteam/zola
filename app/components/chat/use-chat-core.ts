@@ -5,6 +5,8 @@ import { getOrCreateGuestUserId } from "@/lib/api"
 import { useChats } from "@/lib/chat-store/chats/provider"
 import { MESSAGE_MAX_LENGTH, SYSTEM_PROMPT_DEFAULT } from "@/lib/config"
 import { Attachment } from "@/lib/file-handling"
+import { parseMentions } from "@/lib/mentions"
+import type { ModelConfig } from "@/lib/models/types"
 import { API_ROUTE_CHAT } from "@/lib/routes"
 import type { UserProfile } from "@/lib/user/types"
 import type { Message } from "@ai-sdk/react"
@@ -33,6 +35,7 @@ type UseChatCoreProps = {
   selectedModel: string
   clearDraft: () => void
   bumpChat: (chatId: string) => void
+  allModels: ModelConfig[]
 }
 
 export function useChatCore({
@@ -51,6 +54,7 @@ export function useChatCore({
   selectedModel,
   clearDraft,
   bumpChat,
+  allModels,
 }: UseChatCoreProps) {
   // State management
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -141,6 +145,111 @@ export function useChatCore({
   }
   prevChatIdRef.current = chatId
 
+  // Stream a response from an additional @mentioned model
+  const streamFromModel = useCallback(
+    async (
+      modelId: string,
+      chatId: string,
+      userId: string,
+      currentMessages: Message[],
+      messageGroupId: string,
+      systemPrompt: string,
+      enableSearch: boolean,
+      isAuthenticated: boolean
+    ) => {
+      const placeholderId = `mention-${modelId}-${Date.now()}`
+      const modelName =
+        allModels.find((m) => m.id === modelId)?.name ?? modelId
+
+      // Insert placeholder message
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: placeholderId,
+          role: "assistant" as const,
+          content: "",
+          createdAt: new Date(),
+          annotations: [{ modelId, modelName }],
+        },
+      ])
+
+      try {
+        const res = await fetch(API_ROUTE_CHAT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: currentMessages,
+            chatId,
+            userId,
+            model: modelId,
+            isAuthenticated,
+            systemPrompt,
+            enableSearch,
+            message_group_id: messageGroupId,
+            skipUserMessageLog: true,
+          }),
+        })
+
+        if (!res.ok || !res.body) {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === placeholderId
+                ? { ...m, content: `Error: Failed to get response from ${modelName}` }
+                : m
+            )
+          )
+          return
+        }
+
+        const reader = res.body.getReader()
+        const decoder = new TextDecoder()
+        let accumulated = ""
+
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value, { stream: true })
+          // Parse AI SDK data stream protocol: lines starting with 0: are text
+          const lines = chunk.split("\n")
+          for (const line of lines) {
+            if (line.startsWith("0:")) {
+              try {
+                const text = JSON.parse(line.slice(2))
+                accumulated += text
+              } catch {
+                // skip non-JSON lines
+              }
+            }
+          }
+
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === placeholderId ? { ...m, content: accumulated } : m
+            )
+          )
+        }
+
+        // Sync to get the real message ID from DB
+        try {
+          await syncRecentMessages(chatId, setMessages, 2)
+        } catch {
+          // non-critical
+        }
+      } catch (err) {
+        console.error(`@mention stream error for ${modelId}:`, err)
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === placeholderId
+              ? { ...m, content: `Error: ${modelName} failed to respond` }
+              : m
+          )
+        )
+      }
+    },
+    [allModels, setMessages]
+  )
+
   // Submit action
   const submit = useCallback(async () => {
     setIsSubmitting(true)
@@ -209,14 +318,22 @@ export function useChatCore({
         }
       }
 
+      // Parse @mentions from the input
+      const mentionedModelIds = parseMentions(input, allModels)
+      const hasMentions = mentionedModelIds.length > 0
+      const primaryModel = hasMentions ? mentionedModelIds[0] : selectedModel
+      const additionalModels = hasMentions ? mentionedModelIds.slice(1) : []
+      const messageGroupId = hasMentions ? crypto.randomUUID() : undefined
+
       const options = {
         body: {
           chatId: currentChatId,
           userId: uid,
-          model: selectedModel,
+          model: primaryModel,
           isAuthenticated,
           systemPrompt: systemPrompt || SYSTEM_PROMPT_DEFAULT,
           enableSearch,
+          ...(messageGroupId ? { message_group_id: messageGroupId } : {}),
         },
         experimental_attachments: attachments || undefined,
       }
@@ -226,6 +343,23 @@ export function useChatCore({
       cleanupOptimisticAttachments(optimisticMessage.experimental_attachments)
       cacheAndAddMessage(optimisticMessage)
       clearDraft()
+
+      // Fire parallel requests for additional @mentioned models
+      if (additionalModels.length > 0 && messageGroupId) {
+        const currentMsgs = messages.concat(optimisticMessage)
+        for (const modelId of additionalModels) {
+          streamFromModel(
+            modelId,
+            currentChatId,
+            uid,
+            currentMsgs,
+            messageGroupId,
+            systemPrompt || SYSTEM_PROMPT_DEFAULT,
+            enableSearch,
+            isAuthenticated
+          )
+        }
+      }
 
       if (messages.length > 0) {
         bumpChat(currentChatId)
@@ -259,6 +393,8 @@ export function useChatCore({
     messages.length,
     bumpChat,
     setIsSubmitting,
+    allModels,
+    streamFromModel,
   ])
 
   const submitEdit = useCallback(

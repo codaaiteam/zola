@@ -204,7 +204,29 @@ export function MessageUser({
             h4: ({ children }) => <p>{children}</p>,
             h5: ({ children }) => <p>{children}</p>,
             h6: ({ children }) => <p>{children}</p>,
-            p: ({ children }) => <p>{children}</p>,
+            p: ({ children: pChildren }) => {
+              // Highlight @mentions in user messages
+              if (typeof pChildren === "string" && pChildren.includes("@")) {
+                const parts = pChildren.split(/(@[\w\s.-]+?)(?=\s|@|$)/g)
+                return (
+                  <p>
+                    {parts.map((part, i) =>
+                      part.startsWith("@") ? (
+                        <span
+                          key={i}
+                          className="not-prose inline-block rounded-md bg-primary/10 px-1.5 py-0.5 text-xs font-semibold text-primary"
+                        >
+                          {part}
+                        </span>
+                      ) : (
+                        <React.Fragment key={i}>{part}</React.Fragment>
+                      )
+                    )}
+                  </p>
+                )
+              }
+              return <p>{pChildren}</p>
+            },
             li: ({ children }) => <p>- {children}</p>,
             ul: ({ children }) => <React.Fragment>{children}</React.Fragment>,
             ol: ({ children }) => <React.Fragment>{children}</React.Fragment>,

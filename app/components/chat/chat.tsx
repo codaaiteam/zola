@@ -9,6 +9,7 @@ import { useMessages } from "@/lib/chat-store/messages/provider"
 import { useChatSession } from "@/lib/chat-store/session/provider"
 import { SYSTEM_PROMPT_DEFAULT } from "@/lib/config"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
+import { useModel as useModelStore } from "@/lib/model-store/provider"
 import { useUser } from "@/lib/user-store/provider"
 import { cn } from "@/lib/utils"
 import { AnimatePresence, motion } from "motion/react"
@@ -46,6 +47,7 @@ export function Chat() {
 
   const { messages: initialMessages, cacheAndAddMessage } = useMessages()
   const { user } = useUser()
+  const { models: allModels } = useModelStore()
   const { preferences } = useUserPreferences()
   const { draftValue, clearDraft } = useChatDraft(chatId)
 
@@ -133,6 +135,7 @@ export function Chat() {
     selectedModel,
     clearDraft,
     bumpChat,
+    allModels,
   })
 
   // Memoize the conversation props to prevent unnecessary rerenders

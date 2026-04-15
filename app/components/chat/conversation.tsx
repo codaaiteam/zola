@@ -70,6 +70,11 @@ export function Conversation({
                 messageGroupId={
                   (message as ExtendedMessageAISDK).message_group_id ?? null
                 }
+                modelId={
+                  (message as ExtendedMessageAISDK).model ??
+                  (message.annotations as Array<{ modelId?: string }>)?.[0]?.modelId ??
+                  undefined
+                }
                 isUserAuthenticated={isUserAuthenticated}
               >
                 {message.content}
