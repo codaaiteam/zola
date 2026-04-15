@@ -1,2 +1,0 @@
-[    1355ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://nottoai.com/api/user-key-status:0
-[    2118ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://nottoai.com/api/user-preferences/favorite-models:0
