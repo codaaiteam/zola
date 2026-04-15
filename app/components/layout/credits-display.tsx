@@ -46,7 +46,7 @@ export function CreditsDisplay() {
 
   return (
     <Link
-      href="/pricing"
+      href="/usage"
       className="pointer-events-auto flex items-center gap-2 rounded-full border px-3 py-1 text-xs transition-colors hover:bg-accent"
     >
       <div className="flex items-center gap-1.5">

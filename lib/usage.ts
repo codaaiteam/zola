@@ -255,12 +255,13 @@ export async function incrementUsageByModel(
   return await incrementUsage(supabase, userId)
 }
 
-/** Deduct credits based on actual token usage */
+/** Deduct credits based on actual token usage and log the transaction */
 export async function deductCredits(
   supabase: SupabaseClient,
   userId: string,
   modelId: string,
-  totalTokens: number
+  totalTokens: number,
+  chatId?: string
 ): Promise<void> {
   const cost = calculateCredits(modelId, totalTokens)
   if (cost <= 0) return
@@ -279,4 +280,14 @@ export async function deductCredits(
     .from("users")
     .update({ credits_remaining: newCredits })
     .eq("id", userId)
+
+  // Log the credit transaction for usage dashboard
+  await supabase.from("credit_logs").insert({
+    user_id: userId,
+    model_id: modelId,
+    tokens_used: totalTokens,
+    credits_cost: cost,
+    credits_after: newCredits,
+    chat_id: chatId ?? null,
+  })
 }

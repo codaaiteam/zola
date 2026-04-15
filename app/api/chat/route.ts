@@ -131,7 +131,7 @@ export async function POST(req: Request) {
           // Fall back to estimate (~1000 tokens) if provider doesn't report usage
           const tokens = usage?.totalTokens || 1000
           try {
-            await deductCredits(supabase, userId, model, tokens)
+            await deductCredits(supabase, userId, model, tokens, chatId)
           } catch (err) {
             console.error("Failed to deduct credits:", err)
           }
