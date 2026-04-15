@@ -286,7 +286,7 @@ export default function ModelPricingPage() {
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-4 py-1.5 dark:border-emerald-500/30 dark:bg-emerald-500/10"
           >
             <span className="text-xs font-semibold tracking-wide text-emerald-600 dark:text-emerald-400">
-              Transparent Pricing
+              One Subscription. All AI Models.
             </span>
           </motion.div>
 
@@ -311,7 +311,7 @@ export default function ModelPricingPage() {
             Every model has a credit rate. Your message tokens × model rate =
             credits used.{" "}
             <span className="font-medium text-zinc-700 dark:text-zinc-200">
-              Simple, predictable, no surprises.
+              Free models are always free — paid credits only apply when you choose premium models.
             </span>
           </motion.p>
 
@@ -542,24 +542,95 @@ export default function ModelPricingPage() {
               )
             })}
           </StaggerWrap>
+
+          {/* Default recommendation callout */}
+          <FadeIn delay={0.2}>
+            <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-blue-200 bg-blue-50/50 px-6 py-4 text-center dark:border-blue-500/20 dark:bg-blue-500/5">
+              <p className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                Not sure? Most users pick{" "}
+                <span className="font-bold">GPT-5.4</span> or{" "}
+                <span className="font-bold">Claude Sonnet</span> (13x rate) —
+                best quality-to-cost ratio for everyday work.
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ═══ Comparison anchor — vs separate subscriptions ═══ */}
+      <section className="border-b border-zinc-100 bg-zinc-50/50 dark:border-white/5 dark:bg-zinc-900/30">
+        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-12">
+          <FadeIn>
+            <p className="mb-4 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-rose-500 dark:text-rose-400">
+              Instead of paying separately
+            </p>
+            <h2 className="mb-12 text-center text-3xl font-bold tracking-tight sm:text-4xl">
+              Why Pay for 4 Subscriptions?
+            </h2>
+          </FadeIn>
+          <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
+            <FadeIn y={20}>
+              <div className="rounded-2xl border border-zinc-200 bg-white p-7 dark:border-white/10 dark:bg-white/[0.02]">
+                <h3 className="mb-4 text-lg font-bold text-red-500">Separate Subscriptions</h3>
+                <ul className="space-y-3">
+                  {[
+                    "ChatGPT Plus — $20/mo",
+                    "Claude Pro — $20/mo",
+                    "Gemini Advanced — $20/mo",
+                    "Perplexity Pro — $20/mo",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-zinc-500">
+                      <span className="text-red-400">✕</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-5 border-t border-zinc-100 pt-4 dark:border-white/5">
+                  <span className="text-3xl font-bold text-red-500">$80+<span className="text-lg font-normal text-zinc-400">/mo</span></span>
+                  <p className="mt-1 text-xs text-zinc-400">4 apps, 4 logins, 4 bills — still only 1 model each</p>
+                </div>
+              </div>
+            </FadeIn>
+            <FadeIn y={20} delay={0.1}>
+              <div className="relative rounded-2xl border-2 border-emerald-500 bg-gradient-to-b from-emerald-50/50 to-white p-7 shadow-[0_12px_40px_rgba(16,185,129,0.1)] dark:from-emerald-500/5 dark:to-zinc-950">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-4 py-1 text-xs font-bold text-white shadow-lg shadow-emerald-500/30">SAVE $60+/mo</div>
+                <h3 className="mb-4 text-lg font-bold text-emerald-600 dark:text-emerald-400">NottoAI Pro</h3>
+                <ul className="space-y-3">
+                  {[
+                    "All 16+ AI models included",
+                    "Switch models mid-conversation",
+                    "100,000 credits / month",
+                    "One login, one bill, zero hassle",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-zinc-700 dark:text-zinc-300">
+                      <span className="text-emerald-500">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-5 border-t border-emerald-200 pt-4 dark:border-emerald-500/20">
+                  <span className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">$99.90<span className="text-lg font-normal text-zinc-400">/mo</span></span>
+                  <p className="mt-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">Or $19.90/mo on Basic for lighter usage</p>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
         </div>
       </section>
 
       {/* ═══ Bottom line ═══ */}
-      <section className="border-b border-zinc-100 bg-zinc-50/50 dark:border-white/5 dark:bg-zinc-900/30">
+      <section className="border-b border-zinc-100 dark:border-white/5">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-12">
           <FadeIn>
             <div className="mx-auto max-w-3xl rounded-2xl border border-emerald-200 bg-emerald-50/50 p-8 text-center dark:border-emerald-500/20 dark:bg-emerald-500/5">
               <p className="text-2xl font-bold text-zinc-900 dark:text-white sm:text-3xl">
-                $19.90/mo = 200–5,000+ messages
+                $19.90/mo typically gives you 1,000–3,000 messages
               </p>
               <p className="mt-2 text-zinc-500 dark:text-zinc-400">
-                depending on which models you use. Mix free and premium models to
-                maximize your credits.
+                Most users mix GPT-5.4 and Claude Sonnet for everyday work, plus
+                free models for quick tasks.
               </p>
               <p className="mt-4 text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                Pro at $99.90/mo = up to 100,000+ messages with free models, or
-                ~410 with Claude Sonnet
+                Free models (DeepSeek R1, Llama) don&apos;t cost any credits — use
+                them anytime, no limits.
               </p>
             </div>
           </FadeIn>
