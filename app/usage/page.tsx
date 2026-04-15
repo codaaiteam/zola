@@ -263,6 +263,31 @@ export default function UsagePage() {
           </p>
         </div>
 
+        {/* How credits work */}
+        <div className="mb-8 rounded-xl border bg-muted/30 px-5 py-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <p className="text-sm font-medium">
+                How credits work:{" "}
+                <span className="font-mono text-xs text-muted-foreground">
+                  credits = ceil(tokens / 1,000) × model rate
+                </span>
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Each message uses tokens (input + output). Different models have
+                different rates — e.g. GPT-5.4 Nano is 1x, Claude Sonnet is 13x.
+                Free models cost 0 credits.
+              </p>
+            </div>
+            <Link
+              href="/model-pricing"
+              className="shrink-0 text-xs font-medium text-[#10B981] hover:underline"
+            >
+              See all model rates →
+            </Link>
+          </div>
+        </div>
+
         {loading && !usage ? (
           <div className="flex h-64 items-center justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
@@ -433,7 +458,7 @@ export default function UsagePage() {
                             {getModelLabel(log.model_id)}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {log.tokens_used.toLocaleString()} tokens
+                            {log.tokens_used.toLocaleString()} tokens × {getModelRate(log.model_id)}x = {log.credits_cost} credits
                           </p>
                         </div>
                       </div>
