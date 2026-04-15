@@ -55,8 +55,11 @@ export function MessagesProvider({ children }: { children: React.ReactNode }) {
 
       try {
         const fresh = await getMessagesFromDb(chatId)
-        setMessages(fresh)
-        cacheMessages(chatId, fresh)
+        // Only overwrite if server returned data, or cache was also empty
+        if (fresh.length > 0 || cached.length === 0) {
+          setMessages(fresh)
+          cacheMessages(chatId, fresh)
+        }
       } catch (error) {
         console.error("Failed to fetch messages:", error)
       } finally {
@@ -72,7 +75,9 @@ export function MessagesProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const fresh = await getMessagesFromDb(chatId)
-      setMessages(fresh)
+      if (fresh.length > 0 || messages.length === 0) {
+        setMessages(fresh)
+      }
     } catch {
       toast({ title: "Failed to refresh messages", status: "error" })
     }

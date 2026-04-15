@@ -67,7 +67,10 @@ export function ChatsProvider({
 
       try {
         const fresh = await fetchAndCacheChats(userId)
-        setChats(fresh)
+        // Only overwrite if we got data, or if cache was also empty
+        if (fresh.length > 0 || cached.length === 0) {
+          setChats(fresh)
+        }
       } finally {
         setIsLoading(false)
       }
@@ -80,7 +83,10 @@ export function ChatsProvider({
     if (!userId) return
 
     const fresh = await fetchAndCacheChats(userId)
-    setChats(fresh)
+    // Don't overwrite existing chats with empty data
+    if (fresh.length > 0 || chats.length === 0) {
+      setChats(fresh)
+    }
   }
 
   const updateTitle = async (id: string, title: string) => {

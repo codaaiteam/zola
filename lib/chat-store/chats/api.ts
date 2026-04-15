@@ -90,6 +90,14 @@ export async function fetchAndCacheChats(userId: string): Promise<Chats[]> {
 
   if (data.length > 0) {
     await writeToIndexedDB("chats", data)
+    return data
+  }
+
+  // Server returned empty — could be auth expiry or network failure.
+  // Fall back to cached data instead of wiping the UI.
+  const cached = await getCachedChats()
+  if (cached.length > 0) {
+    return cached
   }
 
   return data
