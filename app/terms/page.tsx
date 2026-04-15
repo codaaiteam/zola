@@ -17,7 +17,7 @@ export default function TermsPage() {
           >
             <ZolaFaviconIcon className="size-7" />
             <span className="font-semibold tracking-[-0.02em]">Notto</span>
-            <span className="font-semibold italic tracking-[-0.02em]">AI</span>
+            <span className="relative font-semibold tracking-[-0.02em]">AI<svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 24 6" fill="none"><path d="M1 4.5C4 1.5 8 1 12 3s8 1.5 11-1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" className="text-emerald-500" /></svg></span>
           </Link>
           <Link
             href="/"
