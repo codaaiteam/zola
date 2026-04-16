@@ -29,6 +29,7 @@ export const MODEL_CREDIT_RATES: { pattern: string; rate: number; label: string 
   { pattern: "gpt-5.4\"", rate: 13, label: "GPT-5.4" },
   { pattern: "claude-sonnet-4.6", rate: 13, label: "Claude Sonnet 4.6" },
   { pattern: "claude-opus-4.6", rate: 22, label: "Claude Opus 4.6" },
+  { pattern: "claude-opus-4.7", rate: 22, label: "Claude Opus 4.7" },
   { pattern: "gpt-5.4-pro", rate: 150, label: "GPT-5.4 Pro" },
 ]
 

@@ -287,6 +287,36 @@ export const openrouterModels: ModelConfig[] = [
     apiSdk: (apiKey?: string, opts?: { enableSearch?: boolean }) =>
       or("anthropic/claude-opus-4.6", apiKey, opts),
   },
+  {
+    id: "openrouter:anthropic/claude-opus-4.7",
+    name: "Claude Opus 4.7",
+    provider: "OpenRouter",
+    providerId: "openrouter",
+    modelFamily: "Claude",
+    baseProviderId: "claude",
+    description:
+      "Anthropic's latest and most intelligent model. Next-gen reasoning, coding, and agentic performance.",
+    tags: ["premium", "coding", "agentic", "frontier", "newest"],
+    contextWindow: 1000000,
+    inputCost: 5,
+    outputCost: 25,
+    priceUnit: "per 1M tokens",
+    vision: true,
+    tools: true,
+    audio: false,
+    reasoning: true,
+    webSearch: true,
+    openSource: false,
+    speed: "Medium",
+    intelligence: "High",
+    website: "https://openrouter.ai",
+    apiDocs: "https://openrouter.ai/anthropic/claude-opus-4.7",
+    modelPage: "https://anthropic.com",
+    releasedAt: "2026-04-16",
+    icon: "claude",
+    apiSdk: (apiKey?: string, opts?: { enableSearch?: boolean }) =>
+      or("anthropic/claude-opus-4.7", apiKey, opts),
+  },
 
   // ── Gemini family ──
   {
