@@ -146,6 +146,7 @@ export type Database = {
         Row: {
           id: string
           user_id: string
+          user_email: string | null
           event_type: string
           status: string
           tier: string | null
@@ -163,6 +164,7 @@ export type Database = {
         Insert: {
           id?: string
           user_id: string
+          user_email?: string | null
           event_type: string
           status?: string
           tier?: string | null
@@ -180,6 +182,7 @@ export type Database = {
         Update: {
           id?: string
           user_id?: string
+          user_email?: string | null
           event_type?: string
           status?: string
           tier?: string | null

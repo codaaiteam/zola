@@ -87,8 +87,15 @@ export async function POST(req: NextRequest) {
 
     // Log checkout initiation to orders table
     if (supabase) {
+      const { data: orderUser } = await supabase
+        .from("users")
+        .select("email")
+        .eq("id", userId)
+        .maybeSingle()
+
       await supabase.from("nottoai_orders").insert({
         user_id: userId,
+        user_email: orderUser?.email ?? null,
         event_type: "checkout_initiated",
         status: "pending",
         tier,

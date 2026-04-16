@@ -57,8 +57,14 @@ export async function POST(req: NextRequest) {
 
           // Also log as a separate completed event
           if (clerkUserId) {
+            const { data: checkoutUser } = await supabase
+              .from("users")
+              .select("email")
+              .eq("id", clerkUserId)
+              .maybeSingle()
             await supabase.from("nottoai_orders").insert({
               user_id: clerkUserId,
+              user_email: checkoutUser?.email ?? null,
               event_type: "checkout_completed",
               status: "completed",
               tier: session.metadata?.tier,
@@ -89,7 +95,7 @@ export async function POST(req: NextRequest) {
         if (subCustomerId) {
           const { data: subUser } = await supabase
             .from("users")
-            .select("id")
+            .select("id, email")
             .eq("stripe_customer_id", subCustomerId)
             .maybeSingle()
           if (subUser) {
@@ -102,6 +108,7 @@ export async function POST(req: NextRequest) {
               : null
             await supabase.from("nottoai_orders").insert({
               user_id: subUser.id,
+              user_email: subUser.email ?? null,
               event_type: event.type === "customer.subscription.created"
                 ? "subscription_created"
                 : "subscription_updated",
@@ -126,12 +133,13 @@ export async function POST(req: NextRequest) {
           // Log before updating user
           const { data: delUser } = await supabase
             .from("users")
-            .select("id")
+            .select("id, email")
             .eq("stripe_customer_id", customerId)
             .maybeSingle()
           if (delUser) {
             await supabase.from("nottoai_orders").insert({
               user_id: delUser.id,
+              user_email: delUser.email ?? null,
               event_type: "subscription_deleted",
               status: "completed",
               stripe_customer_id: customerId,
@@ -186,12 +194,13 @@ export async function POST(req: NextRequest) {
           // Log invoice payment
           const { data: invUser } = await supabase
             .from("users")
-            .select("id")
+            .select("id, email")
             .eq("stripe_customer_id", invCustomerId)
             .maybeSingle()
           if (invUser) {
             await supabase.from("nottoai_orders").insert({
               user_id: invUser.id,
+              user_email: invUser.email ?? null,
               event_type: "invoice_paid",
               status: "completed",
               tier: invTier,
