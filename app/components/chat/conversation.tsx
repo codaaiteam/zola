@@ -2,7 +2,6 @@ import {
   ChatContainerContent,
   ChatContainerRoot,
 } from "@/components/prompt-kit/chat-container"
-import { LogoLoader } from "@/components/prompt-kit/logo-loader"
 import { ScrollButton } from "@/components/prompt-kit/scroll-button"
 import { ExtendedMessageAISDK } from "@/lib/chat-store/messages/api"
 import { getModelInfo } from "@/lib/models"
@@ -77,7 +76,7 @@ export function Conversation({
                 modelId={
                   (message as ExtendedMessageAISDK).model ??
                   (message.annotations as Array<{ modelId?: string }>)?.[0]?.modelId ??
-                  (message.role === "assistant" ? selectedModel : undefined)
+                  (message.role === "assistant" && isLast ? selectedModel : undefined)
                 }
                 isUserAuthenticated={isUserAuthenticated}
               >
@@ -96,15 +95,19 @@ export function Conversation({
               return (
                 <div className="group min-h-scroll-anchor flex w-full max-w-3xl items-start gap-3 px-6 pb-2">
                   {LoadingIcon ? (
-                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background">
+                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background animate-pulse">
                       <LoadingIcon className="size-4" />
                     </div>
                   ) : (
-                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background">
+                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background animate-pulse">
                       <span className="text-[10px] font-bold text-muted-foreground">AI</span>
                     </div>
                   )}
-                  <LogoLoader />
+                  <div className="flex items-center gap-1 pt-2">
+                    <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground/40" style={{ animationDelay: "0ms" }} />
+                    <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground/40" style={{ animationDelay: "150ms" }} />
+                    <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground/40" style={{ animationDelay: "300ms" }} />
+                  </div>
                 </div>
               )
             })()}
