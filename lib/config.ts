@@ -17,8 +17,7 @@ export const DAILY_LIMIT_PRO_MODELS = 500
 export const NON_AUTH_ALLOWED_MODELS = ["openrouter:openai/gpt-5.4-nano"]
 
 export const FREE_MODELS_IDS = [
-  "openrouter:deepseek/deepseek-r1:free",
-  "openrouter:meta-llama/llama-3.3-8b-instruct:free",
+  "openrouter:meta-llama/llama-3.3-70b-instruct:free",
   "openrouter:openai/gpt-5.4-nano",
 ]
 

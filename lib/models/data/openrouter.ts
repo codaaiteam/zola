@@ -17,13 +17,13 @@ function or(
 export const openrouterModels: ModelConfig[] = [
   // ── Free models ──
   {
-    id: "openrouter:deepseek/deepseek-r1:free",
+    id: "openrouter:deepseek/deepseek-r1",
     name: "DeepSeek R1",
     provider: "OpenRouter",
     providerId: "openrouter",
     modelFamily: "DeepSeek",
     baseProviderId: "deepseek",
-    description: "Flagship reasoning model by DeepSeek. Free tier.",
+    description: "Flagship reasoning model by DeepSeek.",
     tags: ["free", "reasoning", "performance"],
     contextWindow: 163840,
     inputCost: 0,
@@ -38,15 +38,15 @@ export const openrouterModels: ModelConfig[] = [
     speed: "Medium",
     intelligence: "High",
     website: "https://openrouter.ai",
-    apiDocs: "https://openrouter.ai/deepseek/deepseek-r1:free",
+    apiDocs: "https://openrouter.ai/deepseek/deepseek-r1",
     modelPage: "https://deepseek.com",
     releasedAt: "2025-01-20",
     icon: "deepseek",
-    apiSdk: (apiKey?: string) => or("deepseek/deepseek-r1:free", apiKey),
+    apiSdk: (apiKey?: string) => or("deepseek/deepseek-r1", apiKey),
   },
   {
-    id: "openrouter:meta-llama/llama-3.3-8b-instruct:free",
-    name: "Llama 3.3 8B",
+    id: "openrouter:meta-llama/llama-3.3-70b-instruct:free",
+    name: "Llama 3.3 70B",
     provider: "OpenRouter",
     providerId: "openrouter",
     modelFamily: "Llama",
@@ -66,12 +66,12 @@ export const openrouterModels: ModelConfig[] = [
     speed: "Fast",
     intelligence: "Medium",
     website: "https://openrouter.ai",
-    apiDocs: "https://openrouter.ai/meta-llama/llama-3.3-8b-instruct:free",
+    apiDocs: "https://openrouter.ai/meta-llama/llama-3.3-70b-instruct:free",
     modelPage: "https://www.llama.com",
     releasedAt: "2025-04-01",
     icon: "meta",
     apiSdk: (apiKey?: string, opts?: { enableSearch?: boolean }) =>
-      or("meta-llama/llama-3.3-8b-instruct:free", apiKey, opts),
+      or("meta-llama/llama-3.3-70b-instruct:free", apiKey, opts),
   },
 
   // ── GPT family ──

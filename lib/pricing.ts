@@ -14,8 +14,8 @@ export interface PricingPlan {
 
 // 1 credit = 1,000 tokens. Different models consume credits at different rates.
 export const MODEL_CREDIT_RATES: { pattern: string; rate: number; label: string }[] = [
-  { pattern: "deepseek-r1:free", rate: 0, label: "DeepSeek R1 (Free)" },
-  { pattern: "llama-3.3-8b-instruct:free", rate: 0, label: "Llama 3.3 8B (Free)" },
+  { pattern: "deepseek-r1", rate: 2, label: "DeepSeek R1" },
+  { pattern: "llama-3.3-70b-instruct:free", rate: 0, label: "Llama 3.3 70B (Free)" },
   { pattern: "gpt-5.4-nano", rate: 1, label: "GPT-5.4 Nano" },
   { pattern: "gemini-3.1-flash-lite", rate: 1, label: "Gemini 3.1 Flash Lite" },
   { pattern: "grok-4.1-fast", rate: 1, label: "Grok 4.1 Fast" },
