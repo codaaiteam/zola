@@ -24,14 +24,17 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { FREE_TIER_ALLOWED_MODELS } from "@/lib/config"
 import { useModel } from "@/lib/model-store/provider"
 import { filterAndSortModels } from "@/lib/model-store/utils"
 import { ModelConfig } from "@/lib/models/types"
 import { PROVIDERS } from "@/lib/providers"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
+import { useUser } from "@/lib/user-store/provider"
 import { cn } from "@/lib/utils"
 import {
   CaretDownIcon,
+  LockSimpleIcon,
   MagnifyingGlassIcon,
 } from "@phosphor-icons/react"
 import { useRef, useState } from "react"
@@ -52,6 +55,12 @@ export function ModelSelector({
 }: ModelSelectorProps) {
   const { models, isLoading: isLoadingModels, favoriteModels } = useModel()
   const { isModelHidden } = useUserPreferences()
+  const { user } = useUser()
+  const userTier = user?.subscription_tier || "free"
+  const isFreeTier = userTier === "free"
+
+  const isModelLocked = (modelId: string) =>
+    isFreeTier && !FREE_TIER_ALLOWED_MODELS.includes(modelId)
 
   const currentModel = models.find((model) => model.id === selectedModelId)
   const currentProvider = PROVIDERS.find(
@@ -80,15 +89,18 @@ export function ModelSelector({
 
   const renderModelItem = (model: ModelConfig) => {
     const provider = PROVIDERS.find((provider) => provider.id === model.icon)
+    const locked = isModelLocked(model.id)
 
     return (
       <div
         key={model.id}
         className={cn(
           "flex w-full items-center justify-between px-3 py-2",
-          selectedModelId === model.id && "bg-[#10B981]/10 text-[#059669]"
+          selectedModelId === model.id && "bg-[#10B981]/10 text-[#059669]",
+          locked && "opacity-60"
         )}
         onClick={() => {
+          if (locked) return
           setSelectedModelId(model.id)
           if (isMobile) {
             setIsDrawerOpen(false)
@@ -103,6 +115,7 @@ export function ModelSelector({
             <span className="text-sm">{model.name}</span>
           </div>
         </div>
+        {locked && <LockSimpleIcon className="size-4 text-muted-foreground" weight="bold" />}
       </div>
     )
   }
@@ -272,15 +285,21 @@ export function ModelSelector({
                   const provider = PROVIDERS.find(
                     (provider) => provider.id === model.icon
                   )
+                  const locked = isModelLocked(model.id)
 
                   return (
                     <DropdownMenuItem
                       key={model.id}
                       className={cn(
                         "flex w-full items-center justify-between px-3 py-2",
-                        selectedModelId === model.id && "bg-[#10B981]/10 text-[#059669]"
+                        selectedModelId === model.id && "bg-[#10B981]/10 text-[#059669]",
+                        locked && "opacity-60"
                       )}
                       onSelect={() => {
+                        if (locked) {
+                          window.location.href = "/pricing"
+                          return
+                        }
                         setSelectedModelId(model.id)
                         setIsDropdownOpen(false)
                       }}
@@ -301,6 +320,7 @@ export function ModelSelector({
                           <span className="text-sm">{model.name}</span>
                         </div>
                       </div>
+                      {locked && <LockSimpleIcon className="size-4 text-muted-foreground" weight="bold" />}
                     </DropdownMenuItem>
                   )
                 })
