@@ -649,7 +649,7 @@ export default function ModelPricingPage() {
         <div className="relative mx-auto max-w-7xl px-6 py-24 text-center lg:px-12">
           <FadeIn>
             <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
-              Try It Free — 500 Credits Included
+              Try It Free — 100 Credits Included
             </h2>
             <p className="mx-auto mt-4 max-w-md text-lg text-zinc-500 dark:text-zinc-400">
               No credit card required. Start chatting with every AI model today.

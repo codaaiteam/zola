@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
               subscription_tier: "free",
               subscription_current_period_end: null,
               premium: false,
-              credits_remaining: 500,
+              credits_remaining: 100,
             })
             .eq("stripe_customer_id", customerId)
         }
@@ -257,7 +257,7 @@ async function handleSubscriptionChange(
           ).toISOString()
         : null,
       premium: isActive && tier !== "free",
-      credits_remaining: plan?.credits ?? 500,
+      credits_remaining: plan?.credits ?? 100,
     })
     .eq("stripe_customer_id", customerId)
 }

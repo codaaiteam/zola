@@ -758,7 +758,7 @@ export default function ClaudeOpus47Page() {
                 </motion.button>
               </SignInButton>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                No credit card required · 500 free credits included
+                No credit card required · 100 free credits included
               </p>
             </div>
           </FadeIn>

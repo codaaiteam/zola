@@ -3,6 +3,7 @@ import {
   AUTH_DAILY_MESSAGE_LIMIT,
   DAILY_LIMIT_PRO_MODELS,
   FREE_MODELS_IDS,
+  FREE_TIER_ALLOWED_MODELS,
   NON_AUTH_DAILY_MESSAGE_LIMIT,
 } from "@/lib/config"
 import { calculateCredits, getModelCreditRate } from "@/lib/pricing"
@@ -212,17 +213,27 @@ export async function checkUsageByModel(
   modelId: string,
   isAuthenticated: boolean
 ) {
-  // Check credit balance for authenticated users (must have at least some credits for non-free models)
+  // Check credit balance and tier-based model access
   if (isAuthenticated) {
+    const { data: user } = await supabase
+      .from("users")
+      .select("credits_remaining, subscription_tier")
+      .eq("id", userId)
+      .maybeSingle()
+
+    const tier = user?.subscription_tier || "free"
+    const credits = user?.credits_remaining
+
+    // Free-tier users can only use budget models
+    if (tier === "free" && !FREE_TIER_ALLOWED_MODELS.includes(modelId)) {
+      throw new UsageLimitError(
+        "This model requires a paid plan. Upgrade to Basic or Pro to access premium models like Claude, GPT-5.4, and Gemini Pro."
+      )
+    }
+
+    // Check credit balance for non-free models
     const rate = getModelCreditRate(modelId)
     if (rate > 0) {
-      const { data: user } = await supabase
-        .from("users")
-        .select("credits_remaining")
-        .eq("id", userId)
-        .maybeSingle()
-
-      const credits = user?.credits_remaining
       if (credits !== null && credits !== undefined && credits <= 0) {
         throw new UsageLimitError(
           "You've run out of credits. Upgrade your plan or wait for your credits to reset."

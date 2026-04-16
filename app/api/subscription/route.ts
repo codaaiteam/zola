@@ -11,7 +11,7 @@ export async function GET() {
 
     const supabase = await createGuestServerClient()
     if (!supabase) {
-      return NextResponse.json({ tier: "free", credits: 500, maxCredits: 500 })
+      return NextResponse.json({ tier: "free", credits: 100, maxCredits: 100 })
     }
 
     const { data: user } = await supabase
@@ -23,13 +23,13 @@ export async function GET() {
       .single()
 
     if (!user) {
-      return NextResponse.json({ tier: "free", credits: 500, maxCredits: 500 })
+      return NextResponse.json({ tier: "free", credits: 100, maxCredits: 100 })
     }
 
     const tier = user.subscription_tier || "free"
-    const credits = user.credits_remaining ?? 500
+    const credits = user.credits_remaining ?? 100
     const maxCreditsMap: Record<string, number> = {
-      free: 500,
+      free: 100,
       basic: 15000,
       pro: 100000,
       enterprise: 210000,
@@ -39,7 +39,7 @@ export async function GET() {
       tier,
       status: user.subscription_status || "free",
       credits,
-      maxCredits: maxCreditsMap[tier] || 500,
+      maxCredits: maxCreditsMap[tier] || 100,
       periodEnd: user.subscription_current_period_end,
     })
   } catch (error) {

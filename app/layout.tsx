@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NottoAI — One Chat, Every AI Model",
     description:
-      "Access GPT-5.4, Claude, Gemini, DeepSeek, Grok and 16+ AI models in one place. Start free with 500 credits.",
+      "Access GPT-5.4, Claude, Gemini, DeepSeek, Grok and 16+ AI models in one place. Start free with 100 credits.",
     url: "https://nottoai.com",
     siteName: "NottoAI",
     type: "website",

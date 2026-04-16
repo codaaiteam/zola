@@ -21,6 +21,18 @@ export const FREE_MODELS_IDS = [
   "openrouter:openai/gpt-5.4-nano",
 ]
 
+// Models available to free-tier users (cheap/free models only)
+// Premium models (Claude, GPT-5.4, Gemini Pro, etc.) require a paid plan
+export const FREE_TIER_ALLOWED_MODELS = [
+  "openrouter:meta-llama/llama-3.3-70b-instruct:free",
+  "openrouter:openai/gpt-5.4-nano",
+  "openrouter:openai/gpt-5.4-mini",
+  "openrouter:deepseek/deepseek-r1",
+  "openrouter:deepseek/deepseek-v3.2",
+  "openrouter:google/gemini-3.1-flash-lite-preview",
+  "openrouter:x-ai/grok-4.1-fast",
+]
+
 export const MODEL_DEFAULT = "openrouter:openai/gpt-5.4-nano"
 
 export const APP_NAME = "NottoAI"

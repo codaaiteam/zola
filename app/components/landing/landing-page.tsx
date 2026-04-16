@@ -357,7 +357,7 @@ export function LandingPage() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="mt-6 flex flex-col items-center gap-1.5">
-            <p className="text-sm text-zinc-400">No credit card required · 500 free credits included</p>
+            <p className="text-sm text-zinc-400">No credit card required · 100 free credits included</p>
             <p className="text-xs font-semibold text-zinc-500">Join 10,000+ users saving $50+/month</p>
           </motion.div>
         </motion.div>
@@ -568,7 +568,7 @@ export function LandingPage() {
                   <span className="absolute inset-0 -z-0 bg-gradient-to-r from-emerald-600 to-emerald-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 </motion.button>
               </SignInButton>
-              <p className="text-sm text-zinc-400">No credit card required · 500 free credits included</p>
+              <p className="text-sm text-zinc-400">No credit card required · 100 free credits included</p>
             </div>
           </FadeIn>
         </div>
