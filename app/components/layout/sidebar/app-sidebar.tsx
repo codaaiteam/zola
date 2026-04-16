@@ -24,7 +24,9 @@ import {
 import { Pin } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import { FeedbackForm } from "@/components/common/feedback-form"
+import { useUser } from "@/lib/user-store/provider"
 import { HistoryTrigger } from "../../history/history-trigger"
 import { SidebarList } from "./sidebar-list"
 import { SidebarProject } from "./sidebar-project"
@@ -33,6 +35,8 @@ export function AppSidebar() {
   const isMobile = useBreakpoint(768)
   const { setOpenMobile } = useSidebar()
   const { chats, pinnedChats, isLoading } = useChats()
+  const { user } = useUser()
+  const [showFeedback, setShowFeedback] = useState(false)
   const params = useParams<{ chatId: string }>()
   const currentChatId = params.chatId
 
@@ -163,13 +167,26 @@ export function AppSidebar() {
           <CrownSimple size={16} />
           <span>Pricing</span>
         </Link>
-        <Link
-          href="/feedback"
-          className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+        <button
+          type="button"
+          onClick={() => setShowFeedback(true)}
+          className="hover:bg-muted text-sidebar-foreground flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
         >
           <Megaphone size={16} />
           <span>Feedback</span>
-        </Link>
+        </button>
+
+        {/* Feedback dialog */}
+        {showFeedback && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowFeedback(false)}>
+            <div
+              className="bg-popover w-full max-w-sm rounded-xl border shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <FeedbackForm authUserId={user?.id} onClose={() => setShowFeedback(false)} />
+            </div>
+          </div>
+        )}
         <a
           href="mailto:contact@nottoai.com"
           className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
