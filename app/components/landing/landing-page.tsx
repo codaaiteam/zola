@@ -6,6 +6,7 @@ import { SignInButton } from "@clerk/nextjs"
 import { motion, useInView, useScroll, useTransform } from "motion/react"
 import { useRef, useEffect, useState, type ReactNode, type SVGProps } from "react"
 import {
+  X,
   Zap,
   KeyRound,
   Globe,
@@ -19,7 +20,6 @@ import GeminiIcon from "@/components/icons/gemini"
 import DeepSeekIcon from "@/components/icons/deepseek"
 import GrokIcon from "@/components/icons/grok"
 import PerplexityIcon from "@/components/icons/perplexity"
-import XaiIcon from "@/components/icons/xai"
 import MetaIcon from "@/components/icons/meta"
 
 /* ─── Data ─── */
@@ -242,9 +242,37 @@ export function LandingPage() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] })
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 150])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
+  const [showAnnouncement, setShowAnnouncement] = useState(true)
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-white text-zinc-900">
+      {/* Announcement bar */}
+      {showAnnouncement && (
+        <div className="relative z-30 bg-gradient-to-r from-violet-600 to-indigo-600 text-white">
+          <div className="mx-auto flex max-w-7xl items-center justify-center gap-3 px-6 py-2.5 text-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
+            </span>
+            <span className="font-medium">
+              Claude Opus 4.7 is live —{" "}
+              <SignInButton mode="modal">
+                <button className="underline underline-offset-2 hover:opacity-80">
+                  Try it now
+                </button>
+              </SignInButton>
+            </span>
+            <button
+              onClick={() => setShowAnnouncement(false)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-white/10"
+              aria-label="Dismiss"
+            >
+              <X className="size-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Glassmorphic nav */}
       <header className="sticky top-0 z-20 border-b border-white/20 bg-white/60 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-12">
