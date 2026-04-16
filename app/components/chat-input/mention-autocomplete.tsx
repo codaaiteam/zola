@@ -27,7 +27,8 @@ export function MentionAutocomplete({
   // Scroll selected item into view
   useEffect(() => {
     if (!listRef.current) return
-    const el = listRef.current.children[selectedIndex] as HTMLElement
+    const items = listRef.current.querySelectorAll("[data-mention-item]")
+    const el = items[selectedIndex] as HTMLElement
     el?.scrollIntoView({ block: "nearest" })
   }, [selectedIndex])
 
@@ -36,7 +37,7 @@ export function MentionAutocomplete({
   return (
     <div
       ref={listRef}
-      className="bg-popover absolute bottom-full left-0 z-50 mb-2 max-h-64 w-72 overflow-y-auto rounded-xl border shadow-lg"
+      className="bg-popover absolute bottom-full left-0 z-50 mb-2 max-h-72 w-72 overflow-y-auto rounded-xl border shadow-lg"
     >
       <div className="p-1">
         <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -48,9 +49,10 @@ export function MentionAutocomplete({
           return (
             <button
               key={model.id}
+              data-mention-item
               type="button"
               onMouseDown={(e) => {
-                e.preventDefault() // prevent textarea blur
+                e.preventDefault()
                 onSelect(model)
               }}
               className={cn(
@@ -61,12 +63,7 @@ export function MentionAutocomplete({
               )}
             >
               {Icon && <Icon className="size-5 shrink-0" />}
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-medium">{model.name}</div>
-                <div className="truncate text-xs text-muted-foreground">
-                  {model.provider}
-                </div>
-              </div>
+              <span className="truncate">{model.name}</span>
             </button>
           )
         })}

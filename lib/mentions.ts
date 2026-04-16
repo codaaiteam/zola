@@ -126,15 +126,13 @@ export function filterModelsForMention(
   query: string,
   models: ModelConfig[]
 ): ModelConfig[] {
-  if (!query) return models.slice(0, 8)
+  if (!query) return models
 
   const q = query.toLowerCase()
-  return models
-    .filter(
-      (m) =>
-        m.name.toLowerCase().includes(q) ||
-        m.id.toLowerCase().includes(q) ||
-        m.provider.toLowerCase().includes(q)
-    )
-    .slice(0, 8)
+  return models.filter(
+    (m) =>
+      m.name.toLowerCase().includes(q) ||
+      (m.modelFamily && m.modelFamily.toLowerCase().includes(q)) ||
+      m.id.toLowerCase().includes(q)
+  )
 }
