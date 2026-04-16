@@ -85,6 +85,20 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.create(sessionParams)
 
+    // Log checkout initiation to orders table
+    if (supabase) {
+      await supabase.from("nottoai_orders").insert({
+        user_id: userId,
+        event_type: "checkout_initiated",
+        status: "pending",
+        tier,
+        billing_period: billingPeriod,
+        stripe_customer_id: stripeCustomerId,
+        stripe_session_id: session.id,
+        stripe_price_id: priceId,
+      })
+    }
+
     return NextResponse.json({ url: session.url })
   } catch (error) {
     console.error("Stripe checkout error:", error)

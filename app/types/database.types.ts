@@ -142,6 +142,60 @@ export type Database = {
           },
         ]
       }
+      nottoai_orders: {
+        Row: {
+          id: string
+          user_id: string
+          event_type: string
+          status: string
+          tier: string | null
+          billing_period: string | null
+          amount: number | null
+          currency: string | null
+          stripe_customer_id: string | null
+          stripe_session_id: string | null
+          stripe_subscription_id: string | null
+          stripe_invoice_id: string | null
+          stripe_price_id: string | null
+          metadata: Record<string, unknown> | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          event_type: string
+          status?: string
+          tier?: string | null
+          billing_period?: string | null
+          amount?: number | null
+          currency?: string | null
+          stripe_customer_id?: string | null
+          stripe_session_id?: string | null
+          stripe_subscription_id?: string | null
+          stripe_invoice_id?: string | null
+          stripe_price_id?: string | null
+          metadata?: Record<string, unknown> | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          event_type?: string
+          status?: string
+          tier?: string | null
+          billing_period?: string | null
+          amount?: number | null
+          currency?: string | null
+          stripe_customer_id?: string | null
+          stripe_session_id?: string | null
+          stripe_subscription_id?: string | null
+          stripe_invoice_id?: string | null
+          stripe_price_id?: string | null
+          metadata?: Record<string, unknown> | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       credit_logs: {
         Row: {
           id: string

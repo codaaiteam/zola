@@ -47,6 +47,32 @@ export async function POST(req: NextRequest) {
             .update({ stripe_customer_id: customerId })
             .eq("id", clerkUserId)
         }
+
+        // Update order status from pending → completed
+        if (session.id) {
+          await supabase
+            .from("nottoai_orders")
+            .update({ status: "completed", stripe_customer_id: customerId })
+            .eq("stripe_session_id", session.id)
+
+          // Also log as a separate completed event
+          if (clerkUserId) {
+            await supabase.from("nottoai_orders").insert({
+              user_id: clerkUserId,
+              event_type: "checkout_completed",
+              status: "completed",
+              tier: session.metadata?.tier,
+              amount: session.amount_total,
+              currency: session.currency ?? "usd",
+              stripe_customer_id: customerId,
+              stripe_session_id: session.id,
+              stripe_subscription_id:
+                typeof session.subscription === "string"
+                  ? session.subscription
+                  : null,
+            })
+          }
+        }
         break
       }
 
@@ -54,6 +80,38 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription
         await handleSubscriptionChange(supabase, subscription)
+
+        // Log subscription event
+        const subCustomerId =
+          typeof subscription.customer === "string"
+            ? subscription.customer
+            : null
+        if (subCustomerId) {
+          const { data: subUser } = await supabase
+            .from("users")
+            .select("id")
+            .eq("stripe_customer_id", subCustomerId)
+            .maybeSingle()
+          if (subUser) {
+            const subProductId =
+              typeof subscription.items.data[0]?.price.product === "string"
+                ? subscription.items.data[0].price.product
+                : null
+            const subTier = subProductId
+              ? PRODUCT_TO_TIER[subProductId]
+              : null
+            await supabase.from("nottoai_orders").insert({
+              user_id: subUser.id,
+              event_type: event.type === "customer.subscription.created"
+                ? "subscription_created"
+                : "subscription_updated",
+              status: "completed",
+              tier: subTier,
+              stripe_customer_id: subCustomerId,
+              stripe_subscription_id: subscription.id,
+            })
+          }
+        }
         break
       }
 
@@ -65,6 +123,22 @@ export async function POST(req: NextRequest) {
             : null
 
         if (customerId) {
+          // Log before updating user
+          const { data: delUser } = await supabase
+            .from("users")
+            .select("id")
+            .eq("stripe_customer_id", customerId)
+            .maybeSingle()
+          if (delUser) {
+            await supabase.from("nottoai_orders").insert({
+              user_id: delUser.id,
+              event_type: "subscription_deleted",
+              status: "completed",
+              stripe_customer_id: customerId,
+              stripe_subscription_id: subscription.id,
+            })
+          }
+
           await supabase
             .from("users")
             .update({
@@ -83,22 +157,21 @@ export async function POST(req: NextRequest) {
       case "invoice.paid": {
         // Reset credits on successful payment (new billing cycle)
         const invoice = event.data.object as Stripe.Invoice
-        const customerId =
+        const invCustomerId =
           typeof invoice.customer === "string" ? invoice.customer : null
         const subscriptionId =
           typeof invoice.parent?.subscription_details?.subscription === "string"
             ? invoice.parent.subscription_details.subscription
             : null
 
-        if (customerId && subscriptionId) {
-          // Look up the subscription to determine the tier
+        if (invCustomerId && subscriptionId) {
           const sub = await stripe.subscriptions.retrieve(subscriptionId)
           const productId =
             typeof sub.items.data[0]?.price.product === "string"
               ? sub.items.data[0].price.product
               : null
-          const tier = productId ? PRODUCT_TO_TIER[productId] : null
-          const plan = PRICING_PLANS.find((p) => p.tier === tier)
+          const invTier = productId ? PRODUCT_TO_TIER[productId] : null
+          const plan = PRICING_PLANS.find((p) => p.tier === invTier)
 
           if (plan) {
             await supabase
@@ -107,7 +180,27 @@ export async function POST(req: NextRequest) {
                 credits_remaining: plan.credits,
                 credits_reset_at: new Date().toISOString(),
               })
-              .eq("stripe_customer_id", customerId)
+              .eq("stripe_customer_id", invCustomerId)
+          }
+
+          // Log invoice payment
+          const { data: invUser } = await supabase
+            .from("users")
+            .select("id")
+            .eq("stripe_customer_id", invCustomerId)
+            .maybeSingle()
+          if (invUser) {
+            await supabase.from("nottoai_orders").insert({
+              user_id: invUser.id,
+              event_type: "invoice_paid",
+              status: "completed",
+              tier: invTier,
+              amount: invoice.amount_paid,
+              currency: invoice.currency ?? "usd",
+              stripe_customer_id: invCustomerId,
+              stripe_subscription_id: subscriptionId,
+              stripe_invoice_id: invoice.id,
+            })
           }
         }
         break
