@@ -15,7 +15,9 @@ import {
   ChatTeardropText,
   CrownSimple,
   Compass,
+  Envelope,
   MagnifyingGlass,
+  Megaphone,
   NotePencilIcon,
   X,
 } from "@phosphor-icons/react"
@@ -161,6 +163,20 @@ export function AppSidebar() {
           <CrownSimple size={16} />
           <span>Pricing</span>
         </Link>
+        <Link
+          href="/feedback"
+          className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+        >
+          <Megaphone size={16} />
+          <span>Feedback</span>
+        </Link>
+        <a
+          href="mailto:contact@nottoai.com"
+          className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+        >
+          <Envelope size={16} />
+          <span>Contact</span>
+        </a>
       </SidebarFooter>
     </Sidebar>
   )

@@ -20,10 +20,6 @@ import { useChatCore } from "./use-chat-core"
 import { useChatOperations } from "./use-chat-operations"
 import { useFileUpload } from "./use-file-upload"
 
-const FeedbackWidget = dynamic(
-  () => import("./feedback-widget").then((mod) => mod.FeedbackWidget),
-  { ssr: false }
-)
 
 const DialogAuth = dynamic(
   () => import("./dialog-auth").then((mod) => mod.DialogAuth),
@@ -271,7 +267,6 @@ export function Chat() {
         <ChatInput {...chatInputProps} />
       </motion.div>
 
-      <FeedbackWidget authUserId={user?.id} />
     </div>
   )
 }
