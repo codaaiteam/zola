@@ -5,6 +5,8 @@ import {
 import { LogoLoader } from "@/components/prompt-kit/logo-loader"
 import { ScrollButton } from "@/components/prompt-kit/scroll-button"
 import { ExtendedMessageAISDK } from "@/lib/chat-store/messages/api"
+import { getModelInfo } from "@/lib/models"
+import { PROVIDERS } from "@/lib/providers"
 import { Message as MessageType } from "@ai-sdk/react"
 import { useRef } from "react"
 import { Message } from "./message"
@@ -17,6 +19,7 @@ type ConversationProps = {
   onReload: () => void
   onQuote?: (text: string, messageId: string) => void
   isUserAuthenticated?: boolean
+  selectedModel?: string
 }
 
 export function Conversation({
@@ -27,6 +30,7 @@ export function Conversation({
   onReload,
   onQuote,
   isUserAuthenticated,
+  selectedModel,
 }: ConversationProps) {
   const initialMessageCount = useRef(messages.length)
 
@@ -73,7 +77,7 @@ export function Conversation({
                 modelId={
                   (message as ExtendedMessageAISDK).model ??
                   (message.annotations as Array<{ modelId?: string }>)?.[0]?.modelId ??
-                  undefined
+                  (message.role === "assistant" ? selectedModel : undefined)
                 }
                 isUserAuthenticated={isUserAuthenticated}
               >
@@ -83,11 +87,27 @@ export function Conversation({
           })}
           {status === "submitted" &&
             messages.length > 0 &&
-            messages[messages.length - 1].role === "user" && (
-              <div className="group min-h-scroll-anchor flex w-full max-w-3xl flex-col items-start gap-2 px-6 pb-2">
-                <LogoLoader />
-              </div>
-            )}
+            messages[messages.length - 1].role === "user" && (() => {
+              const loadingModelConfig = selectedModel ? getModelInfo(selectedModel) : null
+              const loadingProvider = loadingModelConfig
+                ? PROVIDERS.find((p) => p.id === loadingModelConfig.icon)
+                : null
+              const LoadingIcon = loadingProvider?.icon
+              return (
+                <div className="group min-h-scroll-anchor flex w-full max-w-3xl items-start gap-3 px-6 pb-2">
+                  {LoadingIcon ? (
+                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background">
+                      <LoadingIcon className="size-4" />
+                    </div>
+                  ) : (
+                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background">
+                      <span className="text-[10px] font-bold text-muted-foreground">AI</span>
+                    </div>
+                  )}
+                  <LogoLoader />
+                </div>
+              )
+            })()}
           <div className="absolute bottom-0 flex w-full max-w-3xl flex-1 items-end justify-end gap-4 px-6 pb-2">
             <ScrollButton className="absolute top-[-50px] right-[30px]" />
           </div>

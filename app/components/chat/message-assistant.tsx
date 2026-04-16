@@ -92,31 +92,38 @@ export function MessageAssistant({
     }
   }, [selectionInfo, onQuote, clearSelection])
 
+  const ModelIcon = modelProvider?.icon
+
   return (
     <Message
       className={cn(
-        "group flex w-full max-w-3xl flex-1 items-start gap-4 px-6 pb-2",
+        "group flex w-full max-w-3xl flex-1 items-start gap-3 px-6 pb-2",
         hasScrollAnchor && "min-h-scroll-anchor",
         className
       )}
     >
+      {/* Model avatar */}
+      {ModelIcon ? (
+        <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background">
+          <ModelIcon className="size-4" />
+        </div>
+      ) : (
+        <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background">
+          <span className="text-[10px] font-bold text-muted-foreground">AI</span>
+        </div>
+      )}
       <div
         ref={messageRef}
         className={cn(
-          "relative flex min-w-full flex-col gap-2",
+          "relative flex min-w-0 flex-1 flex-col gap-2",
           isLast && "pb-8"
         )}
         {...(isQuoteEnabled && { "data-message-id": messageId })}
       >
         {modelConfig && (
-          <div className="mb-1 flex items-center gap-1.5">
-            {modelProvider?.icon && (
-              <modelProvider.icon className="size-4" />
-            )}
-            <span className="text-xs font-medium text-muted-foreground">
-              {modelConfig.name}
-            </span>
-          </div>
+          <span className="text-xs font-medium text-muted-foreground">
+            {modelConfig.name}
+          </span>
         )}
 
         {reasoningParts && reasoningParts.reasoning && (

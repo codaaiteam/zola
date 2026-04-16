@@ -148,6 +148,7 @@ export function Chat() {
       onReload: handleReload,
       onQuote: handleQuotedSelected,
       isUserAuthenticated: isAuthenticated,
+      selectedModel,
     }),
     [
       messages,
@@ -155,6 +156,7 @@ export function Chat() {
       handleDelete,
       submitEdit,
       handleReload,
+      selectedModel,
       handleQuotedSelected,
       isAuthenticated,
     ]
