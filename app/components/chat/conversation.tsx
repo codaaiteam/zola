@@ -76,7 +76,7 @@ export function Conversation({
                 modelId={
                   (message as ExtendedMessageAISDK).model ??
                   (message.annotations as Array<{ modelId?: string }>)?.[0]?.modelId ??
-                  (message.role === "assistant" && isLast ? selectedModel : undefined)
+                  (message.role === "assistant" ? selectedModel : undefined)
                 }
                 isUserAuthenticated={isUserAuthenticated}
               >
