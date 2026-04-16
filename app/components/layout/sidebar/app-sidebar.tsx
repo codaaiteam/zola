@@ -167,26 +167,25 @@ export function AppSidebar() {
           <CrownSimple size={16} />
           <span>Pricing</span>
         </Link>
-        <button
-          type="button"
-          onClick={() => setShowFeedback(true)}
-          className="hover:bg-muted text-sidebar-foreground flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-        >
-          <Megaphone size={16} />
-          <span>Feedback</span>
-        </button>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowFeedback(!showFeedback)}
+            className="hover:bg-muted text-sidebar-foreground flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+          >
+            <Megaphone size={16} />
+            <span>Feedback</span>
+          </button>
 
-        {/* Feedback dialog */}
-        {showFeedback && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowFeedback(false)}>
-            <div
-              className="bg-popover w-full max-w-sm rounded-xl border shadow-lg"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <FeedbackForm authUserId={user?.id} onClose={() => setShowFeedback(false)} />
-            </div>
-          </div>
-        )}
+          {showFeedback && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowFeedback(false)} />
+              <div className="absolute bottom-0 left-full z-50 ml-2 w-80 rounded-xl border bg-popover shadow-lg">
+                <FeedbackForm authUserId={user?.id} onClose={() => setShowFeedback(false)} />
+              </div>
+            </>
+          )}
+        </div>
         <a
           href="mailto:contact@nottoai.com"
           className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
