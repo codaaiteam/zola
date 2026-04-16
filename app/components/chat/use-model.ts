@@ -53,15 +53,13 @@ export function useModel({
 
       // For authenticated users with a chat, persist the change
       if (chatId && updateChatModel && user?.id) {
-        // Optimistically update the state
         setLocalSelectedModel(newModel)
 
         try {
           await updateChatModel(chatId, newModel)
-          // Clear local override since it's now persisted in the chat
-          setLocalSelectedModel(null)
+          // Keep localSelectedModel set — it will be used until
+          // currentChat.model catches up from the chats state update
         } catch (err) {
-          // Revert on error
           setLocalSelectedModel(null)
           console.error("Failed to update chat model:", err)
           toast({
