@@ -346,7 +346,7 @@ export function useChatCore({
 
       // Fire parallel requests for additional @mentioned models
       if (additionalModels.length > 0 && messageGroupId) {
-        const currentMsgs = messages.concat(optimisticMessage)
+        const currentMsgs = [...messages]
         for (const modelId of additionalModels) {
           streamFromModel(
             modelId,
