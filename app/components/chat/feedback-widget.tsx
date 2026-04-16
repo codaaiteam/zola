@@ -39,7 +39,7 @@ export function FeedbackWidget({ authUserId }: FeedbackWidgetProps) {
   }
 
   return (
-    <div className="fixed right-1 bottom-1 z-50">
+    <div className="fixed right-3 bottom-3 z-50">
       <MorphingPopover
         transition={TRANSITION_POPOVER}
         open={isOpen}
@@ -47,7 +47,7 @@ export function FeedbackWidget({ authUserId }: FeedbackWidgetProps) {
         className="relative flex flex-col items-end justify-end"
       >
         <MorphingPopoverTrigger
-          className="border-border bg-background text-foreground hover:bg-secondary flex size-6 items-center justify-center rounded-full border shadow-md"
+          className="border-border bg-background text-foreground hover:bg-secondary flex size-9 items-center justify-center rounded-full border shadow-md transition-transform hover:scale-110"
           style={{
             transformOrigin: "bottom right",
             originX: "right",
@@ -66,11 +66,11 @@ export function FeedbackWidget({ authUserId }: FeedbackWidgetProps) {
               delay: isOpen ? 0 : TRANSITION_POPOVER.duration / 2,
             }}
           >
-            <QuestionMark className="text-foreground size-4" />
+            <QuestionMark className="text-foreground size-5" />
           </motion.span>
         </MorphingPopoverTrigger>
         <MorphingPopoverContent
-          className="border-border bg-popover fixed right-1 bottom-1 min-w-[320px] rounded-xl border p-0 shadow-[0_9px_9px_0px_rgba(0,0,0,0.01),_0_2px_5px_0px_rgba(0,0,0,0.06)]"
+          className="border-border bg-popover fixed right-3 bottom-3 min-w-[320px] rounded-xl border p-0 shadow-[0_9px_9px_0px_rgba(0,0,0,0.01),_0_2px_5px_0px_rgba(0,0,0,0.06)]"
           style={{
             transformOrigin: "bottom right",
           }}
