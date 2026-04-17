@@ -9,7 +9,10 @@ import { ZolaFaviconIcon } from "@/components/icons/zola"
 import { APP_NAME } from "@/lib/config"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
 import { useUser } from "@/lib/user-store/provider"
+import { Moon, Sun } from "@phosphor-icons/react"
+import { useTheme } from "next-themes"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import { CreditsDisplay } from "./credits-display"
 import { DialogPublish } from "./dialog-publish"
 import { HeaderSidebarTrigger } from "./header-sidebar-trigger"
@@ -20,6 +23,9 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
   const { preferences } = useUserPreferences()
   const isMultiModelEnabled = preferences.multiModelEnabled
 
+  const { resolvedTheme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const isLoggedIn = !!user
 
   return (
@@ -45,6 +51,18 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
             {isLoggedIn && !isMultiModelEnabled && <DialogPublish />}
             {isLoggedIn && <ButtonNewChat />}
             {isLoggedIn && !hasSidebar && <HistoryTrigger hasSidebar={hasSidebar} />}
+            <button
+              type="button"
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              className="hover:bg-muted text-foreground inline-flex size-9 items-center justify-center rounded-md transition-colors"
+              aria-label="Toggle theme"
+            >
+              {mounted && resolvedTheme === "dark" ? (
+                <Sun size={18} />
+              ) : (
+                <Moon size={18} />
+              )}
+            </button>
             <UserMenu />
           </div>
         </div>
