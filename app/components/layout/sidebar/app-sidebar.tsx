@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { ZolaFaviconIcon } from "@/components/icons/zola"
 import { useChats } from "@/lib/chat-store/chats/provider"
 import {
   ChatTeardropText,
@@ -66,33 +67,55 @@ export function AppSidebar() {
       variant="sidebar"
       className="border-border/40 border-r bg-transparent"
     >
-      <SidebarHeader className={isCollapsed ? "h-14 px-1" : "h-14 pl-3"}>
-        <div className="flex h-full items-center justify-between">
-          {isMobile ? (
-            <button
-              type="button"
-              onClick={() => setOpenMobile(false)}
-              className="text-muted-foreground hover:text-foreground hover:bg-muted inline-flex size-9 items-center justify-center rounded-md bg-transparent transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-            >
-              <X size={24} />
-            </button>
+      <SidebarHeader className={isCollapsed ? "px-1 py-3" : "px-3 py-3"}>
+        <div className={`flex items-center ${isCollapsed ? "flex-col" : "justify-between"}`}>
+          {isCollapsed ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={toggleSidebar}
+                  className="group/logo hover:bg-muted relative inline-flex size-9 items-center justify-center rounded-md transition-colors"
+                >
+                  <ZolaFaviconIcon className="size-7 shrink-0 transition-opacity group-hover/logo:opacity-0" />
+                  <SidebarSimpleIcon
+                    size={20}
+                    className="absolute opacity-0 transition-opacity group-hover/logo:opacity-100"
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Expand sidebar</TooltipContent>
+            </Tooltip>
           ) : (
             <>
-              {!isCollapsed && <div className="flex-1" />}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={toggleSidebar}
-                    className="text-muted-foreground hover:text-foreground hover:bg-muted inline-flex size-9 items-center justify-center rounded-md transition-colors"
-                  >
-                    <SidebarSimpleIcon size={20} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  {isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                </TooltipContent>
-              </Tooltip>
+              <Link
+                href="/"
+                className="hover:bg-muted inline-flex size-9 items-center justify-center rounded-md transition-colors"
+              >
+                <ZolaFaviconIcon className="size-7 shrink-0" />
+              </Link>
+              {isMobile ? (
+                <button
+                  type="button"
+                  onClick={() => setOpenMobile(false)}
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted inline-flex size-9 items-center justify-center rounded-md bg-transparent transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={toggleSidebar}
+                      className="text-muted-foreground hover:text-foreground hover:bg-muted inline-flex size-9 items-center justify-center rounded-md transition-colors"
+                    >
+                      <SidebarSimpleIcon size={20} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Collapse sidebar</TooltipContent>
+                </Tooltip>
+              )}
             </>
           )}
         </div>

@@ -34,14 +34,16 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
         <div className="flex flex-1 items-center justify-between">
           <div className="-ml-0.5 flex flex-1 items-center gap-2 lg:-ml-2.5">
             <div className="flex flex-1 items-center gap-2">
-              <Link
-                href="/"
-                className="pointer-events-auto inline-flex items-center gap-1.5 text-base font-medium tracking-tight"
-              >
-                <ZolaFaviconIcon className="size-7" />
-                <span className="font-medium">Notto</span>
-                <span className="font-normal opacity-80">AI</span>
-              </Link>
+              {!hasSidebar && (
+                <Link
+                  href="/"
+                  className="pointer-events-auto inline-flex items-center gap-1.5 text-base font-medium tracking-tight"
+                >
+                  <ZolaFaviconIcon className="size-7" />
+                  <span className="font-medium">Notto</span>
+                  <span className="font-normal opacity-80">AI</span>
+                </Link>
+              )}
               {hasSidebar && isMobile && <HeaderSidebarTrigger />}
             </div>
           </div>
