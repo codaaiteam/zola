@@ -90,9 +90,11 @@ export function AppSidebar() {
             <>
               <Link
                 href="/"
-                className="hover:bg-muted inline-flex size-9 items-center justify-center rounded-md transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-md px-1 py-1 text-base font-medium tracking-tight transition-colors"
               >
                 <ZolaFaviconIcon className="size-7 shrink-0" />
+                <span className="font-medium">Notto</span>
+                <span className="font-normal opacity-80">AI</span>
               </Link>
               {isMobile ? (
                 <button
