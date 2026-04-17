@@ -18,13 +18,16 @@ import {
   Envelope,
   MagnifyingGlass,
   Megaphone,
+  Moon,
   NotePencilIcon,
+  Sun,
   X,
 } from "@phosphor-icons/react"
 import { Pin } from "lucide-react"
 import Link from "next/link"
+import { useTheme } from "next-themes"
 import { useParams, useRouter } from "next/navigation"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { FeedbackForm } from "@/components/common/feedback-form"
 import { useUser } from "@/lib/user-store/provider"
 import { HistoryTrigger } from "../../history/history-trigger"
@@ -37,6 +40,9 @@ export function AppSidebar() {
   const { chats, pinnedChats, isLoading } = useChats()
   const { user } = useUser()
   const [showFeedback, setShowFeedback] = useState(false)
+  const { theme, resolvedTheme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const params = useParams<{ chatId: string }>()
   const currentChatId = params.chatId
 
@@ -160,6 +166,18 @@ export function AppSidebar() {
         </ScrollArea>
       </SidebarContent>
       <SidebarFooter className="border-border/40 mb-2 border-t p-3">
+        <button
+          type="button"
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+          className="hover:bg-muted text-sidebar-foreground flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+        >
+          {mounted && resolvedTheme === "dark" ? (
+            <Sun size={16} />
+          ) : (
+            <Moon size={16} />
+          )}
+          <span>{mounted && resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+        </button>
         <Link
           href="/pricing"
           className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
