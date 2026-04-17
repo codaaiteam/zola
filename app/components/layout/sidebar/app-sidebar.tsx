@@ -10,6 +10,11 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { useChats } from "@/lib/chat-store/chats/provider"
 import {
   ChatTeardropText,
@@ -20,6 +25,7 @@ import {
   Megaphone,
   Moon,
   NotePencilIcon,
+  SidebarSimpleIcon,
   Sun,
   X,
 } from "@phosphor-icons/react"
@@ -36,11 +42,12 @@ import { SidebarProject } from "./sidebar-project"
 
 export function AppSidebar() {
   const isMobile = useBreakpoint(768)
-  const { setOpenMobile } = useSidebar()
+  const { setOpenMobile, toggleSidebar, state } = useSidebar()
+  const isCollapsed = state === "collapsed"
   const { chats, pinnedChats, isLoading } = useChats()
   const { user } = useUser()
   const [showFeedback, setShowFeedback] = useState(false)
-  const { theme, resolvedTheme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const params = useParams<{ chatId: string }>()
@@ -55,12 +62,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      collapsible="offcanvas"
+      collapsible={isMobile ? "offcanvas" : "icon"}
       variant="sidebar"
       className="border-border/40 border-r bg-transparent"
     >
-      <SidebarHeader className="h-14 pl-3">
-        <div className="flex justify-between">
+      <SidebarHeader className={isCollapsed ? "h-14 px-1" : "h-14 pl-3"}>
+        <div className="flex h-full items-center justify-between">
           {isMobile ? (
             <button
               type="button"
@@ -70,130 +77,222 @@ export function AppSidebar() {
               <X size={24} />
             </button>
           ) : (
-            <div className="h-full" />
+            <>
+              {!isCollapsed && <div className="flex-1" />}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={toggleSidebar}
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted inline-flex size-9 items-center justify-center rounded-md transition-colors"
+                  >
+                    <SidebarSimpleIcon size={20} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  {isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                </TooltipContent>
+              </Tooltip>
+            </>
           )}
         </div>
       </SidebarHeader>
       <SidebarContent className="border-border/40 border-t">
-        <ScrollArea className="flex h-full px-3 [&>div>div]:!block">
+        <ScrollArea className={`flex h-full ${isCollapsed ? "px-1" : "px-3"} [&>div>div]:!block`}>
           <div className="mt-3 mb-5 flex w-full flex-col items-start gap-0">
-            <button
-              className="hover:bg-accent/80 hover:text-foreground text-primary group/new-chat relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
-              type="button"
-              onClick={() => router.push("/")}
-            >
-              <div className="flex items-center gap-2">
-                <NotePencilIcon size={20} />
-                New Chat
-              </div>
-              <div className="text-muted-foreground ml-auto text-xs opacity-0 duration-150 group-hover/new-chat:opacity-100">
-                ⌘⇧U
-              </div>
-            </button>
-            <HistoryTrigger
-              hasSidebar={false}
-              classNameTrigger="bg-transparent hover:bg-accent/80 hover:text-foreground text-primary relative inline-flex w-full items-center rounded-md px-2 py-2 text-sm transition-colors group/search"
-              icon={<MagnifyingGlass size={24} className="mr-2" />}
-              label={
-                <div className="flex w-full items-center gap-2">
-                  <span>Search</span>
-                  <div className="text-muted-foreground ml-auto text-xs opacity-0 duration-150 group-hover/search:opacity-100">
-                    ⌘+K
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="hover:bg-accent/80 hover:text-foreground text-primary group/new-chat relative inline-flex w-full items-center justify-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
+                  type="button"
+                  onClick={() => router.push("/")}
+                >
+                  <div className="flex items-center gap-2">
+                    <NotePencilIcon size={20} className="shrink-0" />
+                    {!isCollapsed && "New Chat"}
                   </div>
-                </div>
-              }
-              hasPopover={false}
-            />
+                  {!isCollapsed && (
+                    <div className="text-muted-foreground ml-auto text-xs opacity-0 duration-150 group-hover/new-chat:opacity-100">
+                      ⌘⇧U
+                    </div>
+                  )}
+                </button>
+              </TooltipTrigger>
+              {isCollapsed && (
+                <TooltipContent side="right">New Chat</TooltipContent>
+              )}
+            </Tooltip>
+            {!isCollapsed && (
+              <HistoryTrigger
+                hasSidebar={false}
+                classNameTrigger="bg-transparent hover:bg-accent/80 hover:text-foreground text-primary relative inline-flex w-full items-center rounded-md px-2 py-2 text-sm transition-colors group/search"
+                icon={<MagnifyingGlass size={24} className="mr-2" />}
+                label={
+                  <div className="flex w-full items-center gap-2">
+                    <span>Search</span>
+                    <div className="text-muted-foreground ml-auto text-xs opacity-0 duration-150 group-hover/search:opacity-100">
+                      ⌘+K
+                    </div>
+                  </div>
+                }
+                hasPopover={false}
+              />
+            )}
+            {isCollapsed && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="hover:bg-accent/80 hover:text-foreground text-primary inline-flex w-full items-center justify-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
+                    type="button"
+                    onClick={() => {
+                      // Open search via keyboard shortcut simulation
+                      const event = new KeyboardEvent("keydown", {
+                        key: "k",
+                        metaKey: true,
+                        bubbles: true,
+                      })
+                      document.dispatchEvent(event)
+                    }}
+                  >
+                    <MagnifyingGlass size={20} className="shrink-0" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right">Search</TooltipContent>
+              </Tooltip>
+            )}
           </div>
           {/* Navigation Links */}
           <div className="mb-3 flex w-full flex-col items-start gap-0">
-            <Link
-              href="/pricing"
-              className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <CrownSimple size={20} />
-                Upgrade Plan
-              </div>
-            </Link>
-            <Link
-              href="/"
-              className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <Compass size={20} />
-                Explore Models
-              </div>
-            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/pricing"
+                  className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
+                >
+                  <div className={`flex items-center ${isCollapsed ? "justify-center w-full" : "gap-2"}`}>
+                    <CrownSimple size={20} className="shrink-0" />
+                    {!isCollapsed && "Upgrade Plan"}
+                  </div>
+                </Link>
+              </TooltipTrigger>
+              {isCollapsed && (
+                <TooltipContent side="right">Upgrade Plan</TooltipContent>
+              )}
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/"
+                  className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
+                >
+                  <div className={`flex items-center ${isCollapsed ? "justify-center w-full" : "gap-2"}`}>
+                    <Compass size={20} className="shrink-0" />
+                    {!isCollapsed && "Explore Models"}
+                  </div>
+                </Link>
+              </TooltipTrigger>
+              {isCollapsed && (
+                <TooltipContent side="right">Explore Models</TooltipContent>
+              )}
+            </Tooltip>
           </div>
-          <SidebarProject />
-          {isLoading ? (
-            <div className="h-full" />
-          ) : hasChats ? (
-            <div className="space-y-5">
-              {pinnedChats.length > 0 && (
+          {!isCollapsed && (
+            <>
+              <SidebarProject />
+              {isLoading ? (
+                <div className="h-full" />
+              ) : hasChats ? (
                 <div className="space-y-5">
-                  <SidebarList
-                    key="pinned"
-                    title="Pinned"
-                    icon={<Pin className="size-3" />}
-                    items={pinnedChats}
-                    currentChatId={currentChatId}
+                  {pinnedChats.length > 0 && (
+                    <div className="space-y-5">
+                      <SidebarList
+                        key="pinned"
+                        title="Pinned"
+                        icon={<Pin className="size-3" />}
+                        items={pinnedChats}
+                        currentChatId={currentChatId}
+                      />
+                    </div>
+                  )}
+                  {groupedChats?.map((group) => (
+                    <SidebarList
+                      key={group.name}
+                      title={group.name}
+                      items={group.chats}
+                      currentChatId={currentChatId}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex h-[calc(100vh-160px)] flex-col items-center justify-center">
+                  <ChatTeardropText
+                    size={24}
+                    className="text-muted-foreground mb-1 opacity-40"
                   />
+                  <div className="text-muted-foreground text-center">
+                    <p className="mb-1 text-base font-medium">No chats yet</p>
+                    <p className="text-sm opacity-70">Start a new conversation</p>
+                  </div>
                 </div>
               )}
-              {groupedChats?.map((group) => (
-                <SidebarList
-                  key={group.name}
-                  title={group.name}
-                  items={group.chats}
-                  currentChatId={currentChatId}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex h-[calc(100vh-160px)] flex-col items-center justify-center">
-              <ChatTeardropText
-                size={24}
-                className="text-muted-foreground mb-1 opacity-40"
-              />
-              <div className="text-muted-foreground text-center">
-                <p className="mb-1 text-base font-medium">No chats yet</p>
-                <p className="text-sm opacity-70">Start a new conversation</p>
-              </div>
-            </div>
+            </>
           )}
         </ScrollArea>
       </SidebarContent>
-      <SidebarFooter className="border-border/40 mb-2 border-t p-3">
-        <button
-          type="button"
-          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-          className="hover:bg-muted text-sidebar-foreground flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-        >
-          {mounted && resolvedTheme === "dark" ? (
-            <Sun size={16} />
-          ) : (
-            <Moon size={16} />
+      <SidebarFooter className={`border-border/40 mb-2 border-t ${isCollapsed ? "p-1" : "p-3"}`}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              className={`hover:bg-muted text-sidebar-foreground flex w-full items-center rounded-md text-sm transition-colors ${isCollapsed ? "justify-center px-0 py-2" : "gap-2 px-2 py-1.5"}`}
+            >
+              {mounted && resolvedTheme === "dark" ? (
+                <Sun size={16} className="shrink-0" />
+              ) : (
+                <Moon size={16} className="shrink-0" />
+              )}
+              {!isCollapsed && (
+                <span>{mounted && resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+              )}
+            </button>
+          </TooltipTrigger>
+          {isCollapsed && (
+            <TooltipContent side="right">
+              {mounted && resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}
+            </TooltipContent>
           )}
-          <span>{mounted && resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}</span>
-        </button>
-        <Link
-          href="/pricing"
-          className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-        >
-          <CrownSimple size={16} />
-          <span>Pricing</span>
-        </Link>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="/pricing"
+              className={`hover:bg-muted text-sidebar-foreground flex items-center rounded-md text-sm transition-colors ${isCollapsed ? "justify-center px-0 py-2" : "gap-2 px-2 py-1.5"}`}
+            >
+              <CrownSimple size={16} className="shrink-0" />
+              {!isCollapsed && <span>Pricing</span>}
+            </Link>
+          </TooltipTrigger>
+          {isCollapsed && (
+            <TooltipContent side="right">Pricing</TooltipContent>
+          )}
+        </Tooltip>
         <div className="relative">
-          <button
-            type="button"
-            onClick={() => setShowFeedback(!showFeedback)}
-            className="hover:bg-muted text-sidebar-foreground flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-          >
-            <Megaphone size={16} />
-            <span>Feedback</span>
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => setShowFeedback(!showFeedback)}
+                className={`hover:bg-muted text-sidebar-foreground flex w-full items-center rounded-md text-sm transition-colors ${isCollapsed ? "justify-center px-0 py-2" : "gap-2 px-2 py-1.5"}`}
+              >
+                <Megaphone size={16} className="shrink-0" />
+                {!isCollapsed && <span>Feedback</span>}
+              </button>
+            </TooltipTrigger>
+            {isCollapsed && (
+              <TooltipContent side="right">Feedback</TooltipContent>
+            )}
+          </Tooltip>
 
           {showFeedback && (
             <>
@@ -204,13 +303,20 @@ export function AppSidebar() {
             </>
           )}
         </div>
-        <a
-          href="mailto:contact@nottoai.com"
-          className="hover:bg-muted text-sidebar-foreground flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-        >
-          <Envelope size={16} />
-          <span>Contact</span>
-        </a>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <a
+              href="mailto:contact@nottoai.com"
+              className={`hover:bg-muted text-sidebar-foreground flex items-center rounded-md text-sm transition-colors ${isCollapsed ? "justify-center px-0 py-2" : "gap-2 px-2 py-1.5"}`}
+            >
+              <Envelope size={16} className="shrink-0" />
+              {!isCollapsed && <span>Contact</span>}
+            </a>
+          </TooltipTrigger>
+          {isCollapsed && (
+            <TooltipContent side="right">Contact</TooltipContent>
+          )}
+        </Tooltip>
       </SidebarFooter>
     </Sidebar>
   )
