@@ -56,3 +56,6 @@ bun.lock
 
 # tauri
 /src-tauri/target/
+
+# capacitor
+/ios/App/Pods/
