@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "NottoAI",
   "version": "0.1.0",
-  "identifier": "com.nottoai.app",
+  "identifier": "com.nottoai.desktop",
   "build": {
     "devUrl": "http://localhost:3000",
     "beforeDevCommand": "npm run dev"
