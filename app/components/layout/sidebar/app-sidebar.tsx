@@ -21,6 +21,7 @@ import {
   ChatTeardropText,
   CrownSimple,
   Compass,
+  DownloadSimple,
   Envelope,
   MagnifyingGlass,
   Megaphone,
@@ -218,6 +219,22 @@ export function AppSidebar() {
               </TooltipTrigger>
               {isCollapsed && (
                 <TooltipContent side="right">Explore Models</TooltipContent>
+              )}
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/download"
+                  className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
+                >
+                  <div className={`flex items-center ${isCollapsed ? "justify-center w-full" : "gap-2"}`}>
+                    <DownloadSimple size={20} className="shrink-0" />
+                    {!isCollapsed && "Download App"}
+                  </div>
+                </Link>
+              </TooltipTrigger>
+              {isCollapsed && (
+                <TooltipContent side="right">Download App</TooltipContent>
               )}
             </Tooltip>
           </div>
