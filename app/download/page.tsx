@@ -9,28 +9,28 @@ const DOWNLOAD_URL =
 
 export default function DownloadPage() {
   return (
-    <div className="min-h-screen w-screen bg-zinc-950 text-white">
+    <div className="min-h-screen w-screen bg-white text-zinc-900">
       {/* Header */}
-      <header className="border-b border-white/10">
+      <header className="border-b border-zinc-200">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-base font-medium tracking-tight"
           >
             <ZolaFaviconIcon className="size-7" />
-            <span className="font-medium text-white">Notto</span>
-            <span className="font-normal text-white/60">AI</span>
+            <span className="font-medium">Notto</span>
+            <span className="font-normal opacity-80">AI</span>
           </Link>
           <div className="flex items-center gap-2">
             <Link
               href="/pricing"
-              className="rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:text-white"
+              className="rounded-md px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900"
             >
               Pricing
             </Link>
             <Link
               href="/"
-              className="rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:text-white"
+              className="rounded-md px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900"
             >
               Back to Chat
             </Link>
@@ -44,7 +44,7 @@ export default function DownloadPage() {
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
             Download NottoAI
           </h1>
-          <p className="mt-4 text-lg text-zinc-400">
+          <p className="mt-4 text-lg text-zinc-500">
             Chat with the best AI models. Available on Mac, with iOS coming soon.
           </p>
         </div>
@@ -52,16 +52,16 @@ export default function DownloadPage() {
         {/* Download Cards */}
         <div className="mx-auto grid max-w-2xl gap-8 md:grid-cols-2">
           {/* Mac App */}
-          <div className="relative flex flex-col items-center rounded-2xl border-2 border-[#10B981] bg-zinc-900 p-8 shadow-lg shadow-[#10B981]/10">
+          <div className="relative flex flex-col items-center rounded-2xl border-2 border-[#10B981] p-8 shadow-lg shadow-[#10B981]/10">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#10B981] px-3 py-0.5 text-xs font-medium text-white">
               Available Now
             </div>
-            <Desktop size={48} className="mb-4 text-white" />
+            <Desktop size={48} className="mb-4 text-zinc-900" />
             <h2 className="mb-1 text-xl font-semibold">Mac App</h2>
-            <p className="mb-1 text-sm text-zinc-400">
+            <p className="mb-1 text-sm text-zinc-500">
               macOS 10.15 or later
             </p>
-            <p className="mb-6 text-xs text-zinc-500">
+            <p className="mb-6 text-xs text-zinc-400">
               Apple Silicon (M1+) &middot; 3 MB
             </p>
             <a
@@ -74,16 +74,16 @@ export default function DownloadPage() {
           </div>
 
           {/* iOS App */}
-          <div className="flex flex-col items-center rounded-2xl border border-zinc-800 bg-zinc-900 p-8 opacity-50">
-            <DeviceMobile size={48} className="mb-4 text-white" />
+          <div className="flex flex-col items-center rounded-2xl border border-zinc-200 p-8 opacity-60">
+            <DeviceMobile size={48} className="mb-4 text-zinc-900" />
             <h2 className="mb-1 text-xl font-semibold">iOS App</h2>
-            <p className="mb-1 text-sm text-zinc-400">
+            <p className="mb-1 text-sm text-zinc-500">
               iPhone &amp; iPad
             </p>
-            <p className="mb-6 text-xs text-zinc-500">Coming Soon</p>
+            <p className="mb-6 text-xs text-zinc-400">Coming Soon</p>
             <button
               disabled
-              className="inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-6 py-3 text-sm font-medium text-zinc-500"
+              className="inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-6 py-3 text-sm font-medium text-zinc-400"
             >
               <AppleLogo size={18} weight="fill" />
               App Store
@@ -102,8 +102,8 @@ export default function DownloadPage() {
               { title: "Fast Launch", desc: "Opens instantly. No browser tabs needed." },
               { title: "Native Experience", desc: "Menu bar shortcuts, window management, and offline detection." },
             ].map((item) => (
-              <div key={item.title} className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
-                <div className="text-sm font-medium text-white">{item.title}</div>
+              <div key={item.title} className="rounded-xl border border-zinc-200 p-4 text-center">
+                <div className="text-sm font-medium">{item.title}</div>
                 <div className="mt-1 text-xs text-zinc-500">{item.desc}</div>
               </div>
             ))}

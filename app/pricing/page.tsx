@@ -86,9 +86,9 @@ export default function PricingPage() {
   const enterprisePlan = PRICING_PLANS.find((p) => p.tier === "enterprise")
 
   return (
-    <div className="bg-background min-h-screen w-screen">
+    <div className="min-h-screen w-screen bg-white text-zinc-900">
       {/* Header */}
-      <header className="border-b">
+      <header className="border-b border-zinc-200">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link
             href="/"
@@ -119,24 +119,24 @@ export default function PricingPage() {
 
       <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         {error && (
-          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-3 text-center text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-3 text-center text-sm text-red-700 ">
             {error}
           </div>
         )}
 
         {/* Trust bar */}
         <div className="mb-6 text-center">
-          <p className="text-muted-foreground text-sm">
+          <p className="text-zinc-500 text-sm">
             Supports GPT-5.4, Claude, Gemini, DeepSeek, Grok & more
           </p>
         </div>
 
         {/* Title */}
         <div className="mb-12 text-center">
-          <h1 className="text-foreground text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="text-zinc-900 text-4xl font-semibold tracking-tight sm:text-5xl">
             One Subscription. All AI Models.
           </h1>
-          <p className="text-muted-foreground mt-4 text-lg">
+          <p className="text-zinc-500 mt-4 text-lg">
             Stop paying for multiple AI subscriptions. Access every model in one
             place.
           </p>
@@ -149,7 +149,7 @@ export default function PricingPage() {
                 "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
                 billingPeriod === "monthly"
                   ? "bg-[#10B981] text-white"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-zinc-500 hover:text-zinc-900"
               )}
             >
               Monthly
@@ -160,7 +160,7 @@ export default function PricingPage() {
                 "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
                 billingPeriod === "yearly"
                   ? "bg-[#10B981] text-white"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-zinc-500 hover:text-zinc-900"
               )}
             >
               Yearly
@@ -186,7 +186,7 @@ export default function PricingPage() {
                   "relative flex flex-col rounded-2xl border p-6",
                   isPro
                     ? "scale-[1.03] border-2 border-[#10B981] shadow-lg shadow-[#10B981]/10"
-                    : "border-border",
+                    : "border-zinc-200",
                   isFree && "opacity-75"
                 )}
               >
@@ -197,31 +197,31 @@ export default function PricingPage() {
                 )}
 
                 <div className="mb-5">
-                  <h2 className="text-foreground text-lg font-semibold">
+                  <h2 className="text-zinc-900 text-lg font-semibold">
                     {plan.name}
                   </h2>
-                  <p className="text-muted-foreground mt-1 text-sm">
+                  <p className="text-zinc-500 mt-1 text-sm">
                     {plan.description}
                   </p>
                 </div>
 
                 <div className="mb-5">
                   {plan.monthlyPrice === 0 ? (
-                    <div className="text-foreground text-4xl font-semibold">
+                    <div className="text-zinc-900 text-4xl font-semibold">
                       Free
                     </div>
                   ) : (
                     <>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-foreground text-4xl font-semibold">
+                        <span className="text-zinc-900 text-4xl font-semibold">
                           ${price.toFixed(price % 1 === 0 ? 0 : 1)}
                         </span>
-                        <span className="text-muted-foreground text-sm">
+                        <span className="text-zinc-500 text-sm">
                           /mo
                         </span>
                       </div>
                       {billingPeriod === "yearly" && (
-                        <p className="text-muted-foreground mt-1 text-xs">
+                        <p className="text-zinc-500 mt-1 text-xs">
                           ${plan.yearlyPrice} billed yearly
                         </p>
                       )}
@@ -233,7 +233,7 @@ export default function PricingPage() {
                   className={cn(
                     "mb-5 w-full",
                     !isPro &&
-                      "border-border bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
+                      "border-zinc-200 bg-transparent text-zinc-900 hover:bg-zinc-100 hover:text-zinc-900"
                   )}
                   variant={isPro ? "default" : "outline"}
                   size="default"
@@ -249,11 +249,11 @@ export default function PricingPage() {
                       <Check
                         className={cn(
                           "mt-0.5 size-4 shrink-0",
-                          isPro ? "text-[#10B981]" : "text-muted-foreground"
+                          isPro ? "text-[#10B981]" : "text-zinc-500"
                         )}
                         weight="bold"
                       />
-                      <span className="text-muted-foreground">{feature}</span>
+                      <span className="text-zinc-500">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -267,17 +267,17 @@ export default function PricingPage() {
           <div className="mt-12 rounded-2xl border p-6">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
               <div>
-                <h3 className="text-foreground text-lg font-semibold">
+                <h3 className="text-zinc-900 text-lg font-semibold">
                   Need more power?
                 </h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-zinc-500 text-sm">
                   {enterprisePlan.name} &mdash;{" "}
                   {enterprisePlan.credits.toLocaleString()} credits/mo,
                   dedicated support, API access & SSO.
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-foreground text-xl font-semibold">
+                <span className="text-zinc-900 text-xl font-semibold">
                   $
                   {billingPeriod === "monthly"
                     ? enterprisePlan.monthlyPrice
@@ -301,10 +301,10 @@ export default function PricingPage() {
 
         {/* Usage examples */}
         <div className="mt-20">
-          <h2 className="text-foreground mb-2 text-center text-2xl font-semibold">
+          <h2 className="text-zinc-900 mb-2 text-center text-2xl font-semibold">
             What can you do with Pro?
           </h2>
-          <p className="text-muted-foreground mb-8 text-center text-sm">
+          <p className="text-zinc-500 mb-8 text-center text-sm">
             100,000 credits per month gets you approximately:
           </p>
           <div className="mx-auto grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
@@ -313,13 +313,13 @@ export default function PricingPage() {
                 key={ex.model}
                 className="rounded-xl border p-4 text-center"
               >
-                <div className="text-foreground text-2xl font-semibold">
+                <div className="text-zinc-900 text-2xl font-semibold">
                   {ex.messages}
                 </div>
-                <div className="text-foreground mt-1 text-sm font-medium">
+                <div className="text-zinc-900 mt-1 text-sm font-medium">
                   {ex.model}
                 </div>
-                <div className="text-muted-foreground mt-0.5 text-xs">
+                <div className="text-zinc-500 mt-0.5 text-xs">
                   {ex.note}
                 </div>
               </div>
@@ -340,7 +340,7 @@ export default function PricingPage() {
 
         {/* Why NottoAI */}
         <div className="mt-20">
-          <h2 className="text-foreground mb-8 text-center text-2xl font-semibold">
+          <h2 className="text-zinc-900 mb-8 text-center text-2xl font-semibold">
             Why NottoAI?
           </h2>
           <div className="mx-auto max-w-2xl space-y-6">
@@ -363,8 +363,8 @@ export default function PricingPage() {
               },
             ].map((item, i) => (
               <div key={i} className="space-y-2">
-                <h3 className="text-foreground font-medium">{item.q}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
+                <h3 className="text-zinc-900 font-medium">{item.q}</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed">
                   {item.a}
                 </p>
               </div>
