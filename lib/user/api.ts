@@ -32,6 +32,7 @@ export async function getUserProfile(): Promise<UserProfile | null> {
           display_name: displayName,
           profile_image: profileImage,
           anonymous: false,
+          credits_remaining: 100,
           created_at: new Date().toISOString(),
         },
         { onConflict: "id", ignoreDuplicates: true }

@@ -37,6 +37,7 @@ export async function POST(request: Request) {
           anonymous: true,
           message_count: 0,
           premium: false,
+          credits_remaining: 100,
           created_at: new Date().toISOString(),
         })
         .select("*")

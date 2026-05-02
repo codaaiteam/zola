@@ -399,7 +399,7 @@ export default function ModelPricingPage() {
                   Tier
                 </div>
                 <div className="col-span-2 text-center text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                  Free (500)
+                  Free (100)
                 </div>
                 <div className="col-span-2 text-center text-xs font-semibold uppercase tracking-wider text-zinc-400">
                   Pro (100K)
@@ -451,7 +451,7 @@ export default function ModelPricingPage() {
                         {/* Free plan messages */}
                         <div className="col-span-2 text-center">
                           <span className="text-sm text-zinc-500">
-                            {estimateMessages(model.rate, 500)}
+                            {estimateMessages(model.rate, 100)}
                           </span>
                         </div>
                         {/* Pro plan messages */}
