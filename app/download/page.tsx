@@ -5,7 +5,7 @@ import { Apple, Desktop, DeviceMobile } from "@phosphor-icons/react"
 import Link from "next/link"
 
 const DOWNLOAD_URL =
-  "https://downloads.nottoai.com/NottoAI_0.1.0_aarch64.dmg"
+  "https://downloads.nottoai.com/NottoAI.dmg"
 
 export default function DownloadPage() {
   return (
