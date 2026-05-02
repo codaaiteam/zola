@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ZolaFaviconIcon } from "@/components/icons/zola"
 import AnthropicIcon from "@/components/icons/anthropic"
-import { SignInButton } from "@clerk/nextjs"
+import { SignInButton } from "@/app/components/auth/native-aware-sign-in-button"
 import { motion, useInView, useScroll, useTransform } from "motion/react"
 import { useRef, useEffect, useState, type ReactNode } from "react"
 import {

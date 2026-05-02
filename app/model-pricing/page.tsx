@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ZolaFaviconIcon } from "@/components/icons/zola"
-import { SignInButton } from "@clerk/nextjs"
+import { SignInButton } from "@/app/components/auth/native-aware-sign-in-button"
 import { motion, useInView } from "motion/react"
 import { useRef, useState, type ReactNode } from "react"
 import { MODEL_CREDIT_RATES, PRICING_PLANS } from "@/lib/pricing"
