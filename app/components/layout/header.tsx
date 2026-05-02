@@ -10,7 +10,7 @@ import { ZolaFaviconIcon } from "@/components/icons/zola"
 import { APP_NAME } from "@/lib/config"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
 import { useUser } from "@/lib/user-store/provider"
-import { Moon, Sun } from "@phosphor-icons/react"
+import { DownloadSimple, Moon, Sun } from "@phosphor-icons/react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -58,6 +58,13 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
             {isLoggedIn && !isMultiModelEnabled && <DialogPublish />}
             {isLoggedIn && <ButtonNewChat />}
             {isLoggedIn && !hasSidebar && <HistoryTrigger hasSidebar={hasSidebar} />}
+            <Link
+              href="/download"
+              className="hover:bg-muted text-foreground inline-flex size-9 items-center justify-center rounded-md transition-colors"
+              aria-label="Download App"
+            >
+              <DownloadSimple size={18} />
+            </Link>
             <button
               type="button"
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
