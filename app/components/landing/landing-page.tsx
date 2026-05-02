@@ -285,6 +285,9 @@ export function LandingPage() {
             <Link href="/pricing" className="hidden text-sm text-zinc-500 transition-colors hover:text-zinc-900 sm:inline">
               Pricing
             </Link>
+            <Link href="/download" className="hidden text-sm text-zinc-500 transition-colors hover:text-zinc-900 sm:inline">
+              Download
+            </Link>
             <SignInButton mode="modal">
               <button className="rounded-full border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 hover:shadow-sm">
                 Sign In
@@ -583,6 +586,7 @@ export function LandingPage() {
           </div>
           <div className="flex gap-6">
             <Link href="/pricing" className="text-sm text-zinc-400 hover:text-zinc-600">Pricing</Link>
+            <Link href="/download" className="text-sm text-zinc-400 hover:text-zinc-600">Download</Link>
             <Link href="/privacy" className="text-sm text-zinc-400 hover:text-zinc-600">Privacy</Link>
             <Link href="/terms" className="text-sm text-zinc-400 hover:text-zinc-600">Terms</Link>
             <Link href="/model-pricing" className="text-sm text-zinc-400 hover:text-zinc-600">Model Pricing</Link>
