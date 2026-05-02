@@ -12,6 +12,7 @@ const config: CapacitorConfig = {
   ios: {
     scheme: "NottoAI",
     contentInset: "always",
+    limitsNavigationsToAppBoundDomains: true,
   },
 }
 

@@ -1,0 +1,15 @@
+{
+	"appId": "com.nottoai.app",
+	"appName": "NottoAI",
+	"webDir": "out",
+	"server": {
+		"url": "https://nottoai.com",
+		"cleartext": false
+	},
+	"ios": {
+		"scheme": "NottoAI",
+		"contentInset": "always",
+		"limitsNavigationsToAppBoundDomains": true
+	},
+	"packageClassList": []
+}

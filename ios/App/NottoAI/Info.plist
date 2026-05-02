@@ -47,5 +47,24 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>WKAppBoundDomains</key>
+	<array>
+		<string>nottoai.com</string>
+		<string>clerk.nottoai.com</string>
+		<string>accounts.nottoai.com</string>
+	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.nottoai.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nottoai</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

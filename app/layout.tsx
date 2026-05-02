@@ -15,6 +15,7 @@ import { getUserProfile } from "@/lib/user/api"
 import { ThemeProvider } from "next-themes"
 import Script from "next/script"
 import { LayoutClient } from "./layout-client"
+import { NativeDeeplinkListener } from "./components/auth/native-deeplink-listener"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -101,6 +102,7 @@ export default async function RootLayout({
         >
           <TanstackQueryProvider>
             <LayoutClient />
+            <NativeDeeplinkListener />
             <UserProvider initialUser={userProfile}>
               <ModelProvider>
                 <ChatsProvider userId={userProfile?.id}>
