@@ -1,7 +1,7 @@
 "use client"
 
 import { ZolaFaviconIcon } from "@/components/icons/zola"
-import { Apple, Desktop, DeviceMobile } from "@phosphor-icons/react"
+import { AppleLogo, Desktop, DeviceMobile } from "@phosphor-icons/react"
 import Link from "next/link"
 
 const DOWNLOAD_URL =
@@ -32,13 +32,13 @@ export default function DownloadPage() {
             macOS 10.15 or later
           </p>
           <p className="text-muted-foreground mb-6 text-xs">
-            Apple Silicon (M1+) &middot; 3 MB
+            AppleLogo Silicon (M1+) &middot; 3 MB
           </p>
           <a
             href={DOWNLOAD_URL}
             className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-medium transition-colors"
           >
-            <Apple size={18} weight="fill" />
+            <AppleLogo size={18} weight="fill" />
             Download for Mac
           </a>
         </div>
@@ -55,7 +55,7 @@ export default function DownloadPage() {
             disabled
             className="bg-muted text-muted-foreground inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-medium"
           >
-            <Apple size={18} weight="fill" />
+            <AppleLogo size={18} weight="fill" />
             App Store
           </button>
         </div>
