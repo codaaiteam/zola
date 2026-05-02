@@ -9,6 +9,7 @@ const isPublicRoute = createRouteMatcher([
   "/terms",
   "/claude-opus-4-7",
   "/model-pricing",
+  "/download",
   "/sitemap.xml",
   "/robots.txt",
   "/auth(.*)",
