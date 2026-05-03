@@ -1,7 +1,16 @@
 "use client"
 
 import { SignInButton as ClerkSignInButton } from "@clerk/nextjs"
-import { useEffect, useState, type ReactNode } from "react"
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useState,
+  type MouseEvent,
+  type ReactElement,
+  type ReactNode,
+} from "react"
 
 type Props = {
   children: ReactNode
@@ -11,6 +20,8 @@ type Props = {
   signUpForceRedirectUrl?: string
   signUpFallbackRedirectUrl?: string
 }
+
+type ClickableProps = { onClick?: (e: MouseEvent) => void }
 
 export function SignInButton({ children, ...rest }: Props) {
   const [isNative, setIsNative] = useState(false)
@@ -34,7 +45,9 @@ export function SignInButton({ children, ...rest }: Props) {
     return <ClerkSignInButton {...rest}>{children}</ClerkSignInButton>
   }
 
-  const handleClick = async () => {
+  const openNativeBridge = async (e: MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
     try {
       const { Browser } = await import("@capacitor/browser")
       await Browser.open({
@@ -47,12 +60,18 @@ export function SignInButton({ children, ...rest }: Props) {
   }
 
   return (
-    <span
-      role="button"
-      onClick={handleClick}
-      style={{ display: "contents", cursor: "pointer" }}
-    >
-      {children}
-    </span>
+    <>
+      {Children.map(children, (child) => {
+        if (!isValidElement(child)) return child
+        const typed = child as ReactElement<ClickableProps>
+        const childOnClick = typed.props.onClick
+        return cloneElement(typed, {
+          onClick: (e: MouseEvent) => {
+            childOnClick?.(e)
+            void openNativeBridge(e)
+          },
+        })
+      })}
+    </>
   )
 }
