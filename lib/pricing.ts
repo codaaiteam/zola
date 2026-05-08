@@ -27,6 +27,7 @@ export const MODEL_CREDIT_RATES: { pattern: string; rate: number; label: string 
   { pattern: "sonar-deep-research", rate: 8, label: "Perplexity Deep Research" },
   { pattern: "sonar-pro", rate: 13, label: "Perplexity Sonar Pro" },
   { pattern: "gpt-5.4\"", rate: 13, label: "GPT-5.4" },
+  { pattern: "gpt-5.5\"", rate: 26, label: "GPT-5.5" },
   { pattern: "claude-sonnet-4.6", rate: 13, label: "Claude Sonnet 4.6" },
   { pattern: "claude-opus-4.6", rate: 22, label: "Claude Opus 4.6" },
   { pattern: "claude-opus-4.7", rate: 22, label: "Claude Opus 4.7" },
