@@ -19,6 +19,8 @@ export const MODEL_CREDIT_RATES: { pattern: string; rate: number; label: string 
   { pattern: "gpt-5.4-nano", rate: 1, label: "GPT-5.4 Nano" },
   { pattern: "gemini-3.1-flash-lite", rate: 1, label: "Gemini 3.1 Flash Lite" },
   { pattern: "grok-4.1-fast", rate: 1, label: "Grok 4.1 Fast" },
+  { pattern: "deepseek-v4-flash", rate: 1, label: "DeepSeek V4 Flash" },
+  { pattern: "deepseek-v4-pro", rate: 2, label: "DeepSeek V4 Pro" },
   { pattern: "deepseek-v3.2", rate: 1, label: "DeepSeek V3.2" },
   { pattern: "gpt-5.4-mini", rate: 4, label: "GPT-5.4 Mini" },
   { pattern: "o4-mini", rate: 5, label: "O4 Mini" },
