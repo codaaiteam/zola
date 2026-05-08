@@ -14,8 +14,8 @@ import { useUser } from "@/lib/user-store/provider"
 import { cn } from "@/lib/utils"
 import { AnimatePresence, motion } from "motion/react"
 import dynamic from "next/dynamic"
-import { redirect } from "next/navigation"
-import { useCallback, useMemo, useState } from "react"
+import { redirect, useRouter, useSearchParams } from "next/navigation"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useChatCore } from "./use-chat-core"
 import { useChatOperations } from "./use-chat-operations"
 import { useFileUpload } from "./use-file-upload"
@@ -65,6 +65,22 @@ export function Chat() {
     updateChatModel,
     chatId,
   })
+
+  // Apply ?model=<id> from /models "Chat with this" → pick once, then strip param
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const appliedUrlModelRef = useRef(false)
+  useEffect(() => {
+    if (appliedUrlModelRef.current) return
+    if (chatId) return // existing chat already has its own model
+    const requested = searchParams.get("model")
+    if (!requested) return
+    const modelExists = allModels.some((m) => m.id === requested)
+    if (!modelExists) return
+    appliedUrlModelRef.current = true
+    void handleModelChange(requested)
+    router.replace("/", { scroll: false })
+  }, [searchParams, chatId, allModels, handleModelChange, router])
 
   // State to pass between hooks
   const [hasDialogAuth, setHasDialogAuth] = useState(false)

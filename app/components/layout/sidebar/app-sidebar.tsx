@@ -208,7 +208,7 @@ export function AppSidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/"
+                  href="/models"
                   className="hover:bg-accent/80 hover:text-foreground text-primary group/nav relative inline-flex w-full items-center rounded-md bg-transparent px-2 py-2 text-sm transition-colors"
                 >
                   <div className={`flex items-center ${isCollapsed ? "justify-center w-full" : "gap-2"}`}>
