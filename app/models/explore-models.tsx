@@ -89,7 +89,7 @@ export function ExploreModels({
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return models.filter((m) => {
+    const matched = models.filter((m) => {
       if (q && !`${m.name} ${m.description ?? ""} ${m.tags.join(" ")}`
         .toLowerCase()
         .includes(q)) return false
@@ -102,7 +102,17 @@ export function ExploreModels({
       }
       return true
     })
-  }, [models, query, providerFilter, capFilter, priceFilter])
+
+    // Sort: free-tier-allowed first, then newer (by releasedAt) first
+    const releaseTime = (m: ModelCardData) =>
+      m.releasedAt ? new Date(m.releasedAt).getTime() : 0
+    return matched.sort((a, b) => {
+      const aFree = freeAllowedSet.has(a.id) ? 1 : 0
+      const bFree = freeAllowedSet.has(b.id) ? 1 : 0
+      if (aFree !== bFree) return bFree - aFree
+      return releaseTime(b) - releaseTime(a)
+    })
+  }, [models, query, providerFilter, capFilter, priceFilter, freeAllowedSet])
 
   const hiddenCount = preferences.hiddenModels.length
 
