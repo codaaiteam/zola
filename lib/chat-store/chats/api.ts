@@ -9,24 +9,20 @@ import {
   API_ROUTE_UPDATE_CHAT_MODEL,
 } from "../../routes"
 
-export async function getChatsForUserInDb(userId: string): Promise<Chats[]> {
-  const supabase = createClient()
-  if (!supabase) return []
-
-  const { data, error } = await supabase
-    .from("chats")
-    .select("*")
-    .eq("user_id", userId)
-    .order("pinned", { ascending: false })
-    .order("pinned_at", { ascending: false, nullsFirst: false })
-    .order("updated_at", { ascending: false })
-
-  if (!data || error) {
-    console.error("Failed to fetch chats:", error)
+export async function getChatsForUserInDb(_userId: string): Promise<Chats[]> {
+  // userId is enforced server-side via Clerk; kept in signature for callers.
+  try {
+    const res = await fetch("/api/chats", { credentials: "include" })
+    if (!res.ok) {
+      console.error("Failed to fetch chats:", await res.text())
+      return []
+    }
+    const data = (await res.json()) as { chats?: Chats[] }
+    return data.chats ?? []
+  } catch (err) {
+    console.error("Failed to fetch chats from API:", err)
     return []
   }
-
-  return data
 }
 
 export async function updateChatTitleInDb(id: string, title: string) {

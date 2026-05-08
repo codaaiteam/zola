@@ -8,6 +8,48 @@ export interface ExtendedMessageAISDK extends MessageAISDK {
   model?: string
 }
 
+type RawMessage = {
+  id: string | number
+  content: string | null
+  role: string
+  experimental_attachments: unknown
+  created_at: string | null
+  parts: unknown
+  message_group_id: string | null
+  model: string | null
+}
+
+function mapRawMessage(message: RawMessage): MessageAISDK {
+  return {
+    ...message,
+    id: String(message.id),
+    role: message.role as MessageAISDK["role"],
+    content: message.content ?? "",
+    createdAt: new Date(message.created_at || ""),
+    parts: (message?.parts as MessageAISDK["parts"]) || undefined,
+    experimental_attachments:
+      message.experimental_attachments as MessageAISDK["experimental_attachments"],
+  } as MessageAISDK
+}
+
+async function fetchMessagesFromApi(
+  chatId: string,
+  limit?: number
+): Promise<MessageAISDK[] | null> {
+  try {
+    const url = new URL("/api/messages", window.location.origin)
+    url.searchParams.set("chatId", chatId)
+    if (limit && limit > 0) url.searchParams.set("limit", String(limit))
+    const res = await fetch(url.toString(), { credentials: "include" })
+    if (!res.ok) return null
+    const data = (await res.json()) as { messages?: RawMessage[] }
+    return (data.messages ?? []).map(mapRawMessage)
+  } catch (err) {
+    console.error("Failed to fetch messages from API:", err)
+    return null
+  }
+}
+
 export async function getMessagesFromDb(
   chatId: string
 ): Promise<MessageAISDK[]> {
@@ -17,31 +59,8 @@ export async function getMessagesFromDb(
     return cached
   }
 
-  const supabase = createClient()
-  if (!supabase) return []
-
-  const { data, error } = await supabase
-    .from("messages")
-    .select(
-      "id, content, role, experimental_attachments, created_at, parts, message_group_id, model"
-    )
-    .eq("chat_id", chatId)
-    .order("created_at", { ascending: true })
-
-  if (!data || error) {
-    console.error("Failed to fetch messages:", error)
-    return []
-  }
-
-  return data.map((message) => ({
-    ...message,
-    id: String(message.id),
-    content: message.content ?? "",
-    createdAt: new Date(message.created_at || ""),
-    parts: (message?.parts as MessageAISDK["parts"]) || undefined,
-    message_group_id: message.message_group_id,
-    model: message.model,
-  }))
+  const fromApi = await fetchMessagesFromApi(chatId)
+  return fromApi ?? []
 }
 
 export async function getLastMessagesFromDb(
@@ -53,33 +72,8 @@ export async function getLastMessagesFromDb(
     return cached.slice(-limit)
   }
 
-  const supabase = createClient()
-  if (!supabase) return []
-
-  const { data, error } = await supabase
-    .from("messages")
-    .select(
-      "id, content, role, experimental_attachments, created_at, parts, message_group_id, model"
-    )
-    .eq("chat_id", chatId)
-    .order("created_at", { ascending: false })
-    .limit(limit)
-
-  if (!data || error) {
-    console.error("Failed to fetch last messages: ", error)
-    return []
-  }
-
-  const ascendingData = [...data].reverse()
-  return ascendingData.map((message) => ({
-    ...message,
-    id: String(message.id),
-    content: message.content ?? "",
-    createdAt: new Date(message.created_at || ""),
-    parts: (message?.parts as MessageAISDK["parts"]) || undefined,
-    message_group_id: message.message_group_id,
-    model: message.model,
-  }))
+  const fromApi = await fetchMessagesFromApi(chatId, limit)
+  return fromApi ?? []
 }
 
 async function insertMessageToDb(
