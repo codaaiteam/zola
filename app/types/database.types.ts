@@ -232,6 +232,63 @@ export type Database = {
         }
         Relationships: []
       }
+      nottoai_download_events: {
+        Row: {
+          id: string
+          event_type:
+            | "dmg_download"
+            | "ios_reserve"
+            | "landing_cta"
+            | "pricing_cta"
+          email: string | null
+          cta_name: string | null
+          referrer: string | null
+          utm_source: string | null
+          utm_medium: string | null
+          utm_campaign: string | null
+          user_agent: string | null
+          ip_hash: string | null
+          user_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          event_type:
+            | "dmg_download"
+            | "ios_reserve"
+            | "landing_cta"
+            | "pricing_cta"
+          email?: string | null
+          cta_name?: string | null
+          referrer?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          user_agent?: string | null
+          ip_hash?: string | null
+          user_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          event_type?:
+            | "dmg_download"
+            | "ios_reserve"
+            | "landing_cta"
+            | "pricing_cta"
+          email?: string | null
+          cta_name?: string | null
+          referrer?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          user_agent?: string | null
+          ip_hash?: string | null
+          user_id?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           experimental_attachments: Attachment[]

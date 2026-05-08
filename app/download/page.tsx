@@ -1,13 +1,43 @@
 "use client"
 
 import { ZolaFaviconIcon } from "@/components/icons/zola"
+import { track } from "@/lib/track"
 import { AppleLogo, Desktop, DeviceMobile } from "@phosphor-icons/react"
 import Link from "next/link"
+import { useState } from "react"
 
 const DOWNLOAD_URL =
   "https://downloads.nottoai.com/NottoAI.dmg"
 
 export default function DownloadPage() {
+  const [reserveEmail, setReserveEmail] = useState("")
+  const [reserveStatus, setReserveStatus] = useState<
+    "idle" | "submitting" | "done" | "error"
+  >("idle")
+  const [reserveError, setReserveError] = useState<string | null>(null)
+
+  const handleDmgDownload = () => {
+    void track("dmg_download")
+  }
+
+  const handleReserveSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (reserveStatus === "submitting") return
+    setReserveStatus("submitting")
+    setReserveError(null)
+    const result = await track("ios_reserve", { email: reserveEmail.trim() })
+    if (result.ok) {
+      setReserveStatus("done")
+    } else {
+      setReserveStatus("error")
+      setReserveError(
+        result.error === "invalid_email"
+          ? "That email looks invalid."
+          : "Couldn't save reservation. Try again?"
+      )
+    }
+  }
+
   return (
     <div className="min-h-screen w-screen bg-white text-zinc-900">
       {/* Header */}
@@ -66,6 +96,7 @@ export default function DownloadPage() {
             </p>
             <a
               href={DOWNLOAD_URL}
+              onClick={handleDmgDownload}
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#10B981] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#0ea572]"
             >
               <AppleLogo size={18} weight="fill" />
@@ -73,21 +104,47 @@ export default function DownloadPage() {
             </a>
           </div>
 
-          {/* iOS App */}
-          <div className="flex flex-col items-center rounded-2xl border border-zinc-200 p-8 opacity-60">
+          {/* iOS App — Reserve flow */}
+          <div className="flex flex-col items-center rounded-2xl border border-zinc-200 p-8">
             <DeviceMobile size={48} className="mb-4 text-zinc-900" />
             <h2 className="mb-1 text-xl font-semibold">iOS App</h2>
-            <p className="mb-1 text-sm text-zinc-500">
-              iPhone &amp; iPad
-            </p>
+            <p className="mb-1 text-sm text-zinc-500">iPhone &amp; iPad</p>
             <p className="mb-6 text-xs text-zinc-400">Coming Soon</p>
-            <button
-              disabled
-              className="inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-6 py-3 text-sm font-medium text-zinc-400"
-            >
-              <AppleLogo size={18} weight="fill" />
-              App Store
-            </button>
+
+            {reserveStatus === "done" ? (
+              <div className="flex w-full flex-col items-center justify-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                <span className="font-medium">You&apos;re on the list ✓</span>
+                <span className="text-xs text-emerald-600">
+                  We&apos;ll email you when it ships.
+                </span>
+              </div>
+            ) : (
+              <form onSubmit={handleReserveSubmit} className="w-full space-y-2">
+                <input
+                  type="email"
+                  required
+                  value={reserveEmail}
+                  onChange={(e) => setReserveEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={reserveStatus === "submitting"}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-60"
+                >
+                  <AppleLogo size={18} weight="fill" />
+                  {reserveStatus === "submitting"
+                    ? "Reserving…"
+                    : "Reserve Early Access"}
+                </button>
+                {reserveError ? (
+                  <p className="text-center text-xs text-red-600">
+                    {reserveError}
+                  </p>
+                ) : null}
+              </form>
+            )}
           </div>
         </div>
 
