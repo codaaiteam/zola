@@ -59,7 +59,7 @@ const FEATURES = [
 const MODELS_GRID = [
   { icon: OpenAIIcon, name: "GPT-5.4 Nano", tag: "Fast", color: "text-blue-600 bg-blue-50" },
   { icon: OpenAIIcon, name: "GPT-5.4", tag: "Smart", color: "text-blue-600 bg-blue-50" },
-  { icon: OpenAIIcon, name: "GPT-5.4 Pro", tag: "Best", color: "text-violet-600 bg-violet-50" },
+  { icon: OpenAIIcon, name: "GPT-5.5 Pro", tag: "Best", color: "text-violet-600 bg-violet-50" },
   { icon: OpenAIIcon, name: "O4 Mini", tag: "Reasoning", color: "text-orange-600 bg-orange-50" },
   { icon: AnthropicIcon, name: "Claude Sonnet", tag: "Writing", color: "text-amber-600 bg-amber-50" },
   { icon: AnthropicIcon, name: "Claude Opus", tag: "Premium", color: "text-violet-600 bg-violet-50" },

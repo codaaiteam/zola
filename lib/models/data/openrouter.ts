@@ -226,16 +226,16 @@ export const openrouterModels: ModelConfig[] = [
       or("openai/o4-mini", apiKey, opts),
   },
   {
-    id: "openrouter:openai/gpt-5.4-pro",
-    name: "GPT-5.4 Pro",
+    id: "openrouter:openai/gpt-5.5-pro",
+    name: "GPT-5.5 Pro",
     provider: "OpenRouter",
     providerId: "openrouter",
     modelFamily: "GPT",
     baseProviderId: "openai",
     description:
-      "OpenAI's most powerful model for complex tasks requiring maximum intelligence.",
-    tags: ["premium", "frontier", "advanced", "reasoning"],
-    contextWindow: 1047576,
+      "OpenAI's most powerful model — extended thinking time and maximum intelligence for complex coding, research, and reasoning. Successor to GPT-5.4 Pro.",
+    tags: ["premium", "frontier", "advanced", "reasoning", "new"],
+    contextWindow: 1050000,
     inputCost: 30,
     outputCost: 180,
     priceUnit: "per 1M tokens",
@@ -248,12 +248,12 @@ export const openrouterModels: ModelConfig[] = [
     speed: "Medium",
     intelligence: "High",
     website: "https://openrouter.ai",
-    apiDocs: "https://openrouter.ai/openai/gpt-5.4-pro",
+    apiDocs: "https://openrouter.ai/openai/gpt-5.5-pro",
     modelPage: "https://openai.com",
-    releasedAt: "2026-03-17",
+    releasedAt: "2026-05-08",
     icon: "openai",
     apiSdk: (apiKey?: string, opts?: { enableSearch?: boolean }) =>
-      or("openai/gpt-5.4-pro", apiKey, opts),
+      or("openai/gpt-5.5-pro", apiKey, opts),
   },
 
   // ── Claude family (newest first) ──
