@@ -1,4 +1,5 @@
 import { LayoutApp } from "@/app/components/layout/layout-app"
+import { MessagesProvider } from "@/lib/chat-store/messages/provider"
 import { getAllModels } from "@/lib/models"
 import { ExploreModels } from "./explore-models"
 import type { ModelCardData } from "./types"
@@ -41,8 +42,10 @@ export default async function ModelsPage() {
   }))
 
   return (
-    <LayoutApp>
-      <ExploreModels models={models} />
-    </LayoutApp>
+    <MessagesProvider>
+      <LayoutApp>
+        <ExploreModels models={models} />
+      </LayoutApp>
+    </MessagesProvider>
   )
 }
