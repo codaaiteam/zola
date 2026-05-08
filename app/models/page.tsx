@@ -1,5 +1,6 @@
 import { LayoutApp } from "@/app/components/layout/layout-app"
 import { MessagesProvider } from "@/lib/chat-store/messages/provider"
+import { FREE_TIER_ALLOWED_MODELS } from "@/lib/config"
 import { getAllModels } from "@/lib/models"
 import { ExploreModels } from "./explore-models"
 import type { ModelCardData } from "./types"
@@ -44,7 +45,10 @@ export default async function ModelsPage() {
   return (
     <MessagesProvider>
       <LayoutApp>
-        <ExploreModels models={models} />
+        <ExploreModels
+          models={models}
+          freeAllowedIds={FREE_TIER_ALLOWED_MODELS}
+        />
       </LayoutApp>
     </MessagesProvider>
   )

@@ -9,7 +9,7 @@ import MistralIcon from "@/components/icons/mistral"
 import OpenAIIcon from "@/components/icons/openai"
 import PerplexityIcon from "@/components/icons/perplexity"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
-import { Eye, EyeSlash, MagnifyingGlass } from "@phosphor-icons/react"
+import { Eye, EyeSlash, Lock, MagnifyingGlass } from "@phosphor-icons/react"
 import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import type { ModelCardData } from "./types"
@@ -58,7 +58,17 @@ const PRICE_TIERS = [
   { key: "premium", label: "$15+/M out", test: (m: ModelCardData) => (m.outputCost ?? 0) > 15 },
 ] as const
 
-export function ExploreModels({ models }: { models: ModelCardData[] }) {
+export function ExploreModels({
+  models,
+  freeAllowedIds,
+}: {
+  models: ModelCardData[]
+  freeAllowedIds: string[]
+}) {
+  const freeAllowedSet = useMemo(
+    () => new Set(freeAllowedIds),
+    [freeAllowedIds]
+  )
   const router = useRouter()
   const { preferences, toggleModelVisibility, isModelHidden } =
     useUserPreferences()
@@ -191,6 +201,7 @@ export function ExploreModels({ models }: { models: ModelCardData[] }) {
               key={m.id}
               model={m}
               hidden={isModelHidden(m.id)}
+              isFreeAllowed={freeAllowedSet.has(m.id)}
               onChat={() => handleChat(m.id)}
               onToggle={() => toggleModelVisibility(m.id)}
             />
@@ -228,11 +239,13 @@ function FilterChip({
 function ModelCard({
   model,
   hidden,
+  isFreeAllowed,
   onChat,
   onToggle,
 }: {
   model: ModelCardData
   hidden: boolean
+  isFreeAllowed: boolean
   onChat: () => void
   onToggle: () => void
 }) {
@@ -260,15 +273,27 @@ function ModelCard({
             </div>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-label={hidden ? "Show in picker" : "Hide from picker"}
-          title={hidden ? "Show in picker" : "Hide from picker"}
-          className="rounded-md p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
-        >
-          {hidden ? <EyeSlash size={16} /> : <Eye size={16} />}
-        </button>
+        <div className="flex items-center gap-1">
+          {isFreeAllowed ? (
+            <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+              Free tier
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-md bg-violet-50 px-1.5 py-0.5 text-[10px] font-medium text-violet-700 dark:bg-violet-950/40 dark:text-violet-300">
+              <Lock size={9} weight="fill" />
+              Pro
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-label={hidden ? "Show in picker" : "Hide from picker"}
+            title={hidden ? "Show in picker" : "Hide from picker"}
+            className="rounded-md p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+          >
+            {hidden ? <EyeSlash size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
       </div>
 
       {model.description ? (

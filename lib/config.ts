@@ -21,16 +21,25 @@ export const FREE_MODELS_IDS = [
   "openrouter:openai/gpt-5.4-nano",
 ]
 
-// Models available to free-tier users (cheap/free models only)
-// Premium models (Claude, GPT-5.4, Gemini Pro, etc.) require a paid plan
+// Models available to free-tier users (credits still get charged normally).
+// Cutoff: credit rate <= 5. Premium models (GPT-5.5, Claude, Gemini Pro,
+// Sonar Pro, GPT-5.4, GPT-4o, Grok 4.20, etc.) require a paid plan.
 export const FREE_TIER_ALLOWED_MODELS = [
+  // free / rate 0
   "openrouter:meta-llama/llama-3.3-70b-instruct:free",
+  // rate 1 — ultra-cheap
   "openrouter:openai/gpt-5.4-nano",
-  "openrouter:openai/gpt-5.4-mini",
-  "openrouter:deepseek/deepseek-r1",
-  "openrouter:deepseek/deepseek-v3.2",
+  "openrouter:openai/gpt-4o-mini",
   "openrouter:google/gemini-3.1-flash-lite-preview",
   "openrouter:x-ai/grok-4.1-fast",
+  "openrouter:deepseek/deepseek-v3.2",
+  "openrouter:deepseek/deepseek-v4-flash",
+  // rate 2
+  "openrouter:deepseek/deepseek-r1",
+  "openrouter:deepseek/deepseek-v4-pro",
+  // rate 4-5
+  "openrouter:openai/gpt-5.4-mini",
+  "openrouter:openai/o4-mini",
 ]
 
 export const MODEL_DEFAULT = "openrouter:openai/gpt-5.4-nano"
