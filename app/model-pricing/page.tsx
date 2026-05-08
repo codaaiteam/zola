@@ -165,6 +165,8 @@ function CreditsCalculator() {
 /* ─── Data ─── */
 
 const MODEL_ICON_MAP: Record<string, (p: React.SVGProps<SVGSVGElement>) => ReactNode> = {
+  "gpt-4o\"": OpenAIIcon,
+  "gpt-4o-mini": OpenAIIcon,
   "gpt-5.4-nano": OpenAIIcon,
   "gpt-5.4-mini": OpenAIIcon,
   "gpt-5.4\"": OpenAIIcon,
