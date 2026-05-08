@@ -14,24 +14,32 @@ import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import type { ModelCardData } from "./types"
 
-const PROVIDER_ICONS: Record<
+const PROVIDER_META: Record<
   string,
-  (p: React.SVGProps<SVGSVGElement>) => React.ReactNode
+  {
+    label: string
+    Icon: (p: React.SVGProps<SVGSVGElement>) => React.ReactNode
+  }
 > = {
-  openai: OpenAIIcon,
-  anthropic: AnthropicIcon,
-  google: GeminiIcon,
-  gemini: GeminiIcon,
-  deepseek: DeepSeekIcon,
-  xai: GrokIcon,
-  grok: GrokIcon,
-  meta: MetaIcon,
-  perplexity: PerplexityIcon,
-  mistral: MistralIcon,
+  openai: { label: "OpenAI", Icon: OpenAIIcon },
+  anthropic: { label: "Anthropic", Icon: AnthropicIcon },
+  claude: { label: "Anthropic", Icon: AnthropicIcon },
+  google: { label: "Google", Icon: GeminiIcon },
+  gemini: { label: "Google", Icon: GeminiIcon },
+  deepseek: { label: "DeepSeek", Icon: DeepSeekIcon },
+  xai: { label: "xAI", Icon: GrokIcon },
+  grok: { label: "xAI", Icon: GrokIcon },
+  meta: { label: "Meta", Icon: MetaIcon },
+  perplexity: { label: "Perplexity", Icon: PerplexityIcon },
+  mistral: { label: "Mistral", Icon: MistralIcon },
+}
+
+function getProvider(id: string) {
+  return PROVIDER_META[id] ?? { label: id, Icon: OpenAIIcon }
 }
 
 function ProviderIcon({ id, className }: { id: string; className?: string }) {
-  const Icon = PROVIDER_ICONS[id] ?? OpenAIIcon
+  const { Icon } = getProvider(id)
   return <Icon className={className} />
 }
 
@@ -62,7 +70,9 @@ export function ExploreModels({ models }: { models: ModelCardData[] }) {
   const providers = useMemo(() => {
     const set = new Map<string, string>()
     models.forEach((m) => {
-      if (!set.has(m.baseProviderId)) set.set(m.baseProviderId, m.provider)
+      if (!set.has(m.baseProviderId)) {
+        set.set(m.baseProviderId, getProvider(m.baseProviderId).label)
+      }
     })
     return Array.from(set.entries()).map(([id, label]) => ({ id, label }))
   }, [models])
@@ -128,7 +138,7 @@ export function ExploreModels({ models }: { models: ModelCardData[] }) {
             active={providerFilter === null}
             onClick={() => setProviderFilter(null)}
           >
-            All providers
+            All
           </FilterChip>
           {providers.map((p) => (
             <FilterChip
@@ -245,7 +255,9 @@ function ModelCard({
             <div className="text-sm font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
               {model.name}
             </div>
-            <div className="text-xs text-zinc-500">{model.provider}</div>
+            <div className="text-xs text-zinc-500">
+              {getProvider(model.baseProviderId).label}
+            </div>
           </div>
         </div>
         <button
