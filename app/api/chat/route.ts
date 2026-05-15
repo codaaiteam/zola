@@ -96,7 +96,16 @@ export async function POST(req: Request) {
       throw new Error(`Model ${model} not found`)
     }
 
-    const effectiveSystemPrompt = systemPrompt || SYSTEM_PROMPT_DEFAULT
+    const today = new Date().toISOString().slice(0, 10)
+    const identityFooter = `
+
+---
+Identity & freshness:
+- You are NottoAI. NottoAI is a multi-model chat app that routes to many underlying LLMs (OpenAI, Anthropic, Google, DeepSeek, xAI, Meta, etc.) via OpenRouter. If asked "what model are you?", answer truthfully that you are running on the model the user selected (you do not always know which one). Do not claim to be GPT, Claude, Gemini, or any other specific brand unless you are absolutely certain.
+- Today's date is ${today}. Use this as ground truth for "what year is it / what's today's date" type questions.
+- Do NOT invent a specific knowledge cutoff date (no "my training data ends in April 2023" style answers). If your built-in knowledge of a topic feels stale, say so honestly and suggest the user toggle web search if they need fresh info — but never guess the exact cutoff month.`
+    const effectiveSystemPrompt =
+      (systemPrompt || SYSTEM_PROMPT_DEFAULT) + identityFooter
 
     let apiKey: string | undefined
     if (isAuthenticated && userId) {
